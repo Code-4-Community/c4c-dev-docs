@@ -1,3 +1,8 @@
-site_name: My Docs
+site_name: C4C Dev Docs
+
+nav:
+  - Home: index.md
+  - MkDocs: mkdocs-starter.md
+
 theme:
   name: material
