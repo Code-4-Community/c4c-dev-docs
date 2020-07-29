@@ -1,4 +1,9 @@
 site_name: C4C Dev Docs
+repo_url: https://github.com/Code-4-Community/c4c-dev-docs
+
+theme:
+  name: material
+  favicon: "img/favicon.ico"
 
 nav:
   - Home: index.md
@@ -12,6 +17,3 @@ nav:
     - sftt/sftt-api-spec.md
     - sftt/sftt-auth-api.md
   - API Spec Example: api-spec-example.md
-
-theme:
-  name: material
