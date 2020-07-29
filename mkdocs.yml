@@ -3,10 +3,15 @@ site_name: C4C Dev Docs
 nav:
   - Home: index.md
   - MkDocs: mkdocs-starter.md
-  - SFTT Feature API: sftt-api-spec.md
-  - SFTT Auth API: sftt-auth-api.md
-  - LLB Feature API: llb-api-spec.md
-  - LLB Auth API: llb-auth-api.md
+  - Lucy's Love Bus:
+    - Home: llb/index.md
+    - llb/llb-api-spec.md
+    - llb/llb-auth-api.md
+  - Speak for the Trees:
+    - Home: sftt/index.md
+    - sftt/sftt-api-spec.md
+    - sftt/sftt-auth-api.md
+  - API Spec Example: api-spec-example.md
 
 theme:
   name: material
