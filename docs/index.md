@@ -2,7 +2,7 @@
 
 This repo uses two Python packages, [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/), to generate a static documentation site for C4C repos. Pages are written in Markdown.
 
-## Installation 
+## Local Installation
 
 #### Pre-requisite: python3 [(installation guide)](https://realpython.com/installing-python/)
 
@@ -31,13 +31,28 @@ mkdocs build
 
 The contents of this directory make up your project documentation. There's no need for operating a database or server, as it is completely self-contained. The site can be hosted on GitHub Pages, GitLab Pages, a CDN of your choice or your private web space.
 
-## Adding a Page
+### Adding a Page (local copy of repo)
 
 Add a Markdown file to the `docs/` directory. 
 
-Additionally, you can add a site navigation link to `mkdocs.yml`
+Edit the navigation in `mkdocs.yml`. The structure is well documented [here](https://code-4-community.github.io/c4c-dev-docs/). 
+
+To publish your changes, create a PR. 
 
 ```
-nav:
-    - Page Name: newfilename.md
+git checkout -b JB_update_llb-docs
+git add .
+git commit -m 'updating docs'
+git push (set upstream if needed)
 ```
+
+Include a screenshot of what your new changes look like in your PR. When merged, your changes will automatically be deployed to our site. 
+
+## Contributing without Local Installation
+
+You can make edits right on [GitHub](https://code-4-community.github.io/c4c-dev-docs/) easily as well, the downside is that you cannot preview what those changes will look like in the final MkDocs generated site, so this is preferred for small tweaks rather than adding new pages entirely. 
+
+To contribute online, simply click the edit logo (the pen) in the top right corner of this page. This will take you to GitHub, where you can make whatever changes you'd like to the Markdown file which generates the page you were on. 
+
+When you're done with your edits, simply write an update message, and select `create a new branch for this commit and start a pull request`. Submit your PR, and it'll be reviewed the same as any others.  
+
