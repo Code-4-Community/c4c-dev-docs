@@ -1,8 +1,15 @@
 # C4C Dev Docs
 
-This repo uses two Python packages, [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/), to generate a static documentation site for C4C repos. Pages are written in Markdown.
+C4C Dev Docs holds all technical documentation for our applications and projects. The goal of this site is to bring existing information together to a single, searchable, and pleasant UI. 
+
+As of now, we've copied over the LLB and SFTT API specs. There is some work to update those to be more user-friendly for this site, but I'm very happy with how MkDocs took our existing Markdown files and created this site so effortlessly. 
+
+Other things to expect to see here: general repo setup guide for our major projects, DevOps/Deployment overview for LLB/SFTT cloud pipelines, Jumpstart course material...
+
 
 ## Local Installation
+
+This repo uses two Python packages, [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/), to generate a static documentation site for C4C repos. Pages are written in Markdown.
 
 #### Pre-requisite: python3 [(installation guide)](https://realpython.com/installing-python/)
 
