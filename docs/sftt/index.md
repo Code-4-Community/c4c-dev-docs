@@ -1,5 +1,5 @@
 # Speak for the Trees
 
-[API Spec](./llb-api-spec.md)
+[API Spec](./sftt-api-spec.md)
 
-[Auth API](./llb-auth-api.md)
+[Auth API](./sftt-auth-api.md)
