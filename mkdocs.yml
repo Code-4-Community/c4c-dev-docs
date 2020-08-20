@@ -7,6 +7,11 @@ theme:
   features:
     - tabs
 
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
 nav:
   - Home: index.md
   - MkDocs: mkdocs-starter.md
