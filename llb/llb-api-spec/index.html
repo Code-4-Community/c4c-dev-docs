@@ -1,0 +1,1159 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.7">
+    
+    
+      
+        <title>LLB API Specification - C4C Dev Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.b8ac9624.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#llb-api-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="C4C Dev Docs" class="md-header-nav__button md-logo" aria-label="C4C Dev Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            C4C Dev Docs
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              LLB API Specification
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/Code-4-Community/c4c-dev-docs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href="../.." class="md-tabs__link">
+        Home
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../" class="md-tabs__link md-tabs__link--active">
+          Lucy's Love Bus
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../sftt/" class="md-tabs__link">
+          Speak for the Trees
+        </a>
+      
+    </li>
+  
+
+      
+        
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="C4C Dev Docs" class="md-nav__button md-logo" aria-label="C4C Dev Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    C4C Dev Docs
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/Code-4-Community/c4c-dev-docs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../mkdocs-starter/" title="MkDocs" class="md-nav__link">
+      MkDocs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Lucy's Love Bus
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Lucy's Love Bus" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Lucy's Love Bus
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../" title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="LLB API Specification" class="md-nav__link md-nav__link--active">
+      LLB API Specification
+    </a>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../llb-auth-api/" title="Login and Token Endpoints" class="md-nav__link">
+      Login and Token Endpoints
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Speak for the Trees
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Speak for the Trees" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Speak for the Trees
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../sftt/" title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../sftt/sftt-api-spec/" title="SFTT API Specification" class="md-nav__link">
+      SFTT API Specification
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../sftt/sftt-auth-api/" title="Login and Token Endpoints" class="md-nav__link">
+      Login and Token Endpoints
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../api-spec-example/" title="API Spec Example" class="md-nav__link">
+      API Spec Example
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/Code-4-Community/c4c-dev-docs/edit/master/docs/llb/llb-api-spec.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                <h1 id="llb-api-specification">LLB API Specification</h1>
+<p>Any routes with the <code>protected</code> path are routes and require a valid JWT token. This token must be placed in the header with the name "access_token".</p>
+<p>Any response of <code>401 UNAUTHORIZED</code> with the following body indicates that the user's access_token is expired. In this case the client should initiate a new login, or call the <code>refresh</code> route with a valid refresh_token JWT to recieve a new access_token.</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;Given access_token is expired&quot;</span>
+</code></pre></div>
+
+<h1 id="table-of-contents">Table Of Contents</h1>
+<ul>
+<li><a href="#getting-events">Getting Events</a></li>
+<li><a href="#-get-api-v1-protected-events-qualified-"><code>GET api/v1/protected/events/qualified</code></a></li>
+<li><a href="#-get-api-v1-protected-events-signed-up-"><code>GET api/v1/protected/events/signed_up</code></a></li>
+<li><a href="#-get-api-v1-protected-events-ids-1-2-3--"><code>GET api/v1/protected/events?ids=1,2,3,...</code></a></li>
+<li><a href="#single-event">Single Event</a></li>
+<li><a href="#-get-api-v1-protected-events--event-id-"><code>GET api/v1/protected/events/:event_id</code></a></li>
+<li><a href="#-get-api-v1-protected-events--event-id-registrations-"><code>GET api/v1/protected/events/:event_id/registrations</code></a></li>
+<li><a href="#-post-api-v1-protected-events--"><code>POST api/v1/protected/events/</code></a></li>
+<li><a href="#-put-api-v1-protected-events--event-id-"><code>PUT api/v1/protected/events/:event_id</code></a></li>
+<li><a href="#-delete-api-v1-protected-events--event-id-"><code>DELETE api/v1/protected/events/:event_id</code></a></li>
+<li><a href="#account-creation-flow">Account Creation Flow</a></li>
+<li><a href="#-post-api-v1-protected-requests-"><code>POST api/v1/protected/requests</code></a></li>
+<li><a href="#-get-api-v1-protected-requests-"><code>GET api/v1/protected/requests</code></a></li>
+<li><a href="#-post-api-v1-protected-requests--request-id-approve-"><code>POST api/v1/protected/requests/:request_id/approve</code></a></li>
+<li><a href="#-post-api-v1-protected-requests--request-id-reject-"><code>POST api/v1/protected/requests/:request_id/reject</code></a></li>
+<li><a href="#-get-api-v1-protected-requests--request-id-"><code>GET api/v1/protected/requests/:request_id</code></a></li>
+<li><a href="#site-announcements">Site Announcements</a></li>
+<li><a href="#-get-api-v1-protected-announcements-"><code>GET api/v1/protected/announcements</code></a></li>
+<li><a href="#-get-api-v1-protected-announcements--event-id-"><code>GET api/v1/protected/announcements/:event_id</code></a></li>
+<li><a href="#-post-api-v1-protected-announcements-"><code>POST api/v1/protected/announcements</code></a></li>
+<li><a href="#-post-api-v1-protected-announcements--event-id-"><code>POST api/v1/protected/announcements/:event_id</code></a></li>
+<li><a href="#-delete--api-v1-protected-announcements--announcement-id-"><code>DELETE /api/v1/protected/announcements/:announcement_id</code></a></li>
+<li><a href="#checkout-registration">Event Checkout and Registration</a></li>
+<li><a href="#-post-api-v1-protected-checkout-register"><code>POST api/v1/protected/checkout/register</code></a></li>
+<li><a href="#-put-api-v1-protected-checkout-register--event-id-"><code>PUT api/v1/protected/checkout/register/:event_id</code></a></li>
+<li><a href="#-post-api-v1-webhooks-stripe"><code>POST api/v1/webhooks/stripe</code></a></li>
+</ul>
+<h1 id="getting-events">Getting Events</h1>
+<h2 id="get-apiv1protectedeventsqualified"><code>GET api/v1/protected/events/qualified</code></h2>
+<p>Get a list of events that the calling user is qualified for. This includes events a user is already signed up for.</p>
+<p>For General Public: Any event happening in the next 5 days are eligible.
+For Participating Families: Any event happening in the future.
+For Admins: Any  event happening in the future.</p>
+<h3 id="query-params">Query Params</h3>
+<h5 id="start-date-string">start: DATE-STRING</h5>
+<p>The beginning date of when to get events from. All returned events will happen ON or after
+the given date string that is given in mm/dd/yyyy format, ie: 01/19/2020</p>
+<h5 id="end-date-string">end: DATE-STRING</h5>
+<p>The latest date of when to get events from. All returned events will happen ON or before the
+given date string that is given in mm/dd/yyyy format, ie: 12/03/2009</p>
+<h5 id="count-integer">count: INTEGER</h5>
+<p>The maximum number of events to return. The route will return AT MOST count number of events.</p>
+<h3 id="responses">Responses</h3>
+<h4 id="200-ok"><code>200 OK</code></h4>
+<p>The events were sent successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+      <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+      <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;canRegister&quot;</span><span class="p">:</span> <span class="err">BOOLEAN</span><span class="p">,</span>
+      <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+        <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;totalCount&quot;</span><span class="p">:</span> <span class="err">INTEGER</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.</p>
+<p>canRegister is dependent on the privilege level of the calling user. GPs are only able to register for events that are happening in the next 5 days.</p>
+<h2 id="get-apiv1protectedeventssigned_up"><code>GET api/v1/protected/events/signed_up</code></h2>
+<p>Get all of the events happening in the future that the given user is signed up for.</p>
+<h3 id="query-params_1">Query Params</h3>
+<h5 id="start-date-string_1">start: DATE-STRING</h5>
+<p>The beginning date of when to get events from. All returned events will happen ON or after
+the given date string that is given in mm/dd/yyyy format, ie: 01/19/2020</p>
+<h5 id="end-date-string_1">end: DATE-STRING</h5>
+<p>The latest date of when to get events from. All returned events will happen ON or before the
+given date string that is given in mm/dd/yyyy format, ie: 12/03/2009</p>
+<h5 id="count-integer_1">count: INTEGER</h5>
+<p>The maximum number of events to return. The route will return AT MOST count number of events.</p>
+<h3 id="responses_1">Responses</h3>
+<h4 id="200-ok_1"><code>200 OK</code></h4>
+<p>The events were sent successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+      <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+      <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+        <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;totalCount&quot;</span><span class="p">:</span> <span class="err">INTEGER</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.</p>
+<h2 id="get-apiv1protectedeventsids123"><code>GET api/v1/protected/events?ids=1,2,3,...</code></h2>
+<p>Get the event bodies for the events with the ids that are specified in the query parameter.</p>
+<h3 id="query-params_2">Query Params</h3>
+<h5 id="ids-int-list">ids: INT-LIST</h5>
+<p>The event ids that are being requested. Ids are numbers and they should be seperated by a single comma. If this query parameter is missing, this route returns an empty list. Ignore duplicated values. Ignore ids that do not correspond to any existing event.</p>
+<h3 id="responses_2">Responses</h3>
+<p>Equivelent to above routes:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;events&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+      <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+      <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+      <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+        <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;totalCount&quot;</span><span class="p">:</span> <span class="err">INTEGER</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h1 id="single-event">Single Event</h1>
+<h2 id="get-apiv1protectedeventsevent_id"><code>GET api/v1/protected/events/:event_id</code></h2>
+<p>Gets a specific event with the specified id.</p>
+<h3 id="route-params">Route Params</h3>
+<h5 id="event_id-id">event_id: ID</h5>
+<p>The id number of the event that is being queried.</p>
+<h3 id="responses_3">Responses</h3>
+<h4 id="200-ok_2"><code>200 OK</code></h4>
+<p>The event was retrieved successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+  <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;canRegister&quot;</span><span class="p">:</span> <span class="err">BOOLEAN</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.</p>
+<p>canRegister is dependent on the privilege level of the calling user. GPs are only able to register for events that are happening in the next 5 days.</p>
+<p>canRegister does not check if the calling user is already signed up for this event.</p>
+<h2 id="get-apiv1protectedeventsevent_idregistrations"><code>GET api/v1/protected/events/:event_id/registrations</code></h2>
+<p>Gets a list of users registered for the event with the given id.</p>
+<h3 id="route-params_1">Route Params</h3>
+<h5 id="event_id-id_1">event_id: ID</h5>
+<p>The id number of the event that is being queried.</p>
+<h3 id="responses_4">Responses</h3>
+<h4 id="200-ok_3"><code>200 OK</code></h4>
+<p>The event was retrieved successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;registrations&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+      <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="400-bad-request"><code>400 BAD REQUEST</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">There</span> <span class="err">does</span> <span class="err">not</span> <span class="err">exist</span> <span class="err">an</span> <span class="err">event</span> <span class="err">with</span> <span class="err">id:</span> <span class="err">&lt;id&gt;</span>
+</code></pre></div>
+
+<p>If the provided event id does not exist</p>
+<h4 id="401-unauthorized"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="post-apiv1protectedevents"><code>POST api/v1/protected/events/</code></h2>
+<p>Create a new event. This route must be called by an admin.</p>
+<h3 id="request-body">Request Body</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>There is an open question on how thumbnails should be handled.</p>
+<h3 id="responses_5">Responses</h3>
+<h4 id="200-ok_4"><code>200 OK</code></h4>
+<p>The event was created successfully. Will return the event that was just created (including the generated id).</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+  <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_1"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="put-apiv1protectedeventsevent_id"><code>PUT api/v1/protected/events/:event_id</code></h2>
+<p>Update an existing event. This route must be called by an admin. All fields are optional.</p>
+<h3 id="request-body_1">Request Body</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_6">Responses</h3>
+<h4 id="200-ok_5"><code>200 OK</code></h4>
+<p>The event was updated successfully. Will return the event that was just created (including the generated id).</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;spotsAvailable&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="err">URL</span><span class="p">,</span>
+  <span class="nt">&quot;ticketCount&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+  <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;start&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;end&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_2"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h4 id="409-conflict"><code>409 Conflict</code></h4>
+<p>This response occurs when <code>spotsAvailable</code> is less than the number of users currently registered for the event.</p>
+<h2 id="delete-apiv1protectedeventsevent_id"><code>DELETE api/v1/protected/events/:event_id</code></h2>
+<p>Delete an existing event. This route must be called by an admin.</p>
+<h3 id="responses_7">Responses</h3>
+<h4 id="200-ok_6"><code>200 OK</code></h4>
+<p>The event was deleted successfully. Returns the ID of the deleted event.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_3"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h1 id="account-creation-flow">Account Creation Flow</h1>
+<h2 id="post-apiv1protectedrequests"><code>POST api/v1/protected/requests</code></h2>
+<p>Making a request to be upgraded from GP to PF.
+Must be made by a GP user.
+Potentially adding bottle nose to prevent multiple denied requests.
+Allow multiple outstanding requests?</p>
+<h3 id="responses_8">Responses</h3>
+<h4 id="200-ok_7"><code>200 OK</code></h4>
+<h4 id="429-too-many-requests"><code>429 TOO MANY REQUESTS</code></h4>
+<h2 id="get-apiv1protectedrequests"><code>GET api/v1/protected/requests</code></h2>
+<p>Getting all active requests.</p>
+<p>Must be called by an admin.</p>
+<h3 id="responses_9">Responses</h3>
+<h4 id="200-ok_8"><code>200 OK</code></h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;requests&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;request_id STRING&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;phoneNumber&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_4"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="get-apiv1protectedrequestsrequest_id"><code>GET /api/v1/protected/requests/:request_id</code></h2>
+<blockquote>
+<p>Gets all the information associated with the account that made this request.</p>
+</blockquote>
+<h3 id="params">Params</h3>
+<ul>
+<li><code>request_id</code> is the id number of this request.</li>
+</ul>
+<h3 id="response"><strong>Response</strong></h3>
+<h4 id="200-ok_9"><code>200 OK</code></h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;mainContact&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;dateOfBirth&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+    <span class="nt">&quot;phoneNumber&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;pronouns&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;allergies&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+    <span class="nt">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+    <span class="nt">&quot;medication&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+    <span class="nt">&quot;notes&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;additionalContacts&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="err">EMAIL</span><span class="p">,</span>
+        <span class="nt">&quot;shouldSendEmails&quot;</span><span class="p">:</span> <span class="err">BOOLEAN</span><span class="p">,</span>
+        <span class="nt">&quot;dateOfBirth&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+        <span class="nt">&quot;phoneNumber&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;pronouns&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;allergies&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+        <span class="nt">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+        <span class="nt">&quot;medication&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+        <span class="nt">&quot;notes&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;children&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;firstName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;lastName&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;dateOfBirth&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+      <span class="nt">&quot;pronouns&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;school&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;schoolYear&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;allergies&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+      <span class="nt">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+      <span class="nt">&quot;medications&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+      <span class="nt">&quot;notes&quot;</span><span class="p">:</span> <span class="err">STRING</span> <span class="err">OR</span> <span class="err">NULL</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;address&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;city&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;state&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;zipCode&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;accountType&quot;</span><span class="p">:</span> <span class="err">PRIVILEGE_LEVEL</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>PRIVILEGE_LEVEL</code> is one of "GP", "PF", or "ADMIN".</p>
+<blockquote>
+<p>Note that this is included so that this response matches the response for getting all of a user's information even though it will always be GP in this case.</p>
+</blockquote>
+<h2 id="post-apiv1protectedrequestsrequest_idapprove"><code>POST api/v1/protected/requests/:request_id/approve</code></h2>
+<h2 id="post-apiv1protectedrequestsrequest_idreject"><code>POST api/v1/protected/requests/:request_id/reject</code></h2>
+<p>Approving or rejecting a request by a user to become a PF.
+Must be called by an admin.</p>
+<h3 id="path-params">Path Params</h3>
+<h4 id="requst_id"><code>requst_id</code></h4>
+<p>The id of the request that is being modified.</p>
+<h3 id="responses_10">Responses</h3>
+<h4 id="200-ok_10"><code>200 OK</code></h4>
+<h4 id="401-unauthorized_5"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="get-apiv1protectedrequestsstatus"><code>GET api/v1/protected/requests/status</code></h2>
+<p>Getting the statuses of all requests the calling user has made to become a PF.</p>
+<h3 id="responses_11">Responses</h3>
+<h4 id="200-ok_11"><code>200 OK</code></h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;requests&quot;</span><span class="p">:</span> <span class="p">[</span>
+   <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;APPROVED&quot;</span> <span class="err">|</span> <span class="s2">&quot;REJECTED&quot;</span> <span class="err">|</span> <span class="s2">&quot;PENDING&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+   <span class="p">},</span>
+   <span class="err">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h1 id="site-announcements">Site Announcements</h1>
+<p><strong>NOTE: Site-wide and event specific announcements have uniquely identifying ID numbers.</strong></p>
+<h2 id="get-apiv1protectedannouncements"><code>GET api/v1/protected/announcements</code></h2>
+<p>Gets a list of site-wide announcements. The announcements will be returned in chronological order, from newest to oldest.</p>
+<h3 id="query-params_3">Query Params</h3>
+<h5 id="start-date-string_2">start: DATE-STRING</h5>
+<p>The beginning date of when to get announcements from. All returned announcements are created ON or after the given date string that is given in mm/dd/yyyy format, e.g. 01/19/2020. Defaults to 3 weeks from <code>end</code> or the current date.</p>
+<h5 id="end-date-string_2">end: DATE-STRING</h5>
+<p>The end date of when to get announcements from. All returned announcements will happen ON or before the given date string that is given in mm/dd/yyyy format, e.g. 12/03/2009. Defaults to the current date.</p>
+<h5 id="count-integer_2">count: INTEGER</h5>
+<p>The maximum number of announcements to return. The route will return AT MOST count number of announcements. Defaults to 50 or all events that exist.</p>
+<h3 id="responses_12">Responses</h3>
+<h4 id="200-ok_12"><code>200 OK</code></h4>
+<p>The announcements were retrieved successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;announcements&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+      <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;totalCount&quot;</span><span class="p">:</span> <span class="err">INTEGER</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="get-apiv1protectedannouncementsevent_id"><code>GET api/v1/protected/announcements/:event_id</code></h2>
+<p>Get any announcements that are specific to a particular event. Events can have multiple announcements associated with them. Announcements should be returned in order of how recent they were created.</p>
+<h3 id="path-params_1">Path Params</h3>
+<h4 id="event_id"><code>event_id</code></h4>
+<p>The ID of the event whose announcements are being queried</p>
+<h3 id="responses_13">Responses</h3>
+<h4 id="200-ok_13"><code>200 OK</code></h4>
+<p>The announcements were retrieved successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;announcements&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+      <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+      <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+      <span class="nt">&quot;event_id&quot;</span><span class="p">:</span> <span class="err">ID</span>
+    <span class="p">},</span>
+    <span class="err">...</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;totalCount&quot;</span><span class="p">:</span> <span class="err">INTEGER</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="post-apiv1protectedannouncements"><code>POST api/v1/protected/announcements</code></h2>
+<p>Creates a new site-wide announcement. Can only be accessed by admins.</p>
+<h3 id="request">Request</h3>
+<p>Body:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;announcement&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_14">Responses</h3>
+<h4 id="200-ok_14"><code>200 OK</code></h4>
+<p>The announcement was created successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_6"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="post-apiv1protectedannouncementsevent_id"><code>POST api/v1/protected/announcements/:event_id</code></h2>
+<p>Creates a new announcement for the given event. Can only be accessed by admins.</p>
+<h3 id="request_1">Request</h3>
+<p>Body:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_15">Responses</h3>
+<h4 id="200-ok_15"><code>200 OK</code></h4>
+<p>The announcement was created successfully.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="err">ID</span><span class="p">,</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;created&quot;</span><span class="p">:</span> <span class="err">TIMESTAMP</span><span class="p">,</span>
+  <span class="nt">&quot;event_id&quot;</span><span class="p">:</span> <span class="err">ID</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="401-unauthorized_7"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h2 id="delete-apiv1protectedannouncementsannouncement_id"><code>DELETE /api/v1/protected/announcements/:announcement_id</code></h2>
+<p>Deletes an announcment with the specified announcment id. This route can be used to delete site-wide or event specific because they have unique announcement identifiers. This route can only be called by an admin.</p>
+<h3 id="path-params_2">Path Params</h3>
+<h4 id="announcment_id"><code>announcment_id</code></h4>
+<p>The ID of the announcement being deleted.</p>
+<h3 id="requests">Requests</h3>
+<h4 id="200-ok_16"><code>200 OK</code></h4>
+<p>The announcement was deleted successfully.</p>
+<h4 id="401-unauthorized_8"><code>401 Unauthorized</code></h4>
+<div class="highlight"><pre><span></span><code><span class="err">The</span> <span class="err">calling</span> <span class="err">user</span> <span class="err">does</span> <span class="err">not</span> <span class="err">have</span> <span class="err">the</span> <span class="err">required</span> <span class="err">privilege</span> <span class="err">level</span>
+</code></pre></div>
+
+<p>If the calling user is not an admin.</p>
+<h1 id="event-checkout-and-registration">Event Checkout and Registration</h1>
+<p>The events in a user's cart are stored in Vuex on the frontend in the cart module.</p>
+<h2 id="post-apiv1protectedcheckoutregister"><code>POST api/v1/protected/checkout/register</code></h2>
+<p>Accepts a non-empty list of events to register the user for and creates records in the USER_EVENTS table. If called by an ADMIN or a PF user, it skips anything
+to do with Stripe and payments. If called by a GP, the EVENT_REGISTRATIONS records are initially persisted as "invalid" with the CheckoutSessionID of the Stripe endpoint we create. When the checkout is successfully completed, the EVENT_REGISTRATIONS records have their statuses updated to "active".</p>
+<p>How does Stripe work?
+When a GP clicks register, we call this route, which will create a Stripe
+Checkout Session. The ID is returned to the frontend by this API.
+The ID is used to redirect the user to a page in Stripe's application,
+where they can pay. Upon a valid payment completion, Stripe triggers
+our webhook, and when it receives a 200 code Stripe will redirect
+to the success URL.</p>
+<h3 id="request-body_2">Request Body</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;lineItems&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;eventId&quot;</span><span class="p">:</span> <span class="err">INT</span><span class="p">,</span>
+            <span class="nt">&quot;quantity&quot;</span><span class="p">:</span> <span class="err">INT</span>
+        <span class="p">},</span>
+        <span class="err">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_16">Responses</h3>
+<h4 id="200-ok_17"><code>200 OK</code></h4>
+<p>The purchase was successful.</p>
+<h4 id="202-accepted"><code>202 ACCEPTED</code></h4>
+<p>Checkout session created, response contains the ID.</p>
+<h4 id="400-bad-request_1"><code>400 BAD REQUEST</code></h4>
+<p>The request syntax is malformed, e.g. the given list of events is empty.</p>
+<h4 id="401-unauthorized_9"><code>401 UNAUTHORIZED</code></h4>
+<p>The user is not eligible to sign up for one or more of the requested events.</p>
+<h4 id="404-not-found"><code>404 NOT FOUND</code></h4>
+<p>One or more of the event IDs is invalid.</p>
+<h4 id="409-conflict_1"><code>409 CONFLICT</code></h4>
+<p>The user has requested a number of tickets that exceeds the capacity for one or more of the requested events.</p>
+<h2 id="put-apiv1protectedcheckoutregisterevent_id"><code>PUT api/v1/protected/checkout/register/:event_id</code></h2>
+<p>Changes the number of tickets a user has for the specified event. If the user is a GP and the new number of tickets is greater than the number of tickets the user previously had, a Stripe checkout session will be created. The new number of tickets must be within the event's capacity and must be greater than or equal to 0. If a GP user decreases the number of tickets, the price of the removed tickets will be added to their account balance.</p>
+<h3 id="request-body_3">Request Body</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;quantity&quot;</span><span class="p">:</span> <span class="err">INT</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_17">Responses</h3>
+<h4 id="200-ok_18"><code>200 OK</code></h4>
+<p>The change in tickets was successful.</p>
+<h4 id="202-accepted_1"><code>202 ACCEPTED</code></h4>
+<p>Checkout session created, response contains the ID.</p>
+<h4 id="401-unauthorized_10"><code>401 UNAUTHORIZED</code></h4>
+<p>The user is not eligible to sign up for the event.</p>
+<h4 id="404-not-found_1"><code>404 NOT FOUND</code></h4>
+<p>The event ID is invalid.</p>
+<h4 id="409-conflict_2"><code>409 CONFLICT</code></h4>
+<p>The user has requested a number of tickets that exceeds the capacity for the event.</p>
+<h2 id="post-apiv1webhooksstripe"><code>POST api/v1/webhooks/stripe</code></h2>
+<p>A webhook for Stripe to send events to.</p>
+<p>See Step 4 of these docs:
+https://stripe.com/docs/payments/checkout/one-time</p>
+<p>Stripe Webhook Documentation:
+https://stripe.com/docs/webhooks</p>
+<h3 id="request-body_4">Request Body</h3>
+<p>The body we care about is a Session object as
+defined by the Stripe Java library. We use only
+the Checkout Session ID, marking USER_EVENTS
+records that are invalid with the same Checkout
+Session ID as valid.</p>
+<h3 id="responses_18">Responses</h3>
+<h4 id="200-ok_19"><code>200 OK</code></h4>
+<p>Generally, a lot of problems are caused when we don't return a 200 code.
+It's the equivalent of Stripe saying "OK, we authorized this payment!"
+and us saying "Wait, something's wrong, don't charge them".
+Idk what the actual implementation details are, but generally,
+Stripe will send more types of events to our hook than
+just the checkout.session.completed event that we care about.
+For other events, we just return 200.</p>
+<h4 id="400-bad-request_2"><code>400 BAD REQUEST</code></h4>
+<p>This shouldn't happen...</p>
+<h4 id="401-unauthorized_11"><code>401 UNAUTHORIZED</code></h4>
+<p>We're using webhook signatures to authorize this endpoint.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../" title="Home" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../llb-auth-api/" title="Login and Token Endpoints" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Login and Token Endpoints
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d5fec882.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.fae956e7.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

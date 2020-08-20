@@ -1,0 +1,854 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.7">
+    
+    
+      
+        <title>Login and Token Endpoints - C4C Dev Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.b8ac9624.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#login-and-token-endpoints" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="C4C Dev Docs" class="md-header-nav__button md-logo" aria-label="C4C Dev Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            C4C Dev Docs
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Login and Token Endpoints
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/Code-4-Community/c4c-dev-docs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href="../.." class="md-tabs__link">
+        Home
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../llb/" class="md-tabs__link">
+          Lucy's Love Bus
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../" class="md-tabs__link md-tabs__link--active">
+          Speak for the Trees
+        </a>
+      
+    </li>
+  
+
+      
+        
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="C4C Dev Docs" class="md-nav__button md-logo" aria-label="C4C Dev Docs">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    C4C Dev Docs
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/Code-4-Community/c4c-dev-docs/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../mkdocs-starter/" title="MkDocs" class="md-nav__link">
+      MkDocs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Lucy's Love Bus
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Lucy's Love Bus" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Lucy's Love Bus
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../llb/" title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../llb/llb-api-spec/" title="LLB API Specification" class="md-nav__link">
+      LLB API Specification
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../llb/llb-auth-api/" title="Login and Token Endpoints" class="md-nav__link">
+      Login and Token Endpoints
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Speak for the Trees
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Speak for the Trees" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Speak for the Trees
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../" title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../sftt-api-spec/" title="SFTT API Specification" class="md-nav__link">
+      SFTT API Specification
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Login and Token Endpoints
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Login and Token Endpoints" class="md-nav__link md-nav__link--active">
+      Login and Token Endpoints
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-headers" class="md-nav__link">
+    Common Headers:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note:
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../api-spec-example/" title="API Spec Example" class="md-nav__link">
+      API Spec Example
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-headers" class="md-nav__link">
+    Common Headers:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note:
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/Code-4-Community/c4c-dev-docs/edit/master/docs/sftt/sftt-auth-api.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                <h1 id="login-and-token-endpoints">Login and Token Endpoints</h1>
+<h4 id="common-headers">Common Headers:</h4>
+<p>For any request with a body it is assumed that this header exists:
+<div class="highlight"><pre><span></span><code>  Content-Type: application/json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>#### Access Token Composition:
+``` json
+{
+    &quot;userId&quot;: INT,
+    &quot;adminLevel&quot;: INT
+}
+</code></pre></div></p>
+<ul>
+<li>adminLevel: integer describing the user's privilege level. <ul>
+<li>1: General Member</li>
+<li>2: Admin</li>
+</ul>
+</li>
+</ul>
+<h4 id="note">Note:</h4>
+<p>For any protected route, if the access token included in the request header is expired the backend will return a 401 with the following text indicating that a refresh is necessary.
+<div class="highlight"><pre><span></span><code> <span class="s2">&quot;Given access token is expired or invalid&quot;</span>
+</code></pre></div></p>
+<h1 id="unprotected-routes"><strong>Unprotected Routes</strong></h1>
+<p>These routes are called by a user that is not yet authenticated.</p>
+<p>**These routes all have the prefix <code>api/v1/</code></p>
+<h2 id="post-userlogin"><code>POST user/login</code></h2>
+<blockquote>
+<p>Used for logging in.</p>
+</blockquote>
+<h3 id="request"><strong>Request</strong></h3>
+<p>Body:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;email&quot;</span> <span class="p">:</span> <span class="err">EMAIL</span><span class="p">,</span>
+    <span class="nt">&quot;password&quot;</span> <span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+  An EMAIL is a string representing a user's email.</p>
+<h3 id="responses"><strong>Responses</strong></h3>
+<h4 id="201-created"><code>201 Created</code></h4>
+<blockquote>
+<p>The username/password combination is valid. Includes distinct access and refresh tokens for the given user. </p>
+</blockquote>
+<p>Body: 
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;accessToken&quot;</span>  <span class="p">:</span> <span class="err">JWT</span><span class="p">,</span>
+  <span class="nt">&quot;refreshToken&quot;</span> <span class="p">:</span> <span class="err">JWT</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h4 id="400-bad-request"><code>400 Bad Request</code></h4>
+<blockquote>
+<p>Malformed request.</p>
+</blockquote>
+<h4 id="401-unauthorized"><code>401 Unauthorized</code></h4>
+<blockquote>
+<p>The username/password combination is invalid.</p>
+</blockquote>
+<h2 id="post-userloginrefresh"><code>POST user/login/refresh</code></h2>
+<blockquote>
+<p>Used for getting a new access token.</p>
+</blockquote>
+<h3 id="request_1"><strong>Request</strong></h3>
+<h4 id="headers">Headers:</h4>
+<div class="highlight"><pre><span></span><code>  <span class="err">X-Refresh-Token</span> <span class="err">:</span> <span class="err">JWT</span>
+</code></pre></div>
+
+<h3 id="responses_1"><strong>Responses</strong></h3>
+<h4 id="201-created_1"><code>201 Created</code></h4>
+<blockquote>
+<p>The refresh token is valid and has not yet expired. Response includes a new unique access_token.</p>
+</blockquote>
+<p>Body: 
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;accessToken&quot;</span> <span class="p">:</span> <span class="err">JWT</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h4 id="401-unauthorized_1"><code>401 Unauthorized</code></h4>
+<blockquote>
+<p>The refresh token is invalid.</p>
+</blockquote>
+<h2 id="delete-userlogin"><code>DELETE user/login</code></h2>
+<blockquote>
+<p>Used for logging out.</p>
+</blockquote>
+<h3 id="request_2"><strong>Request</strong></h3>
+<p>Headers:</p>
+<div class="highlight"><pre><span></span><code>  <span class="err">X-Access-Token</span> <span class="err">:</span> <span class="err">JWT</span>
+  <span class="err">X-Refresh-Token</span> <span class="err">:</span> <span class="err">JWT</span>
+</code></pre></div>
+
+<h3 id="responses_2"><strong>Responses</strong></h3>
+<h4 id="204-no-content"><code>204 No Content</code></h4>
+<blockquote>
+<p>Logout successful.</p>
+</blockquote>
+<h2 id="post-usersignup"><code>POST user/signup</code></h2>
+<blockquote>
+<p>Used for signing up a new user.</p>
+</blockquote>
+<h3 id="request_3"><strong>Request</strong></h3>
+<h4 id="body">Body</h4>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;email&quot;</span> <span class="p">:</span> <span class="err">EMAIL</span><span class="p">,</span>
+  <span class="nt">&quot;password&quot;</span> <span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;firstName&quot;</span> <span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;lastName&quot;</span> <span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li>EMAIL: Is a valid email string.</li>
+<li>PASSWORD: Is a valid password string that is at least 8 characters.</li>
+</ul>
+<h3 id="responses_3"><strong>Responses</strong></h3>
+<h4 id="201-created_2"><code>201 Created</code></h4>
+<blockquote>
+<p>The username and email are still available, and an account has been successfully created.</p>
+</blockquote>
+<p>Body: 
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;accessToken&quot;</span>  <span class="p">:</span> <span class="err">JWT</span><span class="p">,</span>
+  <span class="nt">&quot;refreshToken&quot;</span> <span class="p">:</span> <span class="err">JWT</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h4 id="400-bad-request_1"><code>400 Bad Request</code></h4>
+<blockquote>
+<p>Malformed request body.</p>
+</blockquote>
+<h4 id="409-conflict"><code>409 Conflict</code></h4>
+<blockquote>
+<p>The given email or username is already in use.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;Error creating new user, given email %s already used&quot;</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;Error creating new user, given username %s already used&quot;</span>
+</code></pre></div>
+
+<h2 id="post-userforgot_passwordrequest"><code>POST user/forgot_password/request</code></h2>
+<blockquote>
+<p>Used to send a reset password email to a user if they have forgotten their password</p>
+</blockquote>
+<h3 id="request_4"><strong>Request</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="responses_4"><strong>Responses</strong></h3>
+<h5 id="200-ok"><code>200 OK</code></h5>
+<p>The email was sent to the user successfully</p>
+<h5 id="400-bad-request_2"><code>400 BAD REQUEST</code></h5>
+<p>The given email is not associated with any user account</p>
+<h2 id="post-userforgot_passwordreset"><code>POST user/forgot_password/reset</code></h2>
+<blockquote>
+<p>Used to reset a user's password after they have requested a forget password link</p>
+</blockquote>
+<h3 id="request_5"><strong>Request</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;secret_key&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;new_password&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The secret key should be determined by the frontend link that the user clicked from their email.</p>
+<p>passwords should be strings with length &gt;= 8 characters.</p>
+<h3 id="responses_5"><strong>Responses</strong></h3>
+<h5 id="200-ok_1"><code>200 OK</code></h5>
+<p>The user's identity was confirmed and the password was changed successfully.</p>
+<h5 id="400-bad-request_3"><code>400 BAD REQUEST</code></h5>
+<p>The new password that was given is an invalid password.</p>
+<h5 id="401-unauthorized_2"><code>401 UNAUTHORIZED</code></h5>
+<p>The given secret key is invalid and does not refer to an account or was created too long ago to be valid.</p>
+<h2 id="get-userverifysecret_key"><code>GET user/verify/:secret_key</code></h2>
+<blockquote>
+<p>Used for confirming an account's email</p>
+</blockquote>
+<h3 id="request_6"><strong>Request</strong></h3>
+<h4 id="path-params">Path Params</h4>
+<ul>
+<li>secret_key: is a secret key randomly generated by the backend and sent to the user by email.</li>
+</ul>
+<h3 id="responses_6"><strong>Responses</strong></h3>
+<h4 id="200-ok_2"><code>200 OK</code></h4>
+<blockquote>
+<p>The user's secret key has been verified. </p>
+</blockquote>
+<h4 id="401-unauthorized_3"><code>401 Unauthorized</code></h4>
+<blockquote>
+<p>The secret key is invalid or expired.</p>
+</blockquote>
+<h2 id="todo-get-usercreate_secretuser_id">TODO: <code>GET user/create_secret/:user_id</code></h2>
+<blockquote>
+<p>Used for creating secret keys for users.</p>
+</blockquote>
+<h3 id="request_7"><strong>Request</strong></h3>
+<p>PATH: <code>GET user/create_secret/:user_id</code></p>
+<h3 id="responses_7"><strong>Responses</strong></h3>
+<h4 id="200-ok_3"><code>200 OK</code></h4>
+<blockquote>
+<p>A secret key was created and stored for the given user.</p>
+</blockquote>
+<h4 id="400-bad-request_4"><code>400 BAD REQUEST</code></h4>
+<blockquote>
+<p>The given user id could not be found.</p>
+</blockquote>
+<h1 id="protected-routes"><strong>Protected Routes</strong></h1>
+<p>These routes are called by an authenticated user. These routes can only be called with a valid access JWT token specified in the following header.</p>
+<div class="highlight"><pre><span></span><code>X-Access-Token: JWT-String
+</code></pre></div>
+
+<p>**These routes all have the prefix <code>api/v1/protected/</code></p>
+<h2 id="delete-user"><code>DELETE /user</code></h2>
+<p>Deletes the user that called this route as determined by their access JWT.</p>
+<p>This route is only implemented to support testing and does not invalidate user access tokens. This is <strong>not safe</strong> to be called by the frontend client for this reason.</p>
+<h3 id="responses_8"><strong>Responses</strong></h3>
+<h5 id="200-ok_4"><code>200 OK</code></h5>
+<p>The user no longer exists</p>
+<h2 id="post-userchange_password"><code>POST /user/change_password</code></h2>
+<p>Allows a user to change their password when already authenticated.</p>
+<h3 id="request_8"><strong>Request</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;currentPassword&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;newPassword&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>passwords should be strings with length &gt;= 8 characters.</p>
+<h3 id="responses_9"><strong>Responses</strong></h3>
+<h5 id="200-ok_5"><code>200 OK</code></h5>
+<blockquote>
+<p>The password change was successful.</p>
+</blockquote>
+<h5 id="400-bad-request_5"><code>400 BAD REQUEST</code></h5>
+<blockquote>
+<p>If the request was malformed.</p>
+</blockquote>
+<h5 id="401-unauthorized_4"><code>401 Unauthorized</code></h5>
+<blockquote>
+<p>The currentPassword does not match the calling user's current password.</p>
+</blockquote>
+<h2 id="post-userchange_username"><code>POST /user/change_username</code></h2>
+<p>Allows a user to change their username when already authenticated.</p>
+<h3 id="request_9"><strong>Request</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;newUsername&quot;</span><span class="p">:</span> <span class="err">STRING</span><span class="p">,</span>
+  <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="err">STRING</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>New username must be unique (not already in use by another user).</p>
+<h3 id="responses_10"><strong>Responses</strong></h3>
+<h5 id="200-ok_6"><code>200 OK</code></h5>
+<blockquote>
+<p>The username change was successful.</p>
+</blockquote>
+<h5 id="400-bad-request_6"><code>400 BAD REQUEST</code></h5>
+<blockquote>
+<p>If the request was malformed.</p>
+</blockquote>
+<h5 id="401-unauthorized_5"><code>401 Unauthorized</code></h5>
+<blockquote>
+<p>The password does not match the calling user's current password.</p>
+</blockquote>
+<h5 id="409-conflict_1"><code>409 Conflict</code></h5>
+<blockquote>
+<p>The given <code>newUsername</code> is already in use.</p>
+</blockquote>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../sftt-api-spec/" title="SFTT API Specification" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                SFTT API Specification
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../api-spec-example/" title="API Spec Example" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                API Spec Example
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d5fec882.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.fae956e7.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
