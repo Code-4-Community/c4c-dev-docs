@@ -23,4 +23,5 @@ nav:
     - Home: sftt/index.md
     - sftt/sftt-api-spec.md
     - sftt/sftt-auth-api.md
+    - sftt/sftt-setup-backend.md
   - API Spec Example: api-spec-example.md
