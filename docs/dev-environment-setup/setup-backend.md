@@ -4,7 +4,7 @@ This is a comprehensive overview of the steps required and everything needed to 
 ### Download and Install
 1. Download [PostgreSQL](https://www.postgresql.org/download/) (Make sure it comes with pgAdmin4)
 2. Download [IntelliJ](https://www.jetbrains.com/idea/download/) (Community is fine, Ultimate available through student account)
-3. Clone the relevant GitHub repo
+3. [Clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the relevant GitHub repo
 
 ### Setting JAVA_HOME to JDK 8
 1. Download [Java JDK 8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
