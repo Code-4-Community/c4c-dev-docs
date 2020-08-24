@@ -23,5 +23,7 @@ nav:
     - Home: sftt/index.md
     - sftt/sftt-api-spec.md
     - sftt/sftt-auth-api.md
-    - sftt/sftt-setup-backend.md
+  - Dev Environment Setup:
+    - Home: dev-environment-setup/index.md
+    - dev-environment-setup/setup-backend.md
   - API Spec Example: api-spec-example.md
