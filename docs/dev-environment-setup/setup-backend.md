@@ -19,7 +19,7 @@ This is a comprehensive overview of the steps required and everything needed to 
 
 ### Start a Local Postgres Database
 1. Start pgAdmin4
-2. Create a database named exactly `speak-for-the-trees` or `lucy's-love-bus`
+2. Create a database named exactly `speak-for-the-trees` or `lucys-love-bus`
 
 ### Update the Secret Files
 1. Open the downloaded repo in IntelliJ
