@@ -148,6 +148,7 @@ Returns: void
 
 # Map
 
+ArcGIS types are lazy loaded in `loadMap` method.
 
 ## Props
 
