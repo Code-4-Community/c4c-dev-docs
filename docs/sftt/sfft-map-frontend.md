@@ -6,11 +6,11 @@ The component that represents the webpages with the map is the `MapContainerView
 
 The blocks that a user has reserved are stored in the SFFT database. Upon navigating to the 'Reservations Map', a get request for the user's reserved blocks is made. Then a query is made with these block IDs for the rest of the ArcGIS block data and the corresponding blocks are displayed on the map.
 
-The map itself is the `Map` component. This allows users to move around Boston and interact with the blocks from ArcGIS. The colored shapes represent blocks and the red lines represent private streets. The `Map` also allows users to find their location and to toggle labels for the blocks.
+The map itself is the `MapComponent`. This allows users to move around Boston and interact with the blocks from ArcGIS. The colored shapes represent blocks and the red lines represent private streets. The `MapComponent` also allows users to find their location and to toggle labels for the blocks.
 
 Clicking on of the colored blocks displays a popup with the information about a specific block, its ID and Reservation Status which is either open, reserved, or complete. Depending on the reservation status, a user is able to interact with blocks of different statuses in different ways. Clicking on one of the buttons in the bottom left corner of the popup adds it to a list of active blocks.
 
-These lists are available above the `Map` component in the `SelectedBlocks` component. A user can open the popver which displays the IDs of the currently selected blocks. Clicking the X on one of these blocks triggers a callback to the `MapContainerView` to remove that block from the selected list. Clicking the other button will trigger a Post request to the SFFT api to change the reservation status of each blocks in the active list. There are separate lists for reserving, releasing, and completing blocks.
+These lists are available above the `MapComponent` in the `SelectedBlocks` component. A user can open the popver which displays the IDs of the currently selected blocks. Clicking the X on one of these blocks triggers a callback to the `MapContainerView` to remove that block from the selected list. Clicking the other button will trigger a Post request to the SFFT api to change the reservation status of each blocks in the active list. There are separate lists for reserving, releasing, and completing blocks.
 
 
 # Map router
@@ -100,7 +100,7 @@ Returns: {
 Returns: Number
 ```
 
->Determines the reservation status that the Map will use as a filter depending on :editmode. returns 0 for 'new' and 1 for 'edit'
+>Determines the reservation status that the map will use as a filter depending on :editmode. returns 0 for 'new' and 1 for 'edit'
 
 ## Methods
 
@@ -146,7 +146,7 @@ Returns: void
 
 >Sets the corresponsing `blocksToReserve, blocksToRelease, blocksToComplete` list equal to the given blocks
 
-# Map
+# MapComponent
 
 ArcGIS types are lazy loaded in `loadMap` method.
 
