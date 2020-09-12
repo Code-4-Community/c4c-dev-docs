@@ -146,6 +146,46 @@ Returns: void
 
 >Sets the corresponsing `blocksToReserve, blocksToRelease, blocksToComplete` list equal to the given blocks
 
+# mapConstants
+
+### `addToReserve, addToReserve, addToComplete`
+
+```
+Type: ActionButton (ArcGIS type)
+```
+
+>Each object represents one of the buttons on the `blockPopupTemplate`. Clicking on one of these buttons triggers an event which calls `pushBlock` with the appropriate selection.
+
+For more information on actions: https://developers.arcgis.com/javascript/latest/api-reference/esri-support-actions-ActionButton.html
+
+### `blockRenderer`
+
+```
+Type: Renderer (ArcGIS type)
+```
+
+>Tells the `blockLayer` how to display each of the blocks. Sets a different color for the different possible reservation statuses
+
+For more information on Renderers: https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-Renderer.html
+
+### `privateStreetRenderer`
+
+```
+Type: Renderer (ArcGIS type)
+```
+
+>Tells the `privateStreetLayer` how to display each of the private streets. Currently displays each street as a solid red line
+
+### `blockLabel`
+
+```
+Type: LabelClass (ArcGIS type)
+```
+
+>How the optional ID labels on the map will be displayed.
+
+For more information on LabelClasses: https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-support-LabelClass.html
+
 # MapComponent
 
 ArcGIS types are lazy loaded in `loadMap` method.
@@ -209,47 +249,6 @@ Type: Boolean
 
 >If true, the IDs of the blocks will be displayed on the map
 
-
-## Created (Constants)
-
-
-### `addToReserve, addToReserve, addToComplete`
-
-```
-Type: ActionButton (ArcGIS type)
-```
-
->Each object represents one of the buttons on the `blockPopupTemplate`. Clicking on one of these buttons triggers an event which calls `pushBlock` with the appropriate selection.
-
-For more information on actions: https://developers.arcgis.com/javascript/latest/api-reference/esri-support-actions-ActionButton.html
-
-### `blockRenderer`
-
-```
-Type: Renderer (ArcGIS type)
-```
-
->Tells the `blockLayer` how to display each of the blocks. Sets a different color for the different possible reservation statuses
-
-For more information on Renderers: https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-Renderer.html
-
-### `privateStreetRenderer`
-
-```
-Type: Renderer (ArcGIS type)
-```
-
->Tells the `privateStreetLayer` how to display each of the private streets. Currently displays each street as a solid red line
-
-### `blockLabel`
-
-```
-Type: LabelClass (ArcGIS type)
-```
-
->How the optional ID labels on the map will be displayed.
-
-For more information on LabelClasses: https://developers.arcgis.com/javascript/latest/api-reference/esri-layers-support-LabelClass.html
 
 ## Computed
 
