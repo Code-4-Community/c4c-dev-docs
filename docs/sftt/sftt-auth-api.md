@@ -198,8 +198,8 @@ The given email is not associated with any user account
 
 ```json
 {
-  "secret_key": STRING,
-  "new_password": STRING
+  "secretKey": STRING,
+  "newPassword": STRING
 }
 ```
 

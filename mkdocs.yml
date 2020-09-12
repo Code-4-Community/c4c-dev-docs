@@ -3,7 +3,7 @@ repo_url: https://github.com/Code-4-Community/c4c-dev-docs
 
 theme:
   name: material
-  favicon: "img/favicon.ico"
+  favicon: img/favicon.ico
   features:
     - tabs
 
@@ -14,13 +14,18 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - MkDocs: mkdocs-starter.md
+  - Getting Started:
+    - Home: getting-started/index.md
+    - Product Workflow: getting-started/product-workflow.md
+    - Backend Setup Guide: getting-started/setup-backend.md
+    - Contributing to Dev Docs: getting-started/mkdocs-starter.md
+    - API Specification Example: getting-started/api-spec-example.md
   - Lucy's Love Bus:
     - Home: llb/index.md
-    - llb/llb-api-spec.md
-    - llb/llb-auth-api.md
+    - Feature API Specification: llb/llb-api-spec.md
+    - Auth API Specification: llb/llb-auth-api.md
   - Speak for the Trees:
     - Home: sftt/index.md
-    - sftt/sftt-api-spec.md
-    - sftt/sftt-auth-api.md
-  - API Spec Example: api-spec-example.md
+    - Map Architecture: sftt/map-architecture.md
+    - Feature API Specification: sftt/sftt-api-spec.md
+    - Auth API Specification: sftt/sftt-auth-api.md
