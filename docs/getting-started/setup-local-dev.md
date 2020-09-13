@@ -19,6 +19,8 @@ This is a comprehensive overview of the steps required and everything needed to 
 ### Start a Local Postgres Database
 1. Open the Database tab of IntelliJ (top right). 
 2. Click the +, then select PostgreSQL from the Data Source menu.
+3. Use these properties: 
+![Database Properties](../img/dbconnectionproperties.png)
 3. Open a query console ("QL" button in Database menu)
 3. Create a database named exactly `speak-for-the-trees` or `lucys-love-bus` by running `CREATE DATABASE 'lucys-love-bus';` 
 
