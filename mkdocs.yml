@@ -17,7 +17,7 @@ nav:
   - Getting Started:
     - Home: getting-started/index.md
     - Product Workflow: getting-started/product-workflow.md
-    - Backend Setup Guide: getting-started/setup-backend.md
+    - Codebase Setup Guide: getting-started/setup-local-dev.md
     - Contributing to Dev Docs: getting-started/mkdocs-starter.md
     - API Specification Example: getting-started/api-spec-example.md
   - Lucy's Love Bus:
