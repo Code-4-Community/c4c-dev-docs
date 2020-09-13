@@ -39,6 +39,10 @@ This is a comprehensive overview of the steps required and everything needed to 
 ### Running the API
 The ServiceMain.java class has a main method for running the API. Once running, the API is accessible at `http://localhost:8081`. All routes have the `/api/v1` prefix to them. For example, the HTTP request to get all the teams would be `GET http://localhost:8081/api/v1/teams`.
 
+### Backend Overview Video
+
+A while back Liam gave an overview of the backend to a few people. It may be a bit dated now, but it should provide a good introduction to our backend architecture. See the video [here](https://drive.google.com/file/d/1wf8y-5eOwrrj1BUqJ3L1x4lIeDUM11mK/view?usp=sharing).
+
 ## Frontend Setup
 
 ### Download Node and NPM
