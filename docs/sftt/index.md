@@ -4,4 +4,4 @@
 
 [Auth API](./sftt-auth-api.md)
 
-[Map Frontend](./sfft-map-frontend.md)
+[Map Frontend](./map-architecture.md)
