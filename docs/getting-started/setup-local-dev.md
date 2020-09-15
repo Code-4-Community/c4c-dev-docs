@@ -27,9 +27,8 @@ This is a comprehensive overview of the steps required and everything needed to 
 ### Update the Secret Files
 1. Open the downloaded repo in IntelliJ
 2. Open a terminal (bottom left of IntelliJ)
-3. Change to the properties directory with `cd common/src/main/resources/properties`
-4. Copy each file using `cp filename.properties.example filename.properties`. Do this for each file in the directory. 
-5. In the file `db.properties` make sure the username is `postgres` and the password is the password you set up for the database. If you didn't choose a password leave this field blank.
+3. Run `./copy_properties.sh` 
+4. In the file `db.properties` make sure the username is `postgres` and the password is the password you set up for the database. If you didn't choose a password leave this field blank.
 
 ### Compile the Code Base
 1. Run `mvn clean install` from the root directory
