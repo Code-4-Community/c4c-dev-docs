@@ -1,16 +1,16 @@
 # General Overview
 
-SFFT uses ArcGIS to handle the block location, shape, and reservation status. Block data is stored in an ArcGIS database. The reservation pages on the SFFT web application incorperate the ArcGIS JavaScript API: https://developers.arcgis.com/javascript/latest/guide/. User data is stored in a separate SFFT database.
+SFTT uses ArcGIS to handle the block location, shape, and reservation status. Block data is stored in an ArcGIS database. The reservation pages on the SFTT web application incorperate the ArcGIS JavaScript API: https://developers.arcgis.com/javascript/latest/guide/. User data is stored in a separate SFTT database.
 
 The component that represents the webpages with the map is the `MapContainerView`. Navigate to one of the map pages via the 'Reserve New Blocks' or 'Reservations Map' as a normal user or through the 'Active Blocks Map' as an admin. 'Reserve New Blocks' will display open blocks, 'Reservations Map' displays blocks the user has reserved, and 'Active Blocks Map' displays all reserved and completed blocks.
 
-The blocks that a user has reserved are stored in the SFFT database. Upon navigating to the 'Reservations Map', a get request for the user's reserved blocks is made. Then a query is made with these block IDs for the rest of the ArcGIS block data and the corresponding blocks are displayed on the map.
+The blocks that a user has reserved are stored in the SFTT database. Upon navigating to the 'Reservations Map', a get request for the user's reserved blocks is made. Then a query is made with these block IDs for the rest of the ArcGIS block data and the corresponding blocks are displayed on the map.
 
 The map itself is the `MapComponent`. This allows users to move around Boston and interact with the blocks from ArcGIS. The colored shapes represent blocks and the red lines represent private streets. The `MapComponent` also allows users to find their location and to toggle labels for the blocks.
 
 Clicking on of the colored blocks displays a popup with the information about a specific block, its ID and Reservation Status which is either open, reserved, or complete. Depending on the reservation status, a user is able to interact with blocks of different statuses in different ways. Clicking on one of the buttons in the bottom left corner of the popup adds it to a list of active blocks.
 
-These lists are available above the `MapComponent` in the `SelectedBlocks` component. A user can open the popver which displays the IDs of the currently selected blocks. Clicking the X on one of these blocks triggers a callback to the `MapContainerView` to remove that block from the selected list. Clicking the other button will trigger a Post request to the SFFT api to change the reservation status of each blocks in the active list. There are separate lists for reserving, releasing, and completing blocks.
+These lists are available above the `MapComponent` in the `SelectedBlocks` component. A user can open the popver which displays the IDs of the currently selected blocks. Clicking the X on one of these blocks triggers a callback to the `MapContainerView` to remove that block from the selected list. Clicking the other button will trigger a Post request to the SFTT api to change the reservation status of each blocks in the active list. There are separate lists for reserving, releasing, and completing blocks.
 
 
 # Map router
