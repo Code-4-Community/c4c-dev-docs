@@ -10,15 +10,15 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
 
 # Table Of Contents
 - [Getting Events](#getting-events)
-  * [`GET api/v1/protected/events/qualified`](#-get-api-v1-protected-events-qualified-)
-  * [`GET api/v1/protected/events/signed_up`](#-get-api-v1-protected-events-signed-up-)
-  * [`GET api/v1/protected/events?ids=1,2,3,...`](#-get-api-v1-protected-events-ids-1-2-3--)
+  * [`GET api/v1/events/qualified`](#-get-api-v1-events-qualified-)
+  * [`GET api/v1/events/signed_up`](#-get-api-v1-events-signed-up-)
+  * [`GET api/v1/events?ids=1,2,3,...`](#-get-api-v1-events-ids-1-2-3--)
 - [Single Event](#single-event)
-  * [`GET api/v1/protected/events/:event_id`](#-get-api-v1-protected-events--event-id-)
-  * [`GET api/v1/protected/events/:event_id/registrations`](#-get-api-v1-protected-events--event-id-registrations-)
-  * [`POST api/v1/protected/events/`](#-post-api-v1-protected-events--)
-  * [`PUT api/v1/protected/events/:event_id`](#-put-api-v1-protected-events--event-id-)
-  * [`DELETE api/v1/protected/events/:event_id`](#-delete-api-v1-protected-events--event-id-)
+  * [`GET api/v1/events/:event_id`](#-get-api-v1-events--event-id-)
+  * [`GET api/v1/events/:event_id/registrations`](#-get-api-v1-events--event-id-registrations-)
+  * [`POST api/v1/events/`](#-post-api-v1-events--)
+  * [`PUT api/v1/events/:event_id`](#-put-api-v1-events--event-id-)
+  * [`DELETE api/v1/events/:event_id`](#-delete-api-v1-events--event-id-)
 - [Account Creation Flow](#account-creation-flow)
   * [`POST api/v1/protected/requests`](#-post-api-v1-protected-requests-)
   * [`GET api/v1/protected/requests`](#-get-api-v1-protected-requests-)
@@ -26,11 +26,11 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
   * [`POST api/v1/protected/requests/:request_id/reject`](#-post-api-v1-protected-requests--request-id-reject-)
   * [`GET api/v1/protected/requests/:request_id`](#-get-api-v1-protected-requests--request-id-)
 - [Site Announcements](#site-announcements)
-  * [`GET api/v1/protected/announcements`](#-get-api-v1-protected-announcements-)
-  * [`GET api/v1/protected/announcements/:event_id`](#-get-api-v1-protected-announcements--event-id-)
-  * [`POST api/v1/protected/announcements`](#-post-api-v1-protected-announcements-)
-  * [`POST api/v1/protected/announcements/:event_id`](#-post-api-v1-protected-announcements--event-id-)
-  * [`DELETE /api/v1/protected/announcements/:announcement_id`](#-delete--api-v1-protected-announcements--announcement-id-)
+  * [`GET api/v1/announcements`](#-get-api-v1-announcements-)
+  * [`GET api/v1/announcements/:event_id`](#-get-api-v1-announcements--event-id-)
+  * [`POST api/v1/announcements`](#-post-api-v1-announcements-)
+  * [`POST api/v1/announcements/:event_id`](#-post-api-v1-announcements--event-id-)
+  * [`DELETE /api/v1/announcements/:announcement_id`](#-delete--api-v1-announcements--announcement-id-)
 - [Event Checkout and Registration](#checkout-registration)
   * [`POST api/v1/protected/checkout/register`](#-post-api-v1-protected-checkout-register)
   * [`PUT api/v1/protected/checkout/register/:event_id`](#-put-api-v1-protected-checkout-register--event-id-)
@@ -40,7 +40,7 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
 
 # Getting Events
 
-## `GET api/v1/protected/events/qualified`
+## `GET api/v1/events/qualified`
 
 Get a list of events that the calling user is qualified for. This includes events a user is already signed up for.
 
@@ -100,7 +100,7 @@ canRegister is dependent on the privilege level of the calling user. GPs are onl
 
 
 
-## `GET api/v1/protected/events/signed_up`
+## `GET api/v1/events/signed_up`
 
 Get all of the events happening in the future that the given user is signed up for.
 
@@ -153,7 +153,7 @@ The events were sent successfully.
 ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.
 
 
-## `GET api/v1/protected/events?ids=1,2,3,...`
+## `GET api/v1/events?ids=1,2,3,...`
 
 Get the event bodies for the events with the ids that are specified in the query parameter.
 
@@ -193,7 +193,7 @@ Equivelent to above routes:
 
 # Single Event
 
-## `GET api/v1/protected/events/:event_id`
+## `GET api/v1/events/:event_id`
 
 Gets a specific event with the specified id.
 
@@ -234,7 +234,7 @@ canRegister is dependent on the privilege level of the calling user. GPs are onl
 canRegister does not check if the calling user is already signed up for this event.
 
 
-## `GET api/v1/protected/events/:event_id/registrations`
+## `GET api/v1/events/:event_id/registrations`
 
 Gets a list of users registered for the event with the given id.
 
@@ -280,7 +280,7 @@ The calling user does not have the required privilege level
 
 If the calling user is not an admin.
 
-## `POST api/v1/protected/events/`
+## `POST api/v1/events/`
 
 Create a new event. This route must be called by an admin.
 
@@ -334,7 +334,7 @@ The calling user does not have the required privilege level
 
 If the calling user is not an admin.
 
-## `PUT api/v1/protected/events/:event_id`
+## `PUT api/v1/events/:event_id`
 
 Update an existing event. This route must be called by an admin. All fields are optional.
 
@@ -388,7 +388,7 @@ If the calling user is not an admin.
 
 This response occurs when `spotsAvailable` is less than the number of users currently registered for the event.
 
-## `DELETE api/v1/protected/events/:event_id`
+## `DELETE api/v1/events/:event_id`
 
 Delete an existing event. This route must be called by an admin.
 
@@ -632,7 +632,7 @@ The announcements were retrieved successfully.
 ```
 
 
-## `GET api/v1/protected/announcements/:event_id`
+## `GET api/v1/announcements/:event_id`
 
 Get any announcements that are specific to a particular event. Events can have multiple announcements associated with them. Announcements should be returned in order of how recent they were created.
 
@@ -665,7 +665,7 @@ The announcements were retrieved successfully.
 ```
 
 
-## `POST api/v1/protected/announcements`
+## `POST api/v1/announcements`
 
 Creates a new site-wide announcement. Can only be accessed by admins.
 
@@ -705,7 +705,7 @@ The calling user does not have the required privilege level
 
 If the calling user is not an admin.
 
-## `POST api/v1/protected/announcements/:event_id`
+## `POST api/v1/announcements/:event_id`
 
 Creates a new announcement for the given event. Can only be accessed by admins.
 
@@ -745,7 +745,7 @@ The calling user does not have the required privilege level
 If the calling user is not an admin.
 
 
-## `DELETE /api/v1/protected/announcements/:announcement_id`
+## `DELETE /api/v1/announcements/:announcement_id`
 
 Deletes an announcment with the specified announcment id. This route can be used to delete site-wide or event specific because they have unique announcement identifiers. This route can only be called by an admin.
 
