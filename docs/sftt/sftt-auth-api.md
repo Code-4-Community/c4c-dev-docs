@@ -346,3 +346,35 @@ New username must be unique (not already in use by another user).
 
 ##### `409 Conflict`
 > The given `newUsername` is already in use.
+
+## POST /user/make_admin
+
+Allows an admin user to make a different standard user into an admin.
+
+### __Request__
+
+```json
+{
+  "newAdminEmail": STRING,
+  "password": STRING
+}
+```
+
+### __Responses__
+
+##### `200 OK`
+> The privilege level change was successful.
+
+##### `400 Bad Request`
+> The requested user is already an admin.
+
+##### `400 Bad Request`
+> There is no user associated with the given email.
+
+##### `400 BAD REQUEST`
+> If the request was malformed.
+
+##### `401 Unauthorized`
+> The password does not match the calling user's current password.
+
+
