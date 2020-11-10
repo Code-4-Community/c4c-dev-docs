@@ -24,6 +24,7 @@ nav:
     - Home: llb/index.md
     - Feature API Specification: llb/llb-api-spec.md
     - Auth API Specification: llb/llb-auth-api.md
+    - How to style AntD components with styled-components: llb/antd-styled-components.md
   - Speak for the Trees:
     - Home: sftt/index.md
     - Map Architecture: sftt/map-architecture.md
