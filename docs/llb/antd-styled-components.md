@@ -10,6 +10,7 @@ Heres an example of overriding the CSS of a standard AntD component: a `Button`.
 
 
 ```js
+import styled from 'styled-components';
 import { Button } from 'antd';
 
 const StyledButton = styled(Button)`
@@ -36,8 +37,7 @@ In general we want to only use `styled` in extreme cases where our only alternat
 In the case that you want to style an AntD component to make it reusable, we could do:
 
 ```js
-
-
+import styled from 'styled-components';
 import { Button } from 'antd';
 
 const MyBetterAntDButton = styled(Button)`
@@ -53,6 +53,7 @@ Then import `MyBetterAntDButton` where needed.
 *Note that we can't do something like:
 
 ```js
+import styled from 'styled-components';
 import { Button } from 'antd';
 
 // DO NOT DO THIS, THIS IS AN EXAMPLE OF WHAT *NOT* TO DO
