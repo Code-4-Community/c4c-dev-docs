@@ -14,6 +14,16 @@ pip install mkdocs
 pip install mkdocs-material
 ```
 
+Or using Anaconda (if you already have Anaconda installed):
+
+```
+conda install -c conda-forge mkdocs
+
+conda install -c conda-forge mkdocs-material
+
+conda install -c conda-forge mkdocs-material-extensions
+```
+
 ### Previewing Locally
 
 MkDocs includes a live preview server, so you can preview your changes as you write your documentation. The server will automatically rebuild the site upon saving. Start it with: 
