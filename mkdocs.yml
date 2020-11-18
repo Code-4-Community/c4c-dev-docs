@@ -30,3 +30,6 @@ nav:
     - Map Architecture: sftt/map-architecture.md
     - Feature API Specification: sftt/sftt-api-spec.md
     - Auth API Specification: sftt/sftt-auth-api.md
+  - C4C Website:
+    - Add Yourself to People page: c4cwebsite/people.md
+    
