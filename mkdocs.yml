@@ -31,4 +31,5 @@ nav:
     - Auth API Specification: sftt/sftt-auth-api.md
   - C4C Website:
     - Add Yourself to People page: c4cwebsite/people.md
-    
+  - Amazon Web Services:
+      - Backend Deployment: aws/backend-deployment.md
