@@ -15,21 +15,24 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
-    - Home: getting-started/index.md
-    - Product Workflow: getting-started/product-workflow.md
-    - Codebase Setup Guide: getting-started/setup-local-dev.md
-    - Contributing to Dev Docs: getting-started/mkdocs-starter.md
-    - API Specification Example: getting-started/api-spec-example.md
-  - Lucy's Love Bus:
-    - Home: llb/index.md
-    - Feature API Specification: llb/llb-api-spec.md
-    - Auth API Specification: llb/llb-auth-api.md
-  - Speak for the Trees:
-    - Home: sftt/index.md
-    - Map Architecture: sftt/map-architecture.md
-    - Feature API Specification: sftt/sftt-api-spec.md
-    - Auth API Specification: sftt/sftt-auth-api.md
+      - Home: getting-started/index.md
+      - Product Workflow: getting-started/product-workflow.md
+      - Codebase Setup Guide: getting-started/setup-local-dev.md
+      - Contributing to Dev Docs: getting-started/mkdocs-starter.md
+      - API Specification Example: getting-started/api-spec-example.md
+  - Lucy's Love Bus (LLB):
+      - Home: llb/index.md
+      - Feature API Specification: llb/llb-api-spec.md
+      - Auth API Specification: llb/llb-auth-api.md
+  - Speak for the Trees (SFTT):
+      - Home: sftt/index.md
+      - Map Architecture: sftt/map-architecture.md
+      - Feature API Specification: sftt/sftt-api-spec.md
+      - Auth API Specification: sftt/sftt-auth-api.md
+  - Hands Across the Sea (HATS):
+      - Home: hats/index.md
+      - Auth API Specification: hats/api-spec-auth.md
   - C4C Website:
-    - Add Yourself to People page: c4cwebsite/people.md
+      - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:
       - Backend Deployment: aws/backend-deployment.md
