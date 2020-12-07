@@ -32,6 +32,8 @@ nav:
   - Hands Across the Sea (HATS):
       - Home: hats/index.md
       - Auth API Specification: hats/api-spec-auth.md
+      - Countries API Specification: hats/api-spec-country.md
+      - Schools API Specification: hats/api-spec-school.md
   - C4C Website:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:
