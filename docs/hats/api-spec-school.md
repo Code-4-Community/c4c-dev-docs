@@ -35,52 +35,95 @@ Responses:
 `401 Unauthorized`: the user is not authenticated
 
 
-====================================================================================================================
+### Get One School
+Used to return information about a single school.
 
-TODO
+`GET` request to `/api/v1/protected/schools/:school_id`
 
-====================================================================================================================
+Responses:
 
-
-`GET` request to `/api/v1/protected/schools/:school_id`: returns information about the given school
-
-Response:
+`200 OK`: returns information about the requested school:
 ```json
 {
   "id": 1,
   "name": "Northeastern University",
   "address": "360 Huntington Ave",
-  "hidden": false,
-  "country": "UNITED_STATES"
+  "country": "UNITED_STATES",
+  "hidden": false
 }
 ```
 
-`POST` request to `/api/v1/protected/schools`: creates a new school
 
-Request:
+### Create One School
+Used to create a single school record. Before creating the school,
+we check if a school with this name, address, and country already exists.
+If yes, and the school was previously deleted or hidden, we un-hide
+and un-delete the school.
+
+`POST` request to `/api/v1/protected/schools` with body:
+```json
+{
+    "name": "New School Name",
+    "address": "Address 01",
+    "country": "DOMINICA",
+    "hidden": false
+}
+```
+
+Responses:
+
+`201 Created`: the school was successfully created / un-hidden / un-deleted
+
+`409 Conflict`: the given school already exists:
+```
+School 'New School Name' already exists in 'DOMINICA'
+```
+
+
+### Update One School
+Used to update the given school to have a new name, address, and country.
+
+`PUT` request to `/api/v1/protected/schools/:school_id` with body:
 ```json
 {
   "name": "Northeastern University",
   "address": "360 Huntington Ave",
-  "country": "UNITED_STATES"
+  "country": "UNITED_STATES",
+  "hidden": false
 }
 ```
 
-`PUT` request to `/api/v1/protected/schools/:school_id`: updates the given school
+Responses:
 
-Request:
-```json
-{
-  "name": "Northeastern University",
-  "address": "360 Huntington Ave",
-  "country": "UNITED_STATES"
-}
-```
+`200 OK`: the school was successfully updated.
 
-`DELETE` request to `/api/v1/protected/schools/:school_id`: deletes the given school
 
-`PUT` request to `/api/v1/protected/schools/:school_id/hide`: hides the given school
+## Delete One School
+Used to delete the specified school.
 
-`PUT` request to `/api/v1/protected/schools/:school_id/unhide`: un-hides the given school
+`DELETE` request to `/api/v1/protected/schools/:school_id`
 
+Responses:
+
+`200 OK`: the school was successfully deleted.
+
+
+## Hide One School
+Used to mark the specified school as "hidden".
+
+`PUT` request to `/api/v1/protected/schools/:school_id/hide`
+
+Responses:
+
+`200 OK`: the school was successfully updated.
+
+
+## Un-Hide One School
+Used to mark the specified school as no longer "hidden".
+
+`PUT` request to `/api/v1/protected/schools/:school_id/unhide`
+
+Responses:
+
+`200 OK`: the school was successfully updated.
  
