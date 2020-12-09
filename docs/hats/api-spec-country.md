@@ -19,13 +19,11 @@ Responses:
         {
             "id": 1,
             "name": "Northeastern University",
-            "address": "360 Huntington Ave",
             "country": "UNITED_STATES"
         },
         {
             "id": 2,
             "name": "Boston University",
-            "address": "720 Commonwealth Ave",
             "country": "UNITED_STATES"
         }
     ]

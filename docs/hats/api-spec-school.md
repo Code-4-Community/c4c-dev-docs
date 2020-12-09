@@ -1,7 +1,7 @@
 # HATS School API Specification
 
 ## Protected Routes
-These routes are called by a user that is not yet authenticated.
+All of these routes must be called by a user that is already authenticated.
 
 
 ### Get All Schools 
@@ -11,7 +11,7 @@ Used to return a list of all schools.
 
 Responses:
 
-`200 OK`: returns a list of schools and the count of schools returned: 
+`200 OK`: returns a list of schools and the count of schools returned:
 ```json
 {
     "count": 2,
@@ -19,13 +19,11 @@ Responses:
         {
             "id": 1,
             "name": "Northeastern University",
-            "address": "360 Huntington Ave",
             "country": "UNITED_STATES"
         },
         {
             "id": 4,
             "name": "School DEF",
-            "address": "Some Place in Grenada",
             "country": "GRENADA"
         }
     ]
@@ -49,7 +47,16 @@ Responses:
   "name": "Northeastern University",
   "address": "360 Huntington Ave",
   "country": "UNITED_STATES",
-  "hidden": false
+  "hidden": false,
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Joseph Aoun",
+      "address": "360 Huntington Ave",
+      "email": "president@gmail.com",
+      "phone": "6015551234"
+    }
+  ]
 }
 ```
 
@@ -57,8 +64,8 @@ Responses:
 ### Create One School
 Used to create a single school record. Before creating the school,
 we check if a school with this name, address, and country already exists.
-If yes, and the school was previously deleted or hidden, we un-hide
-and un-delete the school.
+If yes, and the school was previously deleted or hidden, we un-delete the
+and update the hidden field to the given value.
 
 `POST` request to `/api/v1/protected/schools` with body:
 ```json
@@ -66,7 +73,8 @@ and un-delete the school.
     "name": "New School Name",
     "address": "Address 01",
     "country": "DOMINICA",
-    "hidden": false
+    "hidden": false,
+    "contacts": []
 }
 ```
 

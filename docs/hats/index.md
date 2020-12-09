@@ -5,3 +5,5 @@
 [Countries API Specification](./api-spec-country.md)
 
 [Schools API Specification](./api-spec-school.md)
+
+[School Contacts API Specification](./api-spec-school-contact.md)
