@@ -17,6 +17,7 @@ Content-Type: application/json
  - `privilegeLevel`: the user's privilege level 
     - `STANDARD`: a general user
     - `ADMIN`: an administrator
+
 ```json
 {
   "userId": 1,
@@ -69,7 +70,7 @@ X-Refresh-Token: JWT_REFRESH_TOKEN
 
 Responses:
 
-`201 Created`: the refresh token is valid and has not yet expired; response includes a new unique access token
+`201 Created`: the refresh token is valid and has not yet expired; response includes a new unique access token:
 ```json
 {
   "accessToken" : "JWT_ACCESS_TOKEN"
