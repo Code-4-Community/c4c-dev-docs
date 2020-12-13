@@ -10,12 +10,22 @@ This repo uses two Python packages, [MkDocs](https://www.mkdocs.org/) and [Mater
 
 #### Pre-requisite: python3 [(installation guide)](https://realpython.com/installing-python/)
 
-Install the required Python packages: 
+Install the required Python packages using pip: 
 
 ```
 pip install mkdocs
 
 pip install mkdocs-material
+```
+
+Or using Anaconda (if you already have Anaconda installed):
+
+```
+conda install -c conda-forge mkdocs
+
+conda install -c conda-forge mkdocs-material
+
+conda install -c conda-forge mkdocs-material-extensions
 ```
 
 If youre stuck check out [the offical documentation on how to install mkdocs](https://www.mkdocs.org/#installation).
