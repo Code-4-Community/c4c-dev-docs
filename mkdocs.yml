@@ -25,6 +25,7 @@ nav:
       - Feature API Specification: llb/llb-api-spec.md
       - Auth API Specification: llb/llb-auth-api.md
       - Local Image Upload Guide: llb/llb-local-image-upload.md
+      - Testing Specification: llb/llb-test-spec.md
   - Speak for the Trees (SFTT):
       - Home: sftt/index.md
       - Map Architecture: sftt/map-architecture.md
