@@ -28,6 +28,8 @@ conda install -c conda-forge mkdocs-material
 conda install -c conda-forge mkdocs-material-extensions
 ```
 
+If youre stuck check out [the offical documentation on how to install mkdocs](https://www.mkdocs.org/#installation).
+
 ### Previewing Locally
 
 MkDocs includes a live preview server, so you can preview your changes as you write your documentation. The server will automatically rebuild the site upon saving. Start it with: 

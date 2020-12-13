@@ -26,6 +26,7 @@ nav:
       - Auth API Specification: llb/llb-auth-api.md
       - Local Image Upload Guide: llb/llb-local-image-upload.md
       - Testing Specification: llb/llb-test-spec.md
+      - How to style AntD components with styled-components: llb/antd-styled-components.md
   - Speak for the Trees (SFTT):
       - Home: sftt/index.md
       - Map Architecture: sftt/map-architecture.md
@@ -41,4 +42,3 @@ nav:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:
       - Backend Deployment: aws/backend-deployment.md
-
