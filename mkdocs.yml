@@ -11,6 +11,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - toc:
+      toc_depth: 3
 
 nav:
   - Home: index.md
@@ -31,6 +33,7 @@ nav:
       - Home: sftt/index.md
       - Map Architecture: sftt/map-architecture.md
       - Feature API Specification: sftt/sftt-api-spec.md
+      - New API Specification: sftt/sftt-api-spec-new.md
       - Auth API Specification: sftt/sftt-auth-api.md
   - Hands Across the Sea (HATS):
       - Home: hats/index.md
