@@ -1,5 +1,5 @@
 # SFTT API Specification
-This is the official API specification for the SFTT back end. The back end is implemented as is described in he documentation below and should correspond exactly with how the back end behaves. If you find any inconsistencies please create a PR to amend the error.
+This is the official API specification for the SFTT back end. The back end is implemented as is described in the documentation below and should correspond exactly with how the back end behaves. If you find any inconsistencies please create a PR to amend the error.
 
 !!! info "Java Web Tokens (JWT)"
     In every request header is a JWT. The JWT will contain the user's id value and the user's privilege level.
@@ -12,7 +12,7 @@ This router is used to manage reservations. A reservation is when a user claims 
 
 `POST api/v1/protected/reservations/reserve`
 
-Must be called on an open block.
+Must be called on an unreserved block. Will create a reservation for the user making the request for the given block.
 
 #### Request Body
 
@@ -34,29 +34,71 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/complete`
 
-Must be called on an open block.
+Must be called on a block reserved by the user. Will change the completion date to the current date and time.
 
 #### Request Body
 
 ```json
 {
-  "block": INT
+  "reservation": INT
 }
 ```
 
 #### Responses
 
 ##### `200 OK`
-This block was completed successfully.
+This reservation was completed successfully.
 
 ##### `400 BAD REQUEST`
-If the block id specified is invalid.
+If the reservation id specified is invalid.
 
-### Cancel a Reservation
+### Release a Reservation
+
+`POST api/v1/protected/reservations/release`
+
+Must be called on a reservation belonging. Will cancel the reservation by setting deleted to `true`.
+
+#### Request Body
+
+```json
+{
+  "reservation": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This reservation was cancelled successfully.
+
+##### `400 BAD REQUEST`
+If the reservation id specified is invalid.
 
 ### Delete a Reservation (Admin Only)
 
+`POST api/v1/protected/reservations/delete`
+
+Can only by called by admins. Will delete the specified reservation by setting deleted to `true`.
+
+#### Request Body
+
+```json
+{
+  "reservation": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This reservation was deleted successfully.
+
+##### `400 BAD REQUEST`
+If the reservation id specified is invalid.
+
 ## Blocks Router
+
+!!! missing "This router has not been implemented yet"
 
 ### Get All Blocks
 
@@ -68,6 +110,8 @@ If the block id specified is invalid.
 
 ## Map Router
 
+!!! missing "This router has not been implemented yet"
+
 ### Get All Blocks in GeoJSON
 
 ### Get All Neighborhoods in GeoJSON
@@ -75,6 +119,8 @@ If the block id specified is invalid.
 ### Get All Sites in GeoJSON
 
 ## Teams Router
+
+!!! missing "This router has not been implemented yet"
 
 ### Create a Team
 
@@ -103,6 +149,8 @@ If the block id specified is invalid.
 ### Transfer Team Ownership
 
 ## Leaderboard Router
+
+!!! missing "This router has not been implemented yet"
 
 ### Get All Teams
 
