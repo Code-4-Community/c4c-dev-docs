@@ -52,8 +52,6 @@ This block was completed successfully.
 ##### `400 BAD REQUEST`
 If the block id specified is invalid.
 
-##### `401 BAD REQUEST`
-
 ### Cancel a Reservation
 
 ### Delete a Reservation (Admin Only)
@@ -76,13 +74,11 @@ If the block id specified is invalid.
 
 ### Get All Sites in GeoJSON
 
-## Users Router
-
-### Get a User 
-
 ## Teams Router
 
 ### Create a Team
+
+### Get a Team
 
 ### Add a Goal
 
@@ -111,5 +107,3 @@ If the block id specified is invalid.
 ### Get All Teams
 
 ### Get All Users
-
-### Get a Team
