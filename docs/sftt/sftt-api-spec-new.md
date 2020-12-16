@@ -120,33 +120,310 @@ If the reservation id specified is invalid.
 
 ## Teams Router
 
-!!! missing "This router has not been implemented yet"
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Below is a simple overview of how each role is denoted in the back end.
+
+| Role Name      | teamRole |
+|----------------|----------|
+| NONE           | 0        |
+| MEMBER         | 1        |
+| LEADER         | 2        |
+| PENDING        | 3        |
 
 ### Create a Team
 
+`POST api/v1/protected/teams`
+
+Create a team. The team will only contain the member that created it who is now specified as the team leader.
+
+#### Request Body
+
+```json
+{
+  "name": STRING,
+  "bio": STRING,
+  "inviteEmails": [
+    STRING,
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "id": INT,
+  "name": STRING,
+  "bio": STRING,
+  "goal" INT,
+  "goalCompleteDate": DATE,
+  "blocksCompleted": INT,
+  "blocksReserved": INT,
+  "applicantsToReview": BOOLEAN,
+  "members": [
+    {
+      "id": INT,
+      "username": STRING,
+      "blocksCompleted": INT,
+      "blocksReserved": INT,
+      "teamRole": INT
+    },
+    ...
+  ],
+}
+```
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team name is already taken"
+
 ### Get a Team
+
+!!! missing "Needs an update"
+
+`GET /teams/:team_id`
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "JSON body"
 
 ### Add a Goal
 
+!!! missing "This route has not been implemented yet"
+
 ### Delete a Goal
+
+!!! missing "This route has not been implemented yet"
 
 ### Invite a User
 
+`POST api/v1/protected/teams/:team_id/invite`
+
+Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated.
+
+#### Request Body
+
+```json
+{
+  "invites": [
+    {
+      "name": STRING,
+      "email" STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+
 ### Get Applicants
+
+`GET api/v1/protected/teams/:team_id/applicants`
+
+Team Leader only. Get the info for anyone that has requested to join this team.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "applicants": [
+    {
+      "userId": INT,
+      "username": STRING,
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid or if the user is not a team leader"
 
 ### Apply to a Team
 
+`POST api/v1/protected/teams/:team_id/apply`
+
+Apply to join this team. Any member can apply to join a team that they are not currently on. They will have to be approved by the team leader before becoming an actual member of the team.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+
 ### Approve a User
+
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/approve`
+
+Team Leader only. Approve this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+This member has joined the team.
+
+##### `400 BAD REQUEST`
+
+If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
+
+##### `401 Unauthorized`
+
+!!! missing "Should be an error here if the user is not a team leader"
 
 ### Reject a User
 
+Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+This applicant has been removed from the applicant's list.
+
+##### `400 BAD REQUEST`
+
+If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
+
+##### `401 Unauthorized`
+
+!!! missing "Should be an error here if the user is not a team leader"
+
 ### Kick a User
+
+`POST api/v1/protected/teams/:team_id/members/:member_id/kick`
+
+Leader only. Kicks a member off this team. That member is then allowed to join or create any team now.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+
+##### `401 Unauthorized`
+
+!!! missing "Should be an error here if the user is not a team leader"
 
 ### Leave a Team
 
+`POST api/v1/protected/teams/:team_id/leave`
+
+Leave this team that you are a part of. Cannot be called by the leader of the team.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+
 ### Disband a Team
 
+`POST api/v1/protected/teams/:team_id/disband`
+
+Leader only. Disband this team. The team will be deleted from the database. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid"
+
+##### `401 Unauthorized`
+
+!!! missing "Should be an error here if the user is not the team leader"
+
 ### Transfer Team Ownership
+
+`POST /teams/:team_id/transfer_ownership`
+
+Leader only. Makes the current team leader a regular team member and the specified user the team leader.
+
+#### Request Body
+
+```json
+{
+    "newLeaderId": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Success.
+
+##### `400 BAD REQUEST`
+
+If the given user ID does not exist, or if the given user is not on the team.
+
+##### `401 Unauthorized`
+
+If the requesting user is not the team leader.
 
 ## Leaderboard Router
 
