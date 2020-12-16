@@ -1,7 +1,7 @@
 # SFTT API Specification
 This is the official API specification for the SFTT back end. The back end is implemented as is described in the documentation below and should correspond exactly with how the back end behaves. If you find any inconsistencies please create a PR to amend the error.
 
-!!! info "Java Web Tokens (JWT)"
+!!! info "JSON Web Tokens (JWT)"
     In every request header is a JWT. The JWT will contain the user's id value and the user's privilege level.
     It is assumed that the user making the request (as specified in the JWT header) is the person the action is being performed by.
 
