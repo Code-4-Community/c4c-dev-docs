@@ -12,6 +12,29 @@ Used to return a list of all contacts associated with the specified school.
 Responses:
 
 `200 OK`: returns the list of contacts for the specified school
+```json
+{
+    "count": 2,
+    "schoolContacts": [
+        {
+            "id": 1,
+            "schoolId": 1,
+            "name": "Contact Two",
+            "email": "two@gmail.com",
+            "address": "Two Address",
+            "phone": "1112223333"
+        },
+        {
+            "id": 2,
+            "schoolId": 1,
+            "name": "Contact One",
+            "email": "one@gmail.com",
+            "address": "One Address",
+            "phone": "6012223456"
+        }
+    ]
+}
+```
 
 `401 Unauthorized`: the user is not authenticated
 
@@ -22,7 +45,17 @@ Used to return a single school contact.
 
 Responses:
 
-`200 OK`: returns the list of contacts for the specified school
+`200 OK`: returns the list of contacts for the specified school:
+```json
+{
+  "id": 1,
+  "schoolId": 2,
+  "name": "John Doe",
+  "email": "john.doe@gmail.com",
+  "address": "Boston",
+  "phone": "6015550000"
+}
+```
 
 `401 Unauthorized`: the user is not authenticated
 
@@ -33,13 +66,26 @@ Used to create a new contact for the specified school.
 `POST` request to `/api/v1/protected/schools/:school_id/contacts` with body:
 ```json
 {
-
+  "name": "John Doe",
+  "email": "john.doe@gmail.com",
+  "address": "Boston",
+  "phone": "6015550000"
 }
 ```
 
 Responses:
 
-`201 Created`: the school contact was successfully created
+`201 Created`: the school contact was successfully created:
+```json
+{
+  "id": 1,
+  "schoolId": 2,
+  "name": "John Doe",
+  "email": "john.doe@gmail.com",
+  "address": "Boston",
+  "phone": "6015550000"
+}
+```
 
 `401 Unauthorized`: the user is not authenticated
 
@@ -50,7 +96,10 @@ Used to update the specified contact.
 `PUT` request to `/api/v1/protected/schools/:school_id/contacts/:contact_id` with body:
 ```json
 {
-
+  "name": "John Doe",
+  "email": "john.doe@gmail.com",
+  "address": "Boston",
+  "phone": "6015550000"
 }
 ```
 
