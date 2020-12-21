@@ -6,6 +6,8 @@ theme:
   favicon: img/favicon.ico
   features:
     - tabs
+  palette:
+    primary: deep purple
 
 markdown_extensions:
   - admonition
@@ -22,6 +24,10 @@ nav:
       - Codebase Setup Guide: getting-started/setup-local-dev.md
       - Contributing to Dev Docs: getting-started/mkdocs-starter.md
       - API Specification Example: getting-started/api-spec-example.md
+  - Guides + Resources:
+      - Home: guides/index.md
+      - Jumpstart Fullstack Course: https://learn.c4cneu.com
+      - Frontend Data Architecture with Redux: guides/frontend-redux.md
   - Lucy's Love Bus (LLB):
       - Home: llb/index.md
       - Feature API Specification: llb/llb-api-spec.md
