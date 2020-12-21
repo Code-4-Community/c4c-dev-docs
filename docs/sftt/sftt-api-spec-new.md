@@ -96,28 +96,6 @@ This reservation was deleted successfully.
 ##### `400 BAD REQUEST`
 If the reservation id specified is invalid.
 
-## Blocks Router
-
-!!! missing "This router has not been implemented yet"
-
-### Get All Blocks
-
-### Get All Reserved Blocks
-
-### Get All Completed Blocks
-
-### Get All Blocks Per Neighborhood
-
-## Map Router
-
-!!! missing "This router has not been implemented yet"
-
-### Get All Blocks in GeoJSON
-
-### Get All Neighborhoods in GeoJSON
-
-### Get All Sites in GeoJSON
-
 ## Teams Router
 
 This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Below is a simple overview of how each role is denoted in the back end.
@@ -133,7 +111,7 @@ This router is used to manage teams. A team consists of a group of users which w
 
 `POST api/v1/protected/teams`
 
-Create a team. The team will only contain the member that created it who is now specified as the team leader.
+Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
 
 #### Request Body
 
@@ -152,28 +130,7 @@ Create a team. The team will only contain the member that created it who is now 
 
 ##### `200 OK`
 
-```json
-{
-  "id": INT,
-  "name": STRING,
-  "bio": STRING,
-  "goal" INT,
-  "goalCompleteDate": DATE,
-  "blocksCompleted": INT,
-  "blocksReserved": INT,
-  "applicantsToReview": BOOLEAN,
-  "members": [
-    {
-      "id": INT,
-      "username": STRING,
-      "blocksCompleted": INT,
-      "blocksReserved": INT,
-      "teamRole": INT
-    },
-    ...
-  ],
-}
-```
+!!! missing "Should return the same as the get team route"
 
 ##### `400 BAD REQUEST`
 
@@ -181,7 +138,7 @@ Create a team. The team will only contain the member that created it who is now 
 
 ### Get a Team
 
-!!! missing "Needs an update"
+!!! missing "This route needs to be reimplemented due to the change in goals"
 
 `GET /teams/:team_id`
 
@@ -197,9 +154,17 @@ No request body.
 
 ### Add a Goal
 
+`POST api/v1/protected/teams/:team_id/add_goal`
+
+Adds a goal to this team's list of goals.
+
 !!! missing "This route has not been implemented yet"
 
 ### Delete a Goal
+
+Deletes a goal from this team's list of goals. Simply removes the record from the table.
+
+`POST api/v1/protected/teams/:team_id/delete_goal`
 
 !!! missing "This route has not been implemented yet"
 
@@ -308,6 +273,8 @@ If the team or request specified in the id is invalid OR the user that had creat
 !!! missing "Should be an error here if the user is not a team leader"
 
 ### Reject a User
+
+`POST /teams/:team_id/applicants/:user_id/reject`
 
 Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
 
@@ -424,6 +391,153 @@ If the given user ID does not exist, or if the given user is not on the team.
 ##### `401 Unauthorized`
 
 If the requesting user is not the team leader.
+
+## Users Router
+
+### Login
+
+`POST api/v1/user/login`
+
+Used for logging in.
+
+#### Request Body
+
+#### Responses
+
+### Sign Up
+
+!!! missing "This route needs still needs documentation"
+
+#### Request Body
+
+#### Responses
+
+### Log Out
+
+!!! missing "This route needs still needs documentation"
+
+#### Request Body
+
+#### Responses
+
+### Delete User
+
+!!! missing "This route has not been implemented yet"
+
+`POST api/v1/protected/user/delete`
+
+Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
+
+#### Request Body
+
+```json
+{
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Successfully deleted this user.
+
+##### `400 BAD REQUEST`
+
+If the given user ID does not exist.
+
+##### `401 Unauthorized`
+
+If the password is wrong.
+
+### Change Password
+
+`POST api/v1/protected/user/change_password`
+
+Allows a user to change their password when already authenticated. Passwords should be strings with a length of at least 8 characters.
+
+#### Request Body
+
+```json
+{
+  "currentPassword": STRING,
+  "newPassword": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+The password change was successful.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+The currentPassword does not match the calling user's current password.
+
+### Change Username
+
+`POST api/v1/protected/user/change_username`
+
+Allows a user to change their username. The new username must not be in use already.
+
+#### Request Body
+
+```json
+{
+  "newUsername": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The username change was successful.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
+##### `409 Conflict`
+The given `newUsername` is already in use.
+
+### Request Password Reset
+
+!!! missing "This route needs still needs documentation"
+
+### Reset Password
+
+!!! missing "This route needs still needs documentation"
+
+
+## Blocks Router
+
+!!! missing "This router has not been implemented yet"
+
+### Get All Blocks
+
+### Get All Reserved Blocks
+
+### Get All Completed Blocks
+
+### Get All Blocks Per Neighborhood
+
+## Map Router
+
+!!! missing "This router has not been implemented yet"
+
+### Get All Blocks in GeoJSON
+
+### Get All Neighborhoods in GeoJSON
+
+### Get All Sites in GeoJSON
 
 ## Leaderboard Router
 
