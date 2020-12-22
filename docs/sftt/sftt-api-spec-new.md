@@ -392,7 +392,7 @@ If the given user ID does not exist, or if the given user is not on the team.
 
 If the requesting user is not the team leader.
 
-## Users Router
+## Users Router (Public)
 
 ### Login
 
@@ -402,53 +402,132 @@ Used for logging in.
 
 #### Request Body
 
+```json
+{
+    "email" : EMAIL,
+    "password" : STRING
+}
+```
+
+An EMAIL is a string representing a user's email.
+
 #### Responses
+
+##### `201 Created`
+
+```json
+{
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
+}
+```
+
+##### `400 Bad Request`
+Malformed request.
+
+##### `401 Unauthorized`
+The username/password combination is invalid.
+
+### Refresh Access Token
+
+`POST user/login/refresh`
+
+Used for getting a new access token.
+
+#### Request body
+
+```json
+  X-Refresh-Token : JWT
+```
+
+#### Responses
+
+##### `201 Created`
+The refresh token is valid and has not yet expired. Response includes a new unique access_token.
+
+```json
+{
+  "accessToken" : JWT,
+}
+```
+
+##### `401 Unauthorized`
+The refresh token is invalid.
 
 ### Sign Up
 
-!!! missing "This route needs still needs documentation"
+`POST user/signup`
 
-#### Request Body
-
-#### Responses
-
-### Log Out
-
-!!! missing "This route needs still needs documentation"
-
-#### Request Body
-
-#### Responses
-
-### Delete User
-
-!!! missing "This route has not been implemented yet"
-
-`POST api/v1/protected/user/delete`
-
-Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
+Used for signing up a new user.
 
 #### Request Body
 
 ```json
 {
-  "password": STRING
+  "username": STRING,
+  "email" : EMAIL,
+  "password" : STRING,
+  "firstName" : STRING,
+  "lastName" : STRING
 }
+```
+
+- EMAIL: Is a valid email string.
+- PASSWORD: Is a valid password string that is at least 8 characters.
+
+#### Responses
+
+##### `201 Created`
+The username and email are still available, and an account has been successfully created.
+
+```json
+{
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
+}
+```
+ 
+##### `400 Bad Request`
+Malformed request body.
+
+##### `409 Conflict`
+The given email or username is already in use.
+
+```json
+"Error creating new user, given email %s already used"
+```
+
+```json
+"Error creating new user, given username %s already used"
+```
+
+### Log Out
+
+`DELETE user/login`
+
+Used for logging out.
+
+#### Request Body
+
+```json
+  X-Access-Token : JWT
+  X-Refresh-Token : JWT
 ```
 
 #### Responses
 
-##### `200 OK`
+##### `204 No Content`
+Logout successful.
 
-Successfully deleted this user.
+## Users Router (Protected)
 
-##### `400 BAD REQUEST`
+### Request Password Reset
 
-If the given user ID does not exist.
+!!! missing "This route needs still needs documentation"
 
-##### `401 Unauthorized`
+### Reset Password
 
-If the password is wrong.
+!!! missing "This route needs still needs documentation"
 
 ### Change Password
 
@@ -508,14 +587,35 @@ The password does not match the calling user's current password.
 ##### `409 Conflict`
 The given `newUsername` is already in use.
 
-### Request Password Reset
+### Delete User
 
-!!! missing "This route needs still needs documentation"
+!!! missing "This route has not been implemented yet"
 
-### Reset Password
+`POST api/v1/protected/user/delete`
 
-!!! missing "This route needs still needs documentation"
+Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
 
+#### Request Body
+
+```json
+{
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Successfully deleted this user.
+
+##### `400 BAD REQUEST`
+
+If the given user ID does not exist.
+
+##### `401 Unauthorized`
+
+If the password is wrong.
 
 ## Blocks Router
 
