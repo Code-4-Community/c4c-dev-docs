@@ -430,7 +430,7 @@ The username/password combination is invalid.
 
 ### Refresh Access Token
 
-`POST user/login/refresh`
+`POST api/v1/user/login/refresh`
 
 Used for getting a new access token.
 
@@ -456,7 +456,7 @@ The refresh token is invalid.
 
 ### Sign Up
 
-`POST user/signup`
+`POST api/v1/user/signup`
 
 Used for signing up a new user.
 
@@ -503,7 +503,7 @@ The given email or username is already in use.
 
 ### Log Out
 
-`DELETE user/login`
+`DELETE api/v1/user/login`
 
 Used for logging out.
 
@@ -521,7 +521,7 @@ Logout successful.
 
 ### Request Password Reset
 
-`POST user/forgot_password/request`
+`POST api/v1/user/forgot_password/request`
 
 Used to send a reset password email to a user if they have forgotten their password
 
@@ -545,7 +545,7 @@ The given email is not associated with any user account
 
 ### Reset Password
 
-`POST user/forgot_password/reset`
+`POST api/v1/user/forgot_password/reset`
 
 Used to reset a user's password after they have requested a forget password link. The secret key will be contained in the forgot password link. 
 
@@ -576,7 +576,7 @@ The given secret key is invalid and does not refer to an account or was created 
 
 ### Verify Secret Key
 
-`GET user/verify/:secret_key`
+`GET api/v1/user/verify/:secret_key`
 
 Used for confirming an account's email.
 
@@ -597,7 +597,7 @@ The secret key is invalid or expired.
 
 !!! missing "This route still needs to be implemented"
 
-`GET user/create_secret/:user_id`
+`GET api/v1/user/create_secret/:user_id`
 
 Used to create secret keys for users.
 
