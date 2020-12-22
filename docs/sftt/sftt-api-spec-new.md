@@ -437,7 +437,9 @@ Used for getting a new access token.
 #### Request body
 
 ```json
-  X-Refresh-Token : JWT
+{
+  "X-Refresh-Token" : JWT
+}
 ```
 
 #### Responses
@@ -464,7 +466,7 @@ Used for signing up a new user.
 
 ```json
 {
-  "username": STRING,
+  "username" : STRING,
   "email" : EMAIL,
   "password" : STRING,
   "firstName" : STRING,
