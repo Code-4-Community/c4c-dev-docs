@@ -703,6 +703,41 @@ If the given user ID does not exist.
 
 If the password is wrong.
 
+### Change Privilege Level (Admin Only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/user/change_privilege`
+
+Allows admins to create more admins or demote other admins.
+
+#### Request Body
+
+```json
+{
+  "targetUserEmail": STRING,
+  "newLevel": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The privilege level change was successful.
+
+##### `400 Bad Request`
+The requested user already has the given privilege level.
+
+##### `400 Bad Request`
+There is no user associated with the given email.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
 ## Blocks Router
 
 !!! missing "This router has not been implemented yet"
