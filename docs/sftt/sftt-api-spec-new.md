@@ -519,15 +519,101 @@ Used for logging out.
 ##### `204 No Content`
 Logout successful.
 
-## Users Router (Protected)
-
 ### Request Password Reset
 
-!!! missing "This route needs still needs documentation"
+`POST user/forgot_password/request`
+
+Used to send a reset password email to a user if they have forgotten their password
+
+#### Request Body
+
+```json
+{
+  "email": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+The email was sent to the user successfully
+
+##### `400 BAD REQUEST`
+
+The given email is not associated with any user account
 
 ### Reset Password
 
-!!! missing "This route needs still needs documentation"
+`POST user/forgot_password/reset`
+
+Used to reset a user's password after they have requested a forget password link. The secret key will be contained in the forgot password link. 
+
+#### Request Body
+
+```json
+{
+  "secretKey": STRING,
+  "newPassword": STRING
+}
+```
+
+Passwords should be strings with length >= 8 characters.
+
+#### Responses
+
+##### `200 OK`
+
+The user's identity was confirmed and the password was changed successfully.
+
+##### `400 BAD REQUEST`
+
+The new password that was given is an invalid password.
+
+##### `401 UNAUTHORIZED`
+
+The given secret key is invalid and does not refer to an account or was created too long ago to be valid.
+
+### Verify Secret Key
+
+`GET user/verify/:secret_key`
+
+Used for confirming an account's email.
+
+#### Request Body
+
+None. The secret key parameter is a randomly generated key and sent to the user to verify their email.
+
+#### Responses
+
+##### `200 OK`
+
+The user's secret key has been verified. 
+
+##### `401 Unauthorized`
+The secret key is invalid or expired.
+
+### Create Secret Key
+
+!!! missing "This route still needs to be implemented"
+
+`GET user/create_secret/:user_id`
+
+Used to create secret keys for users.
+
+#### Request Body
+
+None. The user_id parameter is the id of the user the secret key should be linked to.
+
+#### Responses
+
+##### `200 OK`
+A secret key was created and stored for the given user.
+
+##### `400 BAD REQUEST`
+The given user id could not be found.
+
+## Users Router (Protected)
 
 ### Change Password
 
