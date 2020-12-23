@@ -543,7 +543,7 @@ The given `newUsername` is already in use.
 
 The import router will be used to fill the database tables that have either static information, such as the blocks and neighborhoods tables, or if already recorded information needs to be carried over. All routes can only be called by super admins. 
 
-The `geometry` field represents the polygon, multi-polygon or other geometric shape that is associated with the the feature. This will consist of the entire `geometry` field found in a `.geojson` file. The JSON will be encoded as a String when sent to the import API. For example:
+The `geometry` field represents the polygon, multi-polygon or other geometric shape that is associated with the the feature. This will consist of the entire `geometry` field found in a `.geojson` file. The JSON will be encoded as a String when sent to the import API. JSON example:
 ```json
 "type": "MultiPolygon",
 "coordinates": [
