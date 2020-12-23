@@ -541,6 +541,32 @@ The given `newUsername` is already in use.
 
 ## Import Router
 
+The import router will be used to fill the database tables that have either static information, such as the blocks and neighborhoods tables, or if already recorded information needs to be carried over. All routes can only be called by super admins. 
+
+The `geometry` field represents the polygon, multi-polygon or other geometric shape that is associated with the the feature. This will consist of the entire `geometry` field found in a `.geojson` file. For example:
+```json
+"type": "MultiPolygon",
+"coordinates": [
+  [
+    [
+      [
+          -71.02859399925286,
+          42.34889700150278
+      ],
+      [
+          -71.02912299801895,
+          42.34837799993562
+      ],
+      [
+          -71.03016800287584,
+          42.348783997754865
+      ],
+      ...
+    ]
+  ]
+]
+```
+
 ### Import Blocks
 
 `POST api/v1/protected/import/blocks`
@@ -557,7 +583,7 @@ Used to import blocks into the database. Since blocks reference neigborhoods wit
       "neighborhood_id": INT,
       "lat": LONG,
       "lng": LONG,
-      "coords": STRING,
+      "geometry": STRING,
     },
     ...
   ]
@@ -570,7 +596,13 @@ Used to import blocks into the database. Since blocks reference neigborhoods wit
 
 Blocks imported succesfully.
 
-!!! missing "Missing error response, unsure what code"
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
 
 ### Import Neighborhoods
 
@@ -589,7 +621,7 @@ Used to import neighborhoods into the database. Must be called before importing 
       "sq_miles": DOUBLE,
       "lat": LONG,
       "lng": LONG,
-      "coords": STRING,
+      "geometry": STRING,
     },
     ...
   ]
@@ -602,7 +634,13 @@ Used to import neighborhoods into the database. Must be called before importing 
 
 Neighborhoods imported succesfully.
 
-!!! missing "Missing error response, unsure what code"
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
 
 ### Import Trees
 
