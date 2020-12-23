@@ -539,6 +539,44 @@ The given `newUsername` is already in use.
 
 ### Get All Sites in GeoJSON
 
+## Import Router
+
+### Import Blocks
+
+`POST api/v1/protected/import/blocks`
+
+Used to import blocks into the database. Since blocks reference neigborhoods with a foreign key make sure all neighborhoods are imported first.
+
+#### Request Body
+
+#### Responses
+
+##### `200 OK`
+
+Blocks imported succesfully.
+
+### Import Neighborhoods
+
+`POST api/v1/protected/import/neighborhoods`
+
+Used to import neighborhoods into the database. 
+
+#### Request Body
+
+#### Responses
+
+##### `200 OK`
+
+Neighborhoods imported succesfully.
+
+### Import Trees
+
+!!! missing "This route has not been implemented yet"
+
+### Import Reservations
+
+`POST api/v1/protected/import/reservations`
+
 ## Leaderboard Router
 
 !!! missing "This router has not been implemented yet"
