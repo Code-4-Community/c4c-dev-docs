@@ -591,7 +591,9 @@ No request body.
       "properties": {
         "neighborhood_id": INT,
         "name": STRING,
-        "completion_perc": INT
+        "completion_perc": INT,
+        "lat": LONG,
+        "lng": LONG
       },
       "geometry": {
         "type": "MultiPolygon",
