@@ -549,25 +549,60 @@ Used to import blocks into the database. Since blocks reference neigborhoods wit
 
 #### Request Body
 
+```json
+{
+  "blocks": [
+    {
+      "block_id": INT,
+      "neighborhood_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "coords": STRING,
+    },
+    ...
+  ]
+}
+```
+
 #### Responses
 
 ##### `200 OK`
 
 Blocks imported succesfully.
 
+!!! missing "Missing error response, unsure what code"
+
 ### Import Neighborhoods
 
 `POST api/v1/protected/import/neighborhoods`
 
-Used to import neighborhoods into the database. 
+Used to import neighborhoods into the database. Must be called before importing blocks since blocks reference neighborhoods.
 
 #### Request Body
+
+```json
+{
+  "neighborhoods": [
+    {
+      "neighborhood_id": INT,
+      "neighborhood_name": STRING,
+      "sq_miles": DOUBLE,
+      "lat": LONG,
+      "lng": LONG,
+      "coords": STRING,
+    },
+    ...
+  ]
+}
+```
 
 #### Responses
 
 ##### `200 OK`
 
 Neighborhoods imported succesfully.
+
+!!! missing "Missing error response, unsure what code"
 
 ### Import Trees
 
