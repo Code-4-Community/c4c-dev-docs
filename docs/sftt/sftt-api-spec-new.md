@@ -536,7 +536,34 @@ No request body.
 
 ```json
 {
-  "data" : DATA,
+  "type": "FeatureCollection",
+  "name": "blocks",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "block_id": INT,
+        "lat": LONG,
+        "lng": LONG,
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": 
+        [
+          [
+            [
+              [
+                  LONG,
+                  LONG
+              ],
+              ...
+            ]
+          ]
+        ]
+      }
+    },
+    ...
+  ]
 }
 ```
 
@@ -544,7 +571,7 @@ No request body.
 
 `GET api/v1/protected/map/neighborhoods`
 
-Returns all the neighborhoods in GeoJSON format.
+Returns all the neighborhoods in GeoJSON format. The `completion_perc` field in the properties is the percentage of blocks marked as completed compared to the total amount of blocks in that neighborhood.
 
 #### Request Body
 
@@ -556,7 +583,25 @@ No request body.
 
 ```json
 {
-  "data" : DATA,
+  "type": "FeatureCollection",
+  "name": "neighborhoods",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "neighborhood_id": INT,
+        "name": STRING,
+        "completion_perc": INT
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          coordinates pairs...
+        ]
+      }
+    },
+    ...
+  ]
 }
 ```
 
