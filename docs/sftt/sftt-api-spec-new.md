@@ -18,14 +18,14 @@ This router is used to manage reservations. A reservation is when a user claims 
 
 `POST api/v1/protected/reservations/reserve`
 
-Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`.
+Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`. The purpose of specifying a team at the time of reservation is that it allows other team members to complete this block.
 
 #### Request Body
 
 ```json
 {
   "block_id": INT,
-  "team_id": INT
+  "team_id": INT | NULL
 }
 ```
 
@@ -41,14 +41,14 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/complete`
 
-Must be called on a block reserved by the user. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
+Must be called on a block reserved by the user or by a team they're on. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
 
 #### Request Body
 
 ```json
 {
   "block_id": INT,
-  "team_id": INT
+  "team_id": INT | NULL
 }
 ```
 
@@ -64,7 +64,7 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/release`
 
-Must be called on a reservation belonging to the user. 
+Must be called on a reservation belonging to the user or a team they're the leader of. 
 
 #### Request Body
 
@@ -108,7 +108,7 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/qa`
 
-Can only by called by admins. Will indicate that this block needs QA. 
+Can only by called by admins on completed blocks. Will indicate that this block needs QA.
 
 #### Request Body
 
