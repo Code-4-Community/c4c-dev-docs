@@ -6,19 +6,26 @@ This is the official API specification for the SFTT back end. The back end is im
     It is assumed that the user making the request (as specified in the JWT header) is the person the action is being performed by.
 
 ## Reservations Router
-This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those actvities.
+This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table everytime an action is performed on a block. These possible actions are:
+
+- `reserve` - Reserve the given block for the given user.
+- `complete` - Complete the given block. 
+- `release`- Release the given block, meaning to cancel the reservation.
+- `uncomplete` - Admin only. Used to invalidate a completed reservation for any reason (not actually completed, want to inventory the block again, etc.)
+- `QA` - Admin only. Mark this block for QA, meaning that SFTT wants to go through the trees counted here and make sure everything looks okay.
 
 ### Make a Reservation
 
 `POST api/v1/protected/reservations/reserve`
 
-Must be called on an unreserved block. Will create a reservation for the user making the request for the given block.
+Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`.
 
 #### Request Body
 
 ```json
 {
-  "block": INT
+  "block_id": INT,
+  "team_id": INT
 }
 ```
 
@@ -34,13 +41,14 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/complete`
 
-Must be called on a block reserved by the user. Will change the completion date to the current date and time.
+Must be called on a block reserved by the user. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
 
 #### Request Body
 
 ```json
 {
-  "reservation": INT
+  "block_id": INT,
+  "team_id": INT
 }
 ```
 
@@ -50,19 +58,19 @@ Must be called on a block reserved by the user. Will change the completion date 
 This reservation was completed successfully.
 
 ##### `400 BAD REQUEST`
-If the reservation id specified is invalid.
+If the block id specified is invalid.
 
 ### Release a Reservation
 
 `POST api/v1/protected/reservations/release`
 
-Must be called on a reservation belonging. Will cancel the reservation by setting deleted to `true`.
+Must be called on a reservation belonging to the user. 
 
 #### Request Body
 
 ```json
 {
-  "reservation": INT
+  "block_id": INT
 }
 ```
 
@@ -72,29 +80,51 @@ Must be called on a reservation belonging. Will cancel the reservation by settin
 This reservation was cancelled successfully.
 
 ##### `400 BAD REQUEST`
-If the reservation id specified is invalid.
+If the block id specified is invalid.
 
-### Delete a Reservation (Admin Only)
+### Uncomplete a Reservation (Admin Only)
 
-`POST api/v1/protected/reservations/delete`
+`POST api/v1/protected/reservations/uncomplete`
 
-Can only by called by admins. Will delete the specified reservation by setting deleted to `true`.
+Can only by called by admins. Will invalidate the last completion for the given block and opens the block back up for inventory.
 
 #### Request Body
 
 ```json
 {
-  "reservation": INT
+  "block_id": INT
 }
 ```
 
 #### Responses
 
 ##### `200 OK`
-This reservation was deleted successfully.
+This reservation was marked as incomplete successfully.
 
 ##### `400 BAD REQUEST`
-If the reservation id specified is invalid.
+If the block id specified is invalid.
+
+### Mark for QA (Admin Only)
+
+`POST api/v1/protected/reservations/qa`
+
+Can only by called by admins. Will indicate that this block needs QA. 
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has been selected for QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
 
 ## Teams Router
 
