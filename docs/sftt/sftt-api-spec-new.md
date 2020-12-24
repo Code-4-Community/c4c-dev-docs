@@ -392,7 +392,9 @@ If the given user ID does not exist, or if the given user is not on the team.
 
 If the requesting user is not the team leader.
 
-## Users Router (Public)
+## Auth Router
+
+This router is used to authenticate users. It handles logins, logouts, signups but also things like resetting passwords and secret keys. All of these parts are public, as in users don't need to be authenticated yet to call these routes.
 
 ### Login
 
@@ -615,7 +617,9 @@ A secret key was created and stored for the given user.
 ##### `400 BAD REQUEST`
 The given user id could not be found.
 
-## Users Router (Protected)
+## Users Router
+
+This router is used for routes that affects user accounts. It can only be called when a user is authenticated, as opposed to the auth router which is public.
 
 ### Change Password
 
@@ -957,13 +961,76 @@ If the user is not a super admin.
 
 ### Import Reservations
 
-`POST api/v1/protected/import/reservations`
+!!! missing "This route has not been implemented yet"
 
+`POST api/v1/protected/import/reservations`
 
 ## Leaderboard Router
 
-!!! missing "This router has not been implemented yet"
+The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public because future releases possibly include a public leaderboard page. Since none of the information here is strictly private the consequences of making it public are minimal.
 
-### Get All Teams
+A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field.
 
-### Get All Users
+### Get Users Leaderboard
+
+`GET api/v1/leaderboard/users`
+
+Returns a list of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing.
+
+#### Request Body
+
+```json
+{
+  "time_period": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "users": [
+    {
+      "username": STRING,
+      "blocks": INT
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+### Get Teams Leaderboard
+
+`GET api/v1/leaderboard/teams`
+
+Returns a list of team names and the blocks those teams counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing.
+
+#### Request Body
+
+```json
+{
+  "time_period": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "teams": [
+    {
+      "team_name": STRING,
+      "blocks": INT
+    },
+    ...
+  ]
+}
+```
