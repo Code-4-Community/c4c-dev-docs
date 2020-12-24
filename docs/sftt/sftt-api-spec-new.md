@@ -14,6 +14,11 @@ This router is used to manage reservations. A reservation is when a user claims 
 - `uncomplete` - Admin only. Used to invalidate a completed reservation for any reason (not actually completed, want to inventory the block again, etc.)
 - `QA` - Admin only. Mark this block for QA, meaning that SFTT wants to go through the trees counted here and make sure everything looks okay.
 
+If the user specifies doesn't specify a team at the time of reservation the user is solely responsible for the block. If they do specify a team, then their team can also complete this block for them. This leads to two options when completing a block.
+
+1. The user who reserved the block completes the block, and can choose which, if any, team to credit it to. Credit goes to the reserving user and the team of their choosing.
+2. A teammate completes the block. The teammate cannot specify the team, since it was reserved by another user. Credit goes to the user who completes the block, not the reserving user, and their shared team.
+
 ### Make a Reservation
 
 `POST api/v1/protected/reservations/reserve`
