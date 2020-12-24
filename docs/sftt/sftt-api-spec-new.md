@@ -516,28 +516,112 @@ The given `newUsername` is already in use.
 
 !!! missing "This route needs still needs documentation"
 
-
-## Blocks Router
-
-!!! missing "This router has not been implemented yet"
-
-### Get All Blocks
-
-### Get All Reserved Blocks
-
-### Get All Completed Blocks
-
-### Get All Blocks Per Neighborhood
-
 ## Map Router
 
-!!! missing "This router has not been implemented yet"
+This router is used to retrieve the data necessary to render blocks, neighborhoods and sites (plantings sites and trees). It makes a call to the backend, which returns the required data from the database in GeoJSON format. The router is public since much of this information is also rendered on the home page.
 
 ### Get All Blocks in GeoJSON
 
+`GET api/v1/protected/map/blocks`
+
+Returns all the blocks in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+```json
+{
+  "type": "FeatureCollection",
+  "name": "blocks",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "block_id": INT,
+        "lat": LONG,
+        "lng": LONG,
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": 
+        [
+          [
+            [
+              [
+                  LONG,
+                  LONG
+              ],
+              ...
+            ]
+          ]
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
+
 ### Get All Neighborhoods in GeoJSON
 
+`GET api/v1/protected/map/neighborhoods`
+
+Returns all the neighborhoods in GeoJSON format. The `completion_perc` field in the properties is the percentage of blocks marked as completed compared to the total amount of blocks in that neighborhood.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+```json
+{
+  "type": "FeatureCollection",
+  "name": "neighborhoods",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "neighborhood_id": INT,
+        "name": STRING,
+        "completion_perc": INT,
+        "lat": LONG,
+        "lng": LONG
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          coordinates pairs...
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
+
 ### Get All Sites in GeoJSON
+
+`GET api/v1/protected/map/sites`
+
+Returns all the sites in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+!!! missing "This still needs to figured out"
 
 ## Import Router
 
@@ -649,6 +733,7 @@ If the user is not a super admin.
 ### Import Reservations
 
 `POST api/v1/protected/import/reservations`
+
 
 ## Leaderboard Router
 
