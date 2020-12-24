@@ -740,27 +740,225 @@ If the request was malformed.
 ##### `401 Unauthorized`
 The password does not match the calling user's current password.
 
-## Blocks Router
-
-!!! missing "This router has not been implemented yet"
-
-### Get All Blocks
-
-### Get All Reserved Blocks
-
-### Get All Completed Blocks
-
-### Get All Blocks Per Neighborhood
-
 ## Map Router
 
-!!! missing "This router has not been implemented yet"
+
+This router is used to retrieve the data necessary to render blocks, neighborhoods and sites (plantings sites and trees). It makes a call to the backend, which returns the required data from the database in GeoJSON format. The router is public since much of this information is also rendered on the home page.
 
 ### Get All Blocks in GeoJSON
 
+`GET api/v1/protected/map/blocks`
+
+Returns all the blocks in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+```json
+{
+  "type": "FeatureCollection",
+  "name": "blocks",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "block_id": INT,
+        "lat": LONG,
+        "lng": LONG,
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": 
+        [
+          [
+            [
+              [
+                  LONG,
+                  LONG
+              ],
+              ...
+            ]
+          ]
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
+
 ### Get All Neighborhoods in GeoJSON
 
+`GET api/v1/protected/map/neighborhoods`
+
+Returns all the neighborhoods in GeoJSON format. The `completion_perc` field in the properties is the percentage of blocks marked as completed compared to the total amount of blocks in that neighborhood.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+```json
+{
+  "type": "FeatureCollection",
+  "name": "neighborhoods",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "neighborhood_id": INT,
+        "name": STRING,
+        "completion_perc": INT,
+        "lat": LONG,
+        "lng": LONG
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          coordinates pairs...
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
+
 ### Get All Sites in GeoJSON
+
+`GET api/v1/protected/map/sites`
+
+Returns all the sites in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+!!! missing "This still needs to figured out"
+
+## Import Router
+
+The import router will be used to fill the database tables that have either static information, such as the blocks and neighborhoods tables, or if already recorded information needs to be carried over. All routes can only be called by super admins. 
+
+The `geometry` field represents the polygon, multi-polygon or other geometric shape that is associated with the the feature. This will consist of the entire `geometry` field found in a `.geojson` file. The JSON will be encoded as a String when sent to the import API. JSON example:
+```json
+"type": "MultiPolygon",
+"coordinates": [
+  [
+    [
+      [
+          -71.02859399925286,
+          42.34889700150278
+      ],
+      [
+          -71.02912299801895,
+          42.34837799993562
+      ],
+      [
+          -71.03016800287584,
+          42.348783997754865
+      ],
+      ...
+    ]
+  ]
+]
+```
+
+### Import Blocks
+
+`POST api/v1/protected/import/blocks`
+
+Used to import blocks into the database. Since blocks reference neigborhoods with a foreign key make sure all neighborhoods are imported first.
+
+#### Request Body
+
+```json
+{
+  "blocks": [
+    {
+      "block_id": INT,
+      "neighborhood_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "geometry": STRING,
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Blocks imported succesfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
+### Import Neighborhoods
+
+`POST api/v1/protected/import/neighborhoods`
+
+Used to import neighborhoods into the database. Must be called before importing blocks since blocks reference neighborhoods.
+
+#### Request Body
+
+```json
+{
+  "neighborhoods": [
+    {
+      "neighborhood_id": INT,
+      "neighborhood_name": STRING,
+      "sq_miles": DOUBLE,
+      "lat": LONG,
+      "lng": LONG,
+      "geometry": STRING,
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Neighborhoods imported succesfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
+### Import Trees
+
+!!! missing "This route has not been implemented yet"
+
+### Import Reservations
+
+`POST api/v1/protected/import/reservations`
+
 
 ## Leaderboard Router
 
