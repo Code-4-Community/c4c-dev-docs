@@ -392,7 +392,7 @@ If the given user ID does not exist, or if the given user is not on the team.
 
 If the requesting user is not the team leader.
 
-## Users Router
+## Users Router (Public)
 
 ### Login
 
@@ -402,37 +402,136 @@ Used for logging in.
 
 #### Request Body
 
+```json
+{
+    "email" : EMAIL,
+    "password" : STRING
+}
+```
+
+An EMAIL is a string representing a user's email.
+
 #### Responses
+
+##### `201 Created`
+
+```json
+{
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
+}
+```
+
+##### `400 Bad Request`
+Malformed request.
+
+##### `401 Unauthorized`
+The username/password combination is invalid.
+
+### Refresh Access Token
+
+`POST api/v1/user/login/refresh`
+
+Used for getting a new access token.
+
+#### Request body
+
+```json
+{
+  "X-Refresh-Token" : JWT
+}
+```
+
+#### Responses
+
+##### `201 Created`
+The refresh token is valid and has not yet expired. Response includes a new unique access_token.
+
+```json
+{
+  "accessToken" : JWT,
+}
+```
+
+##### `401 Unauthorized`
+The refresh token is invalid.
 
 ### Sign Up
 
-!!! missing "This route needs still needs documentation"
+`POST api/v1/user/signup`
 
-#### Request Body
-
-#### Responses
-
-### Log Out
-
-!!! missing "This route needs still needs documentation"
-
-#### Request Body
-
-#### Responses
-
-### Delete User
-
-!!! missing "This route has not been implemented yet"
-
-`POST api/v1/protected/user/delete`
-
-Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
+Used for signing up a new user.
 
 #### Request Body
 
 ```json
 {
-  "password": STRING
+  "username" : STRING,
+  "email" : EMAIL,
+  "password" : STRING,
+  "firstName" : STRING,
+  "lastName" : STRING
+}
+```
+
+- EMAIL: Is a valid email string.
+- PASSWORD: Is a valid password string that is at least 8 characters.
+
+#### Responses
+
+##### `201 Created`
+The username and email are still available, and an account has been successfully created.
+
+```json
+{
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
+}
+```
+ 
+##### `400 Bad Request`
+Malformed request body.
+
+##### `409 Conflict`
+The given email or username is already in use.
+
+```json
+"Error creating new user, given email %s already used"
+```
+
+```json
+"Error creating new user, given username %s already used"
+```
+
+### Log Out
+
+`DELETE api/v1/user/login`
+
+Used for logging out.
+
+#### Request Body
+
+```json
+  X-Access-Token : JWT
+  X-Refresh-Token : JWT
+```
+
+#### Responses
+
+##### `204 No Content`
+Logout successful.
+
+### Request Password Reset
+
+`POST api/v1/user/forgot_password/request`
+
+Used to send a reset password email to a user if they have forgotten their password
+
+#### Request Body
+
+```json
+{
+  "email": STRING
 }
 ```
 
@@ -440,15 +539,83 @@ Sets this users deleted_at timestamp to now, thereby marking this account as del
 
 ##### `200 OK`
 
-Successfully deleted this user.
+The email was sent to the user successfully
 
 ##### `400 BAD REQUEST`
 
-If the given user ID does not exist.
+The given email is not associated with any user account
+
+### Reset Password
+
+`POST api/v1/user/forgot_password/reset`
+
+Used to reset a user's password after they have requested a forget password link. The secret key will be contained in the forgot password link. 
+
+#### Request Body
+
+```json
+{
+  "secretKey": STRING,
+  "newPassword": STRING
+}
+```
+
+Passwords should be strings with length >= 8 characters.
+
+#### Responses
+
+##### `200 OK`
+
+The user's identity was confirmed and the password was changed successfully.
+
+##### `400 BAD REQUEST`
+
+The new password that was given is an invalid password.
+
+##### `401 UNAUTHORIZED`
+
+The given secret key is invalid and does not refer to an account or was created too long ago to be valid.
+
+### Verify Secret Key
+
+`GET api/v1/user/verify/:secret_key`
+
+Used for confirming an account's email.
+
+#### Request Body
+
+None. The secret key parameter is a randomly generated key and sent to the user to verify their email.
+
+#### Responses
+
+##### `200 OK`
+
+The user's secret key has been verified. 
 
 ##### `401 Unauthorized`
+The secret key is invalid or expired.
 
-If the password is wrong.
+### Create Secret Key
+
+!!! missing "This route still needs to be implemented"
+
+`GET api/v1/user/create_secret/:user_id`
+
+Used to create secret keys for users.
+
+#### Request Body
+
+None. The user_id parameter is the id of the user the secret key should be linked to.
+
+#### Responses
+
+##### `200 OK`
+A secret key was created and stored for the given user.
+
+##### `400 BAD REQUEST`
+The given user id could not be found.
+
+## Users Router (Protected)
 
 ### Change Password
 
@@ -508,15 +675,73 @@ The password does not match the calling user's current password.
 ##### `409 Conflict`
 The given `newUsername` is already in use.
 
-### Request Password Reset
+### Delete User
 
-!!! missing "This route needs still needs documentation"
+!!! missing "This route has not been implemented yet"
 
-### Reset Password
+`POST api/v1/protected/user/delete`
 
-!!! missing "This route needs still needs documentation"
+Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
+
+#### Request Body
+
+```json
+{
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Successfully deleted this user.
+
+##### `400 BAD REQUEST`
+
+If the given user ID does not exist.
+
+##### `401 Unauthorized`
+
+If the password is wrong.
+
+### Change Privilege Level (Admin Only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/user/change_privilege`
+
+Allows admins to create more admins or demote other admins.
+
+#### Request Body
+
+```json
+{
+  "targetUserEmail": STRING,
+  "newLevel": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The privilege level change was successful.
+
+##### `400 Bad Request`
+The requested user already has the given privilege level.
+
+##### `400 Bad Request`
+There is no user associated with the given email.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
 
 ## Map Router
+
 
 This router is used to retrieve the data necessary to render blocks, neighborhoods and sites (plantings sites and trees). It makes a call to the backend, which returns the required data from the database in GeoJSON format. The router is public since much of this information is also rendered on the home page.
 
