@@ -1034,3 +1034,7 @@ Returns a list of team names and the blocks those teams counted, in order of the
   ]
 }
 ```
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
