@@ -967,15 +967,15 @@ If the user is not a super admin.
 
 ## Leaderboard Router
 
-The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public because future releases possibly include a public leaderboard page. Since none of the information here is strictly private the consequences of making it public are minimal.
+The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public so that a future release can include a public leaderboard page. Since none of the information here is strictly private, the consequences of making it public are minimal.
 
-A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field.
+A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field. The tie breaker for users or teams with the same number of completed blocks is whatever order the database returns the values in.
 
 ### Get Users Leaderboard
 
 `GET api/v1/leaderboard/users`
 
-Returns a list of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing.
+Returns a list of all users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
 
 #### Request Body
 
@@ -1009,7 +1009,7 @@ If the request was malformed.
 
 `GET api/v1/leaderboard/teams`
 
-Returns a list of team names and the blocks those teams counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing.
+Returns a list of team names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
 
 #### Request Body
 
