@@ -975,7 +975,7 @@ A completed block is a block for which the last entry is either `complete` or `q
 
 `GET api/v1/leaderboard/users`
 
-Returns a list of all users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
 
 #### Request Body
 
@@ -1009,7 +1009,7 @@ If the request was malformed.
 
 `GET api/v1/leaderboard/teams`
 
-Returns a list of team names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
 
 #### Request Body
 
