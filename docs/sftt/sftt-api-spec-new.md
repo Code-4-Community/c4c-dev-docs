@@ -7,8 +7,6 @@ This is the official API specification for the SFTT back end. The back end is im
 
 ## Enums
 
-!!! missing "This section is under construction"
-
 ### Team Role
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
