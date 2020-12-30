@@ -5,6 +5,36 @@ This is the official API specification for the SFTT back end. The back end is im
     In every request header is a JWT. The JWT will contain the user's id value and the user's privilege level.
     It is assumed that the user making the request (as specified in the JWT header) is the person the action is being performed by.
 
+## Enums
+
+### Team Role
+
+The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
+
+- `None` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
+- `MEMBER` - The is a member of the team.
+- `LEADER` - The user is a leader of the team. This grants them special privileges such as being able to accept or reject pending members and being able to disband the team.
+- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `None`
+
+### Privilege Level
+
+The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
+
+- `STANDARD` - A regular member of the platform and usually a volunteer for Speak for the Trees.
+- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neigbhorhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
+- `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
+
+### Reservation Action
+
+The reservation action enum is all the possible action types a reservation can have. This is how blocks are marked as open, complete, reserved, etc. It is stored in the reservation tables as the action_type field. The possible options are:
+
+- `RESERVE` - Marks a block as reserved.
+- `COMPLETE` - Marks a block as completed.
+- `RELEASE` - Marks a block as released, meaning a user cancelled their reservation and the block is now open again. Anyone can reserve it again now.
+- `UNCOMPLETE` - Marks a block as uncomplete, meaning an admin opened the block back up from its previous state. Anyone can reserve it again now.
+- `QA` - Indicates a block needs QA. It will remain in this state until an admin either approves or denies the completion. If approved, the block will be marked `COMPLETE`. If denied, the block will be marked `UNCOMPLETE`.
+
+
 ## Reservations Router
 This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table everytime an action is performed on a block. These possible actions are:
 
@@ -131,16 +161,53 @@ This block has been selected for QA.
 ##### `400 BAD REQUEST`
 If the block id specified is invalid.
 
+### Pass QA (Admin Only)
+
+`POST api/v1/protected/reservations/pass_qa`
+
+Can only by called by admins on blocks with a QA status. Will set the block to the completion status from before it was marked for QA.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has passed QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+### Fail QA (Admin Only)
+
+`POST api/v1/protected/reservations/fail_qa`
+
+Can only by called by admins on blocks with a QA status. Will mark the block as open.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has failed QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
 ## Teams Router
 
-This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Below is a simple overview of how each role is denoted in the back end.
-
-| Role Name      | teamRole |
-|----------------|----------|
-| NONE           | 0        |
-| MEMBER         | 1        |
-| LEADER         | 2        |
-| PENDING        | 3        |
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `None` team role, meaning they have left the team or have been rejected.
 
 ### Create a Team
 
