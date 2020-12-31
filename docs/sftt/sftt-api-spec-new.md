@@ -187,7 +187,7 @@ If the block id specified is invalid.
 
 `POST api/v1/protected/reservations/fail_qa`
 
-Can only by called by admins on blocks with a QA status. Will mark the block as open.
+Can only by called by admins on blocks with a QA status. Will mark the block as open by using the `UNCOMPLETE` action.
 
 #### Request Body
 
