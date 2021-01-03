@@ -1,155 +1,226 @@
 # SFTT API Specification
+This is the official API specification for the SFTT back end. The back end is implemented as is described in the documentation below and should correspond exactly with how the back end behaves. If you find any inconsistencies please create a PR to amend the error.
 
-In every request header is a JWT. The JWT will contain the user's id value and the user's privilege level.
+!!! info "JSON Web Tokens (JWT)"
+    In every request header is a JWT. The JWT will contain the user's id value and the user's privilege level.
+    It is assumed that the user making the request (as specified in the JWT header) is the person the action is being performed by.
 
-## Privilege Levels
-- `0` = untrusted user
-- `1` = a regular user
-- `2` = an admin user
+## Enums
 
-It is assumed that the user making the request (as specified in the JWT header) is the person the block is being reserved / completed by.
+### Team Role
 
-# Block Status Updates
+The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
 
-## `POST api/v1/protected/blocks/reserve`
+- `None` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
+- `MEMBER` - The is a member of the team.
+- `LEADER` - The user is a leader of the team. This grants them special privileges such as being able to accept or reject pending members and being able to disband the team.
+- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `None`
 
-Open -> Reserved
+### Privilege Level
 
-Must be called on open blocks.
+The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
 
-1. Update DB, add blocks to a user's assigned blocks
-2. Call map API and update status of blocks to reserved
+- `STANDARD` - A regular member of the platform and usually a volunteer for Speak for the Trees.
+- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neigbhorhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
+- `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
 
+### Reservation Action
 
-## `POST api/v1/protected/blocks/finish`
+The reservation action enum is all the possible action types a reservation can have. This is how blocks are marked as open, complete, reserved, etc. It is stored in the reservation tables as the action_type field. The possible options are:
 
-Reserved -> Done
-
-Whoever had the block in it's current reserve is the one who is credited with completion.
-
-Must be called by an admin or by the person holding the block.
-
-## `POST api/v1/protected/blocks/release`
-
-Reserved -> Open
-
-Must be called by an admin or by the person holding the block.
+- `RESERVE` - Marks a block as reserved.
+- `COMPLETE` - Marks a block as completed.
+- `RELEASE` - Marks a block as released, meaning a user cancelled their reservation and the block is now open again. Anyone can reserve it again now.
+- `UNCOMPLETE` - Marks a block as uncomplete, meaning an admin opened the block back up from its previous state. Anyone can reserve it again now.
+- `QA` - Indicates a block needs QA. It will remain in this state until an admin either approves or denies the completion. If approved, the block will be marked `COMPLETE`. If denied, the block will be marked `UNCOMPLETE`.
 
 
-## `POST api/v1/protected/blocks/reset`
+## Reservations Router
+This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table everytime an action is performed on a block. These possible actions are:
 
-Done -> Open
+- `reserve` - Reserve the given block for the given user.
+- `complete` - Complete the given block. 
+- `release`- Release the given block, meaning to cancel the reservation.
+- `uncomplete` - Admin only. Used to invalidate a completed reservation for any reason (not actually completed, want to inventory the block again, etc.)
+- `QA` - Admin only. Mark this block for QA, meaning that SFTT wants to go through the trees counted here and make sure everything looks okay.
 
-Admin Only
+If the user specifies doesn't specify a team at the time of reservation the user is solely responsible for the block. If they do specify a team, then their team can also complete this block for them. This leads to two options when completing a block.
 
-### reserve, finish, release, and reset share the same request bodies and possible responses.
+1. The user who reserved the block completes the block, and can choose which, if any, team to credit it to. Credit goes to the reserving user and the team of their choosing.
+2. A teammate completes the block. The teammate cannot specify the team, since it was reserved by another user. Credit goes to the user who completes the block, not the reserving user, and their shared team.
 
-### Request Body
+### Make a Reservation
+
+`POST api/v1/protected/reservations/reserve`
+
+Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`. The purpose of specifying a team at the time of reservation is that it allows other team members to complete this block.
+
+#### Request Body
+
 ```json
 {
-  "blocks": [
-    "block_id STRING",
-    ...
-  ]
+  "block_id": INT,
+  "team_id": INT | NULL
 }
 ```
 
-The block id will correspond to the fid of a block stored in the ArcGIS map.
-
-### Responses
-Partial successes are possible.
-
-Reasons a block may fail:
-- The block was not in the state that it should've been
-- The user is not allowed to modify that block's state
-- The fid doesn't match any block
+#### Responses
 
 ##### `200 OK`
-```json
-{
-  "successes": [
-    "block_id STRING",
-    ...
-  ],
-  "failures": [
-    "block_id STRING",
-    ...
-  ]
-}
-```
-
-##### `401 Unauthorized`
-The calling user was not an admin (reset only)
-
-## `POST api/v1/protected/blocks/reserve/admin`
-
-Open -> Reserved
-
-Admin Only
-
-Can specify a specific user that a block is being assigned to.
-
-### Request Body
-```json
-{
-  "assigned_to": "user_id STRING",
-  "blocks": [
-    "block_id STRING",
-    ...
-  ]
-}
-```
-
-### Responses
-
-##### `200 OK`
-```json
-{
-  "successes": [
-    "block_id STRING",
-    ...
-  ],
-  "failures": [
-    "block_id STRING",
-    ...
-  ]
-}
-```
+This block was reserved successfully.
 
 ##### `400 BAD REQUEST`
-The body was malformed or the specified user doesn't exist.
+If the block id specified is invalid.
 
-##### `401 Unauthorized`
-The calling user was not an admin.
+### Complete a Reservation
 
+`POST api/v1/protected/reservations/complete`
 
+Must be called on a block reserved by the user or by a team they're on. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
 
+#### Request Body
 
+```json
+{
+  "block_id": INT,
+  "team_id": INT | NULL
+}
+```
 
-# Team Management
+#### Responses
 
-Members of a team have roles specified in the following table:
+##### `200 OK`
+This reservation was completed successfully.
 
-| Role Name      | teamRole |
-|----------------|----------|
-| NONE           | 0        |
-| MEMBER         | 1        |
-| LEADER         | 2        |
-| PENDING        | 3        |
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
 
+### Release a Reservation
 
-## `POST /teams`
+`POST api/v1/protected/reservations/release`
 
-Create a team. The team will only contain the member that created it who is now specified as the team leader.
+Must be called on a reservation belonging to the user or a team they're the leader of. 
 
-### Request
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This reservation was cancelled successfully.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+### Uncomplete a Reservation (Admin Only)
+
+`POST api/v1/protected/reservations/uncomplete`
+
+Can only by called by admins. Will invalidate the last completion for the given block and opens the block back up for inventory.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This reservation was marked as incomplete successfully.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+### Mark for QA (Admin Only)
+
+`POST api/v1/protected/reservations/qa`
+
+Can only by called by admins on completed blocks. Will indicate that this block needs QA.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has been selected for QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+### Pass QA (Admin Only)
+
+`POST api/v1/protected/reservations/pass_qa`
+
+Can only by called by admins on blocks with a QA status. Will set the block to the completion status from before it was marked for QA.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has passed QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+### Fail QA (Admin Only)
+
+`POST api/v1/protected/reservations/fail_qa`
+
+Can only by called by admins on blocks with a QA status. Will mark the block as open.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This block has failed QA.
+
+##### `400 BAD REQUEST`
+If the block id specified is invalid.
+
+## Teams Router
+
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `None` team role, meaning they have left the team or have been rejected.
+
+### Create a Team
+
+`POST api/v1/protected/teams`
+
+Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
+
+#### Request Body
 
 ```json
 {
   "name": STRING,
   "bio": STRING,
-  "goal": INT
-  "goalCompletionDate": DATE,
   "inviteEmails": [
     STRING,
     ...
@@ -157,43 +228,55 @@ Create a team. The team will only contain the member that created it who is now 
 }
 ```
 
-Goal is a number of blocks the team would like to complete by the goalCompleteDate. inviteEmails are a list of emails that that should be sent an invitation email to join the team. The team leader's email should not be included. This acts functionally the same as the `/teams/:team_id/invite` route.
-
-### Response
+#### Responses
 
 ##### `200 OK`
 
-```json
-{
-  "id": INT,
-  "name": STRING,
-  "bio": STRING,
-  "goal" INT,
-  "goalCompleteDate": DATE,
-  "blocksCompleted": INT,
-  "blocksReserved": INT,
-  "applicantsToReview": BOOLEAN,
-  "members": [
-    {
-      "id": INT,
-      "username": STRING,
-      "blocksCompleted": INT,
-      "blocksReserved": INT,
-      "teamRole": INT
-    },
-    ...
-  ],
-}
-```
+!!! missing "Should return the same as the get team route"
 
-This is the same as the JSON returned for `GET /teams/:team_id`
+##### `400 BAD REQUEST`
 
+!!! missing "Should be an error here if the team name is already taken"
 
-## `POST /teams/:team_id/invite`
+### Get a Team
+
+!!! missing "This route needs to be reimplemented due to the change in goals"
+
+`GET /teams/:team_id`
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "JSON body"
+
+### Add a Goal
+
+`POST api/v1/protected/teams/:team_id/add_goal`
+
+Adds a goal to this team's list of goals.
+
+!!! missing "This route has not been implemented yet"
+
+### Delete a Goal
+
+Deletes a goal from this team's list of goals. Simply removes the record from the table.
+
+`POST api/v1/protected/teams/:team_id/delete_goal`
+
+!!! missing "This route has not been implemented yet"
+
+### Invite a User
+
+`POST api/v1/protected/teams/:team_id/invite`
 
 Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated.
 
-### Request
+#### Request Body
 
 ```json
 {
@@ -207,21 +290,27 @@ Invite someone to join a team. Will send an email to all specified people that i
 }
 ```
 
-## `POST /teams/:team_id/apply`
+#### Responses
 
-Apply to join this team. Any member can apply to join a team that they are not currently on. They will have to be approved by the team leader before becoming an actual member of the team.
+##### `200 OK`
 
-### Request
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+
+### Get Applicants
+
+`GET api/v1/protected/teams/:team_id/applicants`
+
+Team Leader only. Get the info for anyone that has requested to join this team.
+
+#### Request Body
 
 No request body.
 
-## `GET /teams/:team_id/applicants`
-
-Team Leader only.
-
-Get the info for anyone that has requested to join this team in a list.
-
-### Responses
+#### Responses
 
 ##### `200 OK`
 
@@ -237,17 +326,41 @@ Get the info for anyone that has requested to join this team in a list.
 }
 ```
 
-## `POST /teams/:team_id/applicants/:user_id/approve`
+##### `400 BAD REQUEST`
 
-Team Leader only.
+!!! missing "Should be an error here if the team id is invalid or if the user is not a team leader"
 
-Approve this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+### Apply to a Team
 
-### Request
+`POST api/v1/protected/teams/:team_id/apply`
 
-No Request body
+Apply to join this team. Any member can apply to join a team that they are not currently on. They will have to be approved by the team leader before becoming an actual member of the team.
 
-### Responses
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+
+### Approve a User
+
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/approve`
+
+Team Leader only. Approve this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+
+#### Request Body
+
+No request body.
+
+#### Responses
 
 ##### `200 OK`
 
@@ -257,19 +370,21 @@ This member has joined the team.
 
 If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
 
+##### `401 Unauthorized`
 
+!!! missing "Should be an error here if the user is not a team leader"
 
-## `POST /teams/:team_id/applicants/:user_id/reject`
+### Reject a User
 
-Team Leader only.
+`POST /teams/:team_id/applicants/:user_id/reject`
 
-Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
 
-### Request
+#### Request Body
 
-No Request body
+No request body.
 
-### Responses
+#### Responses
 
 ##### `200 OK`
 
@@ -279,39 +394,85 @@ This applicant has been removed from the applicant's list.
 
 If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
 
+##### `401 Unauthorized`
 
+!!! missing "Should be an error here if the user is not a team leader"
 
+### Kick a User
 
+`POST api/v1/protected/teams/:team_id/members/:member_id/kick`
 
-## `POST /teams/:team_id/leave`
+Leader only. Kicks a member off this team. That member is then allowed to join or create any team now.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+
+##### `401 Unauthorized`
+
+!!! missing "Should be an error here if the user is not a team leader"
+
+### Leave a Team
+
+`POST api/v1/protected/teams/:team_id/leave`
 
 Leave this team that you are a part of. Cannot be called by the leader of the team.
 
-### Request
+#### Request Body
 
 No request body.
 
-## `POST /teams/:team_id/disband`
+#### Responses
 
-Disband this team. Leader only. The team will be removed from the public team list and all other members will now be free to join or create a different team.
+##### `200 OK`
 
-### Request
+!!! missing "Unknown"
+
+##### `400 BAD REQUEST`
+
+!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+
+### Disband a Team
+
+`POST api/v1/protected/teams/:team_id/disband`
+
+Leader only. Disband this team. The team will be deleted from the database. 
+
+#### Request Body
 
 No request body.
 
-## `POST /teams/:team_id/members/:member_id/kick`
+#### Responses
 
-Kicks a member off this team. Leader only. That member is then allowed to join or create any team now.
+##### `200 OK`
 
-### Request
+!!! missing "Unknown"
 
-No request body.
+##### `400 BAD REQUEST`
 
-## `POST /teams/:team_id/transfer_ownership`
+!!! missing "Should be an error here if the team id is invalid"
 
-Update the team leader. Can only be called by the current leader of the given team.
+##### `401 Unauthorized`
 
-### Request
+!!! missing "Should be an error here if the user is not the team leader"
+
+### Transfer Team Ownership
+
+`POST /teams/:team_id/transfer_ownership`
+
+Leader only. Makes the current team leader a regular team member and the specified user the team leader.
+
+#### Request Body
 
 ```json
 {
@@ -319,13 +480,13 @@ Update the team leader. Can only be called by the current leader of the given te
 }
 ```
 
-### Responses
+#### Responses
 
 ##### `200 OK`
 
 Success.
 
-##### `400 Bad Request`
+##### `400 BAD REQUEST`
 
 If the given user ID does not exist, or if the given user is not on the team.
 
@@ -333,237 +494,649 @@ If the given user ID does not exist, or if the given user is not on the team.
 
 If the requesting user is not the team leader.
 
+## Auth Router
 
-# Team and Leaderboard Data
+This router is used to authenticate users. It handles logins, logouts, signups but also things like resetting passwords and secret keys. All of these parts are public, as in users don't need to be authenticated yet to call these routes.
 
-## `GET /teams`
+### Login
 
-Gets a list of teams, names, member count.
+`POST api/v1/user/login`
 
-### Responses
+Used for logging in.
 
-##### `200 OK`
+#### Request Body
 
 ```json
 {
-  "teams": [
-    {
-      "id": INT,
-      "name": STRING,
-      "memberCount": INT,
-      "userTeamRole": TEAM_ROLE
-    },
-    ...
-  ],
-  "rowCount": INT
+    "email" : EMAIL,
+    "password" : STRING
 }
 ```
 
-## `GET /teams/admin`
+An EMAIL is a string representing a user's email.
 
-Gets a list of teams with their goal data.
+#### Responses
 
-### Responses
-
-##### `200 OK`
+##### `201 Created`
 
 ```json
 {
-  "teams": [
-    {
-      "id": INT,
-      "name": STRING,
-      "goalCompletionDate": TIMESTAMP,
-      "blocksCompleted": INT,
-      "blocksReserved": INT,
-      "goal": INT
-    },
-    ...
-  ],
-  "rowCount": INT
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
 }
 ```
 
-## `GET /teams/:team_id`
+##### `400 Bad Request`
+Malformed request.
 
-Gets the information for this specific team. Including the members with how many blocks each one has completed and reserved.
+##### `401 Unauthorized`
+The username/password combination is invalid.
 
-### Responses
+### Refresh Access Token
 
-##### `200 OK`
+`POST api/v1/user/login/refresh`
+
+Used for getting a new access token.
+
+#### Request body
 
 ```json
 {
-  "id": INT,
-  "name": STRING,
-  "bio": STRING,
-  "goal" INT,
-  "goalCompleteDate": DATE,
-  "blocksCompleted": INT,
-  "blocksReserved": INT,
-  "userTeamRole": TEAM_ROLE,
-  "applicantsToReview": BOOLEAN,
-  "members": [
-    {
-      "id": INT,
-      "username": STRING,
-      "blocksCompleted": INT,
-      "blocksReserved": INT,
-      "teamRole": INT
-    },
-    ...
-  ],
+  "X-Refresh-Token" : JWT
 }
 ```
 
-The `members` list is sorted in descending order of number of blocks completed.
+#### Responses
 
-`teamRole` is an indicator of the member's role on the team. Currently there are only two roles: general member and team leader.
-
-`applicantsToReview` is a flag that there are people that have applied to the team that the team leader has to review. This will always be false if a non-leader calls this route.
-
-
-## `GET /api/v1/protected/teams/export`
-
-Export Teams and User information. This is an admin-only route.
-Returns a `text/cvs` response that includes
-every team name, the goal and goal completion date of the team,
-the time the team was created, every member of each team,
-the team role of each member, the number of blocks
-reserved and completed by each user on a team.
-
-### Responses
-
-##### `200 OK`
-
-```text
-STRING,STRING,STRING,...
-STRING,STRING,STRING,...
-...
-```
-
-
-## `GET /blocks`
-
-Gets blocks done, in progress, todo for all of Boston
-
-### Responses
-
-##### `200 OK`
+##### `201 Created`
+The refresh token is valid and has not yet expired. Response includes a new unique access_token.
 
 ```json
 {
-  "blocksCompleted": INT,
-  "blocksReserved": INT,
-  "blocksOpen": INT
+  "accessToken" : JWT,
 }
 ```
 
-## `GET /blocks/leaderboard`
+##### `401 Unauthorized`
+The refresh token is invalid.
 
-Gets blocks completed leaderboard for both teams and individuals. Will include up-to the top 10 teams and the top 10 individuals
+### Sign Up
 
-### Responses
+`POST api/v1/user/signup`
 
-##### `200 OK`
+Used for signing up a new user.
+
+#### Request Body
 
 ```json
 {
-  "teams": [
+  "username" : STRING,
+  "email" : EMAIL,
+  "password" : STRING,
+  "firstName" : STRING,
+  "lastName" : STRING
+}
+```
+
+- EMAIL: Is a valid email string.
+- PASSWORD: Is a valid password string that is at least 8 characters.
+
+#### Responses
+
+##### `201 Created`
+The username and email are still available, and an account has been successfully created.
+
+```json
+{
+  "accessToken"  : JWT,
+  "refreshToken" : JWT
+}
+```
+ 
+##### `400 Bad Request`
+Malformed request body.
+
+##### `409 Conflict`
+The given email or username is already in use.
+
+```json
+"Error creating new user, given email %s already used"
+```
+
+```json
+"Error creating new user, given username %s already used"
+```
+
+### Log Out
+
+`DELETE api/v1/user/login`
+
+Used for logging out.
+
+#### Request Body
+
+```json
+  X-Access-Token : JWT
+  X-Refresh-Token : JWT
+```
+
+#### Responses
+
+##### `204 No Content`
+Logout successful.
+
+### Request Password Reset
+
+`POST api/v1/user/forgot_password/request`
+
+Used to send a reset password email to a user if they have forgotten their password
+
+#### Request Body
+
+```json
+{
+  "email": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+The email was sent to the user successfully
+
+##### `400 BAD REQUEST`
+
+The given email is not associated with any user account
+
+### Reset Password
+
+`POST api/v1/user/forgot_password/reset`
+
+Used to reset a user's password after they have requested a forget password link. The secret key will be contained in the forgot password link. 
+
+#### Request Body
+
+```json
+{
+  "secretKey": STRING,
+  "newPassword": STRING
+}
+```
+
+Passwords should be strings with length >= 8 characters.
+
+#### Responses
+
+##### `200 OK`
+
+The user's identity was confirmed and the password was changed successfully.
+
+##### `400 BAD REQUEST`
+
+The new password that was given is an invalid password.
+
+##### `401 UNAUTHORIZED`
+
+The given secret key is invalid and does not refer to an account or was created too long ago to be valid.
+
+### Verify Secret Key
+
+`GET api/v1/user/verify/:secret_key`
+
+Used for confirming an account's email.
+
+#### Request Body
+
+None. The secret key parameter is a randomly generated key and sent to the user to verify their email.
+
+#### Responses
+
+##### `200 OK`
+
+The user's secret key has been verified. 
+
+##### `401 Unauthorized`
+The secret key is invalid or expired.
+
+### Create Secret Key
+
+!!! missing "This route still needs to be implemented"
+
+`GET api/v1/user/create_secret/:user_id`
+
+Used to create secret keys for users.
+
+#### Request Body
+
+None. The user_id parameter is the id of the user the secret key should be linked to.
+
+#### Responses
+
+##### `200 OK`
+A secret key was created and stored for the given user.
+
+##### `400 BAD REQUEST`
+The given user id could not be found.
+
+## Users Router
+
+This router is used for routes that affects user accounts. It can only be called when a user is authenticated, as opposed to the auth router which is public.
+
+### Change Password
+
+`POST api/v1/protected/user/change_password`
+
+Allows a user to change their password when already authenticated. Passwords should be strings with a length of at least 8 characters.
+
+#### Request Body
+
+```json
+{
+  "currentPassword": STRING,
+  "newPassword": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+The password change was successful.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+The currentPassword does not match the calling user's current password.
+
+### Change Username
+
+`POST api/v1/protected/user/change_username`
+
+Allows a user to change their username. The new username must not be in use already.
+
+#### Request Body
+
+```json
+{
+  "newUsername": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The username change was successful.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
+##### `409 Conflict`
+The given `newUsername` is already in use.
+
+### Delete User
+
+!!! missing "This route has not been implemented yet"
+
+`POST api/v1/protected/user/delete`
+
+Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
+
+#### Request Body
+
+```json
+{
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Successfully deleted this user.
+
+##### `400 BAD REQUEST`
+
+If the given user ID does not exist.
+
+##### `401 Unauthorized`
+
+If the password is wrong.
+
+### Change Privilege Level (Admin Only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/user/change_privilege`
+
+Allows admins to create more admins or demote other admins.
+
+#### Request Body
+
+```json
+{
+  "targetUserEmail": STRING,
+  "newLevel": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The privilege level change was successful.
+
+##### `400 Bad Request`
+The requested user already has the given privilege level.
+
+##### `400 Bad Request`
+There is no user associated with the given email.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
+## Map Router
+
+
+This router is used to retrieve the data necessary to render blocks, neighborhoods and sites (plantings sites and trees). It makes a call to the backend, which returns the required data from the database in GeoJSON format. The router is public since much of this information is also rendered on the home page.
+
+### Get All Blocks in GeoJSON
+
+`GET api/v1/protected/map/blocks`
+
+Returns all the blocks in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+```json
+{
+  "type": "FeatureCollection",
+  "name": "blocks",
+  "features: [
     {
-      "id": INT,
-      "name": STRING,
-      "blocksCompleted": INT,
-      "blocksReserved": INT
-    },
-    ...
-  ],
-  "individuals": [
-    {
-      "id": INT,
-      "username": STRING,
-      "blocksCompleted": INT,
-      "blocksReserved": INT
+      "type": "Feature",
+      "properties": {
+        "block_id": INT,
+        "lat": LONG,
+        "lng": LONG,
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": 
+        [
+          [
+            [
+              [
+                  LONG,
+                  LONG
+              ],
+              ...
+            ]
+          ]
+        ]
+      }
     },
     ...
   ]
 }
 ```
 
-## `GET api/v1/protected/blocks/reserved`
+### Get All Neighborhoods in GeoJSON
 
-Gets all blocks that are `assigned_to` the current user that have a status of
-`RESERVED`. Including the optional query parameter `done=true` will _also_
-return all blocks that have a status of `DONE`. Returns a list of `block.fid`.
+`GET api/v1/protected/map/neighborhoods`
 
-### Responses
+Returns all the neighborhoods in GeoJSON format. The `completion_perc` field in the properties is the percentage of blocks marked as completed compared to the total amount of blocks in that neighborhood.
 
-##### `200 OK`
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
 
 ```json
-[
-    STRING,
-    STRING,
+{
+  "type": "FeatureCollection",
+  "name": "neighborhoods",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "neighborhood_id": INT,
+        "name": STRING,
+        "completion_perc": INT,
+        "lat": LONG,
+        "lng": LONG
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          coordinates pairs...
+        ]
+      }
+    },
     ...
+  ]
+}
+```
+
+### Get All Sites in GeoJSON
+
+`GET api/v1/protected/map/sites`
+
+Returns all the sites in GeoJSON format.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+#####  `200 OK`
+
+!!! missing "This still needs to figured out"
+
+## Import Router
+
+The import router will be used to fill the database tables that have either static information, such as the blocks and neighborhoods tables, or if already recorded information needs to be carried over. All routes can only be called by super admins. 
+
+The `geometry` field represents the polygon, multi-polygon or other geometric shape that is associated with the the feature. This will consist of the entire `geometry` field found in a `.geojson` file. The JSON will be encoded as a String when sent to the import API. JSON example:
+```json
+"type": "MultiPolygon",
+"coordinates": [
+  [
+    [
+      [
+          -71.02859399925286,
+          42.34889700150278
+      ],
+      [
+          -71.02912299801895,
+          42.34837799993562
+      ],
+      [
+          -71.03016800287584,
+          42.348783997754865
+      ],
+      ...
+    ]
+  ]
 ]
 ```
 
-## `GET api/v1/protected/blocks/reserved/admin`
+### Import Blocks
 
-Gets all blocks that have a status of `RESERVED`, in descending order of reservation date. Can only be called by admins.
+`POST api/v1/protected/import/blocks`
 
-### Responses
+Used to import blocks into the database. Since blocks reference neigborhoods with a foreign key make sure all neighborhoods are imported first.
+
+#### Request Body
+
+```json
+{
+  "blocks": [
+    {
+      "block_id": INT,
+      "neighborhood_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "geometry": STRING,
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Blocks imported succesfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
+### Import Neighborhoods
+
+`POST api/v1/protected/import/neighborhoods`
+
+Used to import neighborhoods into the database. Must be called before importing blocks since blocks reference neighborhoods.
+
+#### Request Body
+
+```json
+{
+  "neighborhoods": [
+    {
+      "neighborhood_id": INT,
+      "neighborhood_name": STRING,
+      "sq_miles": DOUBLE,
+      "lat": LONG,
+      "lng": LONG,
+      "geometry": STRING,
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Neighborhoods imported succesfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
+### Import Trees
+
+!!! missing "This route has not been implemented yet"
+
+### Import Reservations
+
+!!! missing "This route has not been implemented yet"
+
+`POST api/v1/protected/import/reservations`
+
+## Leaderboard Router
+
+The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public so that a future release can include a public leaderboard page. Since none of the information here is strictly private, the consequences of making it public are minimal.
+
+A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field. The tie breaker for users or teams with the same number of completed blocks is whatever order the database returns the values in.
+
+### Get Users Leaderboard
+
+`GET api/v1/leaderboard/users`
+
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
+
+#### Request Body
+
+```json
+{
+  "time_period": INT
+}
+```
+
+#### Responses
 
 ##### `200 OK`
 
 ```json
 {
-    "blocks": [
-        {
-            "fid": STRING,
-            "username": STRING,
-            "dateUpdated": TIMESTAMP
-        }
-    ],
+  "users": [
+    {
+      "username": STRING,
+      "blocks": INT
+    },
     ...
+  ]
 }
 ```
 
-## `GET api/v1/protected/blocks/done/admin`
+##### `400 BAD REQUEST`
 
-Gets all blocks that have a status of `DONE`, in descending order of completion date. Can only be called by admins.
+If the request was malformed.
 
-### Responses
+### Get Teams Leaderboard
+
+`GET api/v1/leaderboard/teams`
+
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
+
+#### Request Body
+
+```json
+{
+  "time_period": INT
+}
+```
+
+#### Responses
 
 ##### `200 OK`
 
 ```json
 {
-    "blocks": [
-        {
-            "fid": STRING,
-            "username": STRING,
-            "dateUpdated": TIMESTAMP
-        }
-    ],
+  "teams": [
+    {
+      "team_name": STRING,
+      "blocks": INT
+    },
     ...
+  ]
 }
 ```
 
-## `GET /api/v1/protected/blocks/export`
+##### `400 BAD REQUEST`
 
-Export Block and User/Team information. This is an admin-only route.
-Returns a `text/csv` response that includes
-every block number, the status of the block,
-the user that is associated with it (first name, last name, email, username),
-the time it last updated, and the names of the teams the user is currently on.
-
-### Responses
-
-##### `200 OK`
-
-```text
-STRING,STRING,STRING,...
-STRING,STRING,STRING,...
-...
-```
+If the request was malformed.
