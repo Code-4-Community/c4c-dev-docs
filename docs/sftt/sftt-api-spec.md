@@ -21,7 +21,7 @@ The team role enum is all the possible states a use can be in in relation to a t
 The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
 
 - `STANDARD` - A regular member of the platform and usually a volunteer for Speak for the Trees.
-- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neigbhorhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
+- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neighborhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
 - `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
 
 ### Reservation Action
@@ -36,7 +36,7 @@ The reservation action enum is all the possible action types a reservation can h
 
 
 ## Reservations Router
-This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table everytime an action is performed on a block. These possible actions are:
+This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table every time an action is performed on a block. These possible actions are:
 
 - `reserve` - Reserve the given block for the given user.
 - `complete` - Complete the given block. 
@@ -986,7 +986,7 @@ The `geometry` field represents the polygon, multi-polygon or other geometric sh
 
 `POST api/v1/protected/import/blocks`
 
-Used to import blocks into the database. Since blocks reference neigborhoods with a foreign key make sure all neighborhoods are imported first.
+Used to import blocks into the database. Since blocks reference neighborhoods with a foreign key make sure all neighborhoods are imported first.
 
 #### Request Body
 
@@ -1009,7 +1009,7 @@ Used to import blocks into the database. Since blocks reference neigborhoods wit
 
 ##### `200 OK`
 
-Blocks imported succesfully.
+Blocks imported successfully.
 
 ##### `400 BAD REQUEST`
 
@@ -1047,7 +1047,7 @@ Used to import neighborhoods into the database. Must be called before importing 
 
 ##### `200 OK`
 
-Neighborhoods imported succesfully.
+Neighborhoods imported successfully.
 
 ##### `400 BAD REQUEST`
 
