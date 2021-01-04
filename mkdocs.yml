@@ -37,10 +37,8 @@ nav:
       - How to style AntD components with styled-components: llb/antd-styled-components.md
   - Speak for the Trees (SFTT):
       - Home: sftt/index.md
-      - Map Architecture: sftt/map-architecture.md
-      - Feature API Specification: sftt/sftt-api-spec.md
-      - New API Specification: sftt/sftt-api-spec-new.md
-      - Auth API Specification: sftt/sftt-auth-api.md
+      - ArcGIS Architecture: sftt/arcgis-architecture.md
+      - API Specification: sftt/sftt-api-spec.md
   - Hands Across the Sea (HATS):
       - Home: hats/index.md
       - Auth API Specification: hats/api-spec-auth.md
