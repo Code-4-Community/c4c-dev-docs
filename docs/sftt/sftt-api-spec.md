@@ -1083,7 +1083,7 @@ Returns a list of the top 100 users with counted blocks, of usernames and the bl
 
 ```json
 {
-  "time_period": INT
+  "previousDays": INT
 }
 ```
 
@@ -1118,7 +1118,7 @@ Returns a list of the top 100 team's names and the blocks those teams counted, i
 
 ```json
 {
-  "time_period": INT
+  "previousDays": INT
 }
 ```
 
