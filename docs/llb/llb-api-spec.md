@@ -9,7 +9,9 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
 ```
 
 # Table Of Contents
-- [Getting Events](#getting-events)
+- [Getting Public Events](#getting-public-events)
+  * [`GET api/v1/events?ids=1,2,3,...`](#-get-api-v1-events-ids-1-2-3--)
+- [Getting Protected Events](#getting-protected-events)
   * [`GET api/v1/protected/events/qualified`](#-get-api-v1-protected-events-qualified-)
   * [`GET api/v1/protected/events/signed_up`](#-get-api-v1-protected-events-signed-up-)
   * [`GET api/v1/protected/events?ids=1,2,3,...`](#-get-api-v1-protected-events-ids-1-2-3--)
@@ -36,9 +38,46 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
   * [`PUT api/v1/protected/checkout/register/:event_id`](#-put-api-v1-protected-checkout-register--event-id-)
   * [`POST api/v1/webhooks/stripe`](#-post-api-v1-webhooks-stripe)
 
+# Getting Public Events
 
+## `GET api/v1/events?ids=1,2,3,...`
 
-# Getting Events
+Get the event bodies for the public events with the ids that are specified in the query parameter.
+
+### Query Params
+
+##### ids: INT-LIST
+
+The event ids that are being requested. Ids are numbers and they should be seperated by a single comma. If this query parameter is missing, this route returns an empty list. Ignore duplicated values. Ignore ids that do not correspond to any existing event.
+
+### Responses
+
+Equivelent to above routes:
+
+```json
+{
+  "events": [
+    {
+      "id": ID,
+      "title": STRING,
+      "spotsAvailable": INT,
+      "capacity": INT,
+      "thumbnail": URL,
+      "price": INT,
+      "details": {
+        "description": STRING,
+        "location": STRING,
+        "start": TIMESTAMP,
+        "end": TIMESTAMP
+      }
+    },
+    ...
+  ],
+  "totalCount": INTEGER
+}
+```
+
+# Getting Protected Events
 
 ## `GET api/v1/protected/events/qualified`
 
@@ -81,6 +120,7 @@ The events were sent successfully.
       "thumbnail": URL,
       "ticketCount": INT,
       "canRegister": BOOLEAN,
+      "price": INT,
       "details": {
         "description": STRING,
         "location": STRING,
@@ -151,7 +191,6 @@ The events were sent successfully.
 ```
 
 ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.
-
 
 ## `GET api/v1/protected/events?ids=1,2,3,...`
 
