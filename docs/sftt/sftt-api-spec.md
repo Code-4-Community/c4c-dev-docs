@@ -232,7 +232,7 @@ Create a team. The team will only contain the member that created it who is now 
 
 ##### `200 OK`
 
-!!! missing "Should return the same as the get team route"
+Returns the same response as the get teams route.
 
 ##### `400 BAD REQUEST`
 
@@ -240,7 +240,7 @@ Create a team. The team will only contain the member that created it who is now 
 
 ### Get a Team
 
-!!! missing "This route needs to be reimplemented due to the change in goals"
+Used to get all the information about a given team. 
 
 `GET /teams/:team_id`
 
@@ -252,7 +252,32 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "JSON body"
+```json
+{
+  "id": INT,
+  "name": STRING,
+  "bio": STRING,
+  "members": [
+    {
+      "user_id": INT,
+      "username": STRING,
+      "team_role": STRING,
+    },
+    ...
+  ],
+  "goals": [
+    {
+      "id": INT,
+      "goal": INT,
+      "progress": INT,
+      "start_date": TIMESTAMP,
+      "complete_by": TIMESTAMP,
+      "completion_date": TIMESTAMP
+    },
+    ...
+  ]
+}
+```
 
 ### Add a Goal
 
@@ -260,7 +285,15 @@ No request body.
 
 Adds a goal to this team's list of goals.
 
-!!! missing "This route has not been implemented yet"
+#### Request Body
+
+```json
+{
+  "goal": INT,
+  "start_at": TIMESTAMP,
+  "complete_by": TIMESTAMP
+}
+```
 
 ### Delete a Goal
 
@@ -268,7 +301,13 @@ Deletes a goal from this team's list of goals. Simply removes the record from th
 
 `POST api/v1/protected/teams/:team_id/delete_goal`
 
-!!! missing "This route has not been implemented yet"
+#### Request Body
+
+```json
+{
+  "id": INT
+}
+```
 
 ### Invite a User
 
