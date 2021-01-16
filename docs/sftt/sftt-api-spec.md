@@ -1057,15 +1057,46 @@ If the request was malformed.
 
 If the user is not a super admin.
 
+### Import Reservations
+
+`POST api/v1/protected/import/reservations`
+
+Used to import reservations into the database. The referenced blocks, users and teams must be in the database. If they're not an error will occur when the "invalid" reservation is reached. `user_id` and `team_id` can be left blank, in which case the reservation will be attributed to the super admin calling the route.
+
+#### Request Body
+
+```json
+{
+  "reservations": [
+    {
+      "block_id": INT,
+      "user_id": INT,
+      "team_id": INT,
+      "action_type": STRING,
+      "performed_at": ???
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Reservations imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
 ### Import Trees
 
 !!! missing "This route has not been implemented yet"
-
-### Import Reservations
-
-!!! missing "This route has not been implemented yet"
-
-`POST api/v1/protected/import/reservations`
 
 ## Leaderboard Router
 
