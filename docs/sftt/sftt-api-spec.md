@@ -234,7 +234,7 @@ Create a team. The team will only contain the member that created it who is now 
 
 ##### `200 OK`
 
-Returns the same response as the get teams route for the newly created team.
+Returns the same response as the "Get a Team" route for the newly created team.
 
 ##### `400 BAD REQUEST`
 
@@ -331,7 +331,7 @@ If the calling user is not team leader.
 
 `POST api/v1/protected/teams/:team_id/invite`
 
-Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out. The other ones will be.
+Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
 
 #### Request Body
 
@@ -355,7 +355,7 @@ Users invited.
 
 ##### `400 BAD REQUEST`
 
-If the team id is invalid or if the one of the users is already on the team. 
+If the team id is invalid.
 
 ### Get Applicants
 
