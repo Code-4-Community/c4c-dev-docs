@@ -11,7 +11,7 @@ This is the official API specification for the SFTT back end. The back end is im
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
 
-- `None` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
+- `NONE` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
 - `MEMBER` - The is a member of the team.
 - `LEADER` - The user is a leader of the team. This grants them special privileges such as being able to accept or reject pending members and being able to disband the team.
 - `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `None`
@@ -211,7 +211,7 @@ This router is used to manage teams. A team consists of a group of users which w
 
 ### Create a Team
 
-`POST api/v1/protected/teams`
+`POST api/v1/protected/teams/create`
 
 Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
 
@@ -236,7 +236,7 @@ Returns the same response as the get teams route.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team name is already taken"
+If the team name is taken.
 
 ### Get a Team
 
@@ -279,6 +279,10 @@ No request body.
 }
 ```
 
+##### `400 BAD REQUEST`
+
+If the team id is invalid.
+
 ### Add a Goal
 
 `POST api/v1/protected/teams/:team_id/add_goal`
@@ -295,6 +299,10 @@ Adds a goal to this team's list of goals.
 }
 ```
 
+##### `400 BAD REQUEST`
+
+If the goal is negative or the `complete_by` date is before the `start_at` date.
+
 ### Delete a Goal
 
 Deletes a goal from this team's list of goals. Simply removes the record from the table.
@@ -308,6 +316,10 @@ Deletes a goal from this team's list of goals. Simply removes the record from th
   "id": INT
 }
 ```
+
+##### `400 BAD REQUEST`
+
+If the goal id is invalid.
 
 ### Invite a User
 
@@ -333,11 +345,11 @@ Invite someone to join a team. Will send an email to all specified people that i
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Users invited.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+If the team id is invalid or if the user is already on the team.
 
 ### Get Applicants
 
@@ -367,7 +379,11 @@ No request body.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is not a team leader"
+If the team id is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a team leader
 
 ### Apply to a Team
 
@@ -383,11 +399,11 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Applied successfully.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+If the team id is invalid or if the user is already on the team"
 
 ### Approve a User
 
@@ -407,17 +423,17 @@ This member has joined the team.
 
 ##### `400 BAD REQUEST`
 
-If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
+If the team or request specified in the id is invalid or the user that had created the request no longer exists.
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Reject a User
 
-`POST /teams/:team_id/applicants/:user_id/reject`
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/reject`
 
-Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call. Their team role will be set to `NONE`.
 
 #### Request Body
 
@@ -435,13 +451,13 @@ If the team or request specified in the id is invalid OR the user that had creat
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Kick a User
 
 `POST api/v1/protected/teams/:team_id/members/:member_id/kick`
 
-Leader only. Kicks a member off this team. That member is then allowed to join or create any team now.
+Leader only. Kicks a member off this team. Sets their team role to `NONE`.
 
 #### Request Body
 
@@ -451,21 +467,21 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully kicked user.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+If the user is no longer on the team or the team id is invalid.
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Leave a Team
 
 `POST api/v1/protected/teams/:team_id/leave`
 
-Leave this team that you are a part of. Cannot be called by the leader of the team.
+Leave this team that you are a part of. Cannot be called by the leader of the team. Will set team role to `NONE`.
 
 #### Request Body
 
@@ -475,17 +491,17 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully left team.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+If the user is not on the team or the team id is invalid.
 
 ### Disband a Team
 
 `POST api/v1/protected/teams/:team_id/disband`
 
-Leader only. Disband this team. The team will be deleted from the database. 
+Leader only. Disband this team. The `deleted_at` field will be set to the current timestamp.
 
 #### Request Body
 
@@ -495,19 +511,19 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully deleted team.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid"
+If the team id is invalid.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
-!!! missing "Should be an error here if the user is not the team leader"
+If the user is not the team leader.
 
 ### Transfer Team Ownership
 
-`POST /teams/:team_id/transfer_ownership`
+`POST api/v1/protected/teams/:team_id/transfer_ownership`
 
 Leader only. Makes the current team leader a regular team member and the specified user the team leader.
 
@@ -529,7 +545,7 @@ Success.
 
 If the given user ID does not exist, or if the given user is not on the team.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the requesting user is not the team leader.
 
