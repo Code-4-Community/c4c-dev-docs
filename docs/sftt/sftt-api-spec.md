@@ -14,7 +14,9 @@ The team role enum is all the possible states a use can be in in relation to a t
 - `NONE` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
 - `MEMBER` - The is a member of the team.
 - `LEADER` - The user is a leader of the team. This grants them special privileges such as being able to accept or reject pending members and being able to disband the team.
-- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `None`
+- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `NONE`
+
+A user is said to be on a team if their role is `MEMBER` or `LEADER`. 
 
 ### Privilege Level
 
@@ -222,7 +224,7 @@ Create a team. The team will only contain the member that created it who is now 
   "name": STRING,
   "bio": STRING,
   "inviteEmails": [
-    STRING,
+    EMAIL,
     ...
   ]
 }
@@ -232,15 +234,15 @@ Create a team. The team will only contain the member that created it who is now 
 
 ##### `200 OK`
 
-Returns the same response as the get teams route.
+Returns the same response as the get teams route for the newly created team.
 
 ##### `400 BAD REQUEST`
 
-If the team name is taken.
+If the team name is taken or if any of the email addresses is invalid.
 
 ### Get a Team
 
-Used to get all the information about a given team. 
+Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
 
 `GET /teams/:team_id`
 
@@ -261,7 +263,7 @@ No request body.
     {
       "user_id": INT,
       "username": STRING,
-      "team_role": STRING,
+      "team_role": TEAM_ROLE,
     },
     ...
   ],
@@ -272,7 +274,7 @@ No request body.
       "progress": INT,
       "start_date": TIMESTAMP,
       "complete_by": TIMESTAMP,
-      "completion_date": TIMESTAMP
+      "completion_date": TIMESTAMP | NULL
     },
     ...
   ]
@@ -287,7 +289,7 @@ If the team id is invalid.
 
 `POST api/v1/protected/teams/:team_id/add_goal`
 
-Adds a goal to this team's list of goals.
+Team leader only. Adds a goal to this team's list of goals.
 
 #### Request Body
 
@@ -303,29 +305,33 @@ Adds a goal to this team's list of goals.
 
 If the goal is negative or the `complete_by` date is before the `start_at` date.
 
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
+
 ### Delete a Goal
 
-Deletes a goal from this team's list of goals. Simply removes the record from the table.
+Team leader only. Deletes a goal from this team's list of goals. Simply removes the record from the table.
 
-`POST api/v1/protected/teams/:team_id/delete_goal`
+`POST api/v1/protected/teams/:team_id/delete_goal/:goal_id`
 
 #### Request Body
 
-```json
-{
-  "id": INT
-}
-```
+No request body.
 
 ##### `400 BAD REQUEST`
 
 If the goal id is invalid.
 
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
+
 ### Invite a User
 
 `POST api/v1/protected/teams/:team_id/invite`
 
-Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated.
+Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out. The other ones will be.
 
 #### Request Body
 
@@ -349,7 +355,7 @@ Users invited.
 
 ##### `400 BAD REQUEST`
 
-If the team id is invalid or if the user is already on the team.
+If the team id is invalid or if the one of the users is already on the team. 
 
 ### Get Applicants
 
