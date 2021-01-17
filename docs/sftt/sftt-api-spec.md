@@ -209,7 +209,7 @@ If the block id specified is invalid.
 
 ## Teams Router
 
-This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `None` team role, meaning they have left the team or have been rejected.
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `NONE` team role, meaning they have left the team or have been rejected.
 
 ### Create a Team
 
