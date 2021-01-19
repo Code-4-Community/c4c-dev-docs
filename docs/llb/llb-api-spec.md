@@ -48,7 +48,7 @@ Get the event bodies for the public events with the ids that are specified in th
 
 ##### ids: INT-LIST
 
-The event ids that are being requested. Ids are numbers and they should be seperated by a single comma. If this query parameter is missing, this route returns an empty list. Ignore duplicated values. Ignore ids that do not correspond to any existing event.
+The event ids that are being requested. Ids are numbers and they should be seperated by a single comma. If this query parameter is missing, this route returns all future events. Ignore duplicated values. Ignore ids that do not correspond to any existing event.
 
 ### Responses
 
