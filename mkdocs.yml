@@ -13,6 +13,10 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
   - toc:
       toc_depth: 3
 
@@ -49,3 +53,4 @@ nav:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:
       - Backend Deployment: aws/backend-deployment.md
+  - Test: "jumpstart2/backend/ticket.md"
