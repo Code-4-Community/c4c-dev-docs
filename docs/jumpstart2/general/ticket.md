@@ -16,7 +16,7 @@ and ask. Good luck on your tickets!
       - Model, View, Controller (MVC)
     - What will we need to do?
 3. Making Changes
-   - ???
+    - ???
 4. Testing!!!
 5. Pull Requests
 
@@ -307,7 +307,7 @@ the record class in service/ you added when you're done.
 
 Cool, now we're done with working in persist/. Let's move on to creating the Note sub-router.
 
-### The Note Sub-router
+### The Notes Sub-router
 
 Creating a new sub-router is pretty simple, but first let's take a look at what routing even means. Routing is
 when an application receives a request at a certain endpoint, usually a path in a URL, and performs some associated 
@@ -363,16 +363,17 @@ public class ApiRouter implements IRouter {
     this.notesHandler = new NotesHandler();
   }
   
-  public Router initializeRouter(Vertx vertx) {
-    Router router = commonRouter.initializeRouter(vertx);
+  ...
+  
+  private Router defineProtectedRoutes(Vertx vertx) {
+    Router router = Router.router(vertx);
     
-    router.mountSubRouter("/user", authRouter.initializeRouter(vertx));
-    router.mountSubRouter("/protected", defineProtectedRouter(vertx));
-    router.mountSubRouter("/notes", notesHandler.initializeRouter(vertx));
-    
+    router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
+    router.mountSubRouter("/notes", notesRouter.initiallizeRouter(vertx));
+
     return router;
   }
-  
+
   ...
 }
 ```
@@ -450,6 +451,8 @@ We're all done with the DTO now, so let's take a look at the processor.
 
 ### Create a new notes processor
 
+Now we need to create what's called a processor for notes. In C4C, we use the term processor to define
+a class which deals with the interactions between an API and jOOQ type, both for incoming and outgoing data.
 
 
 

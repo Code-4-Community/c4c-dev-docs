@@ -32,6 +32,8 @@ nav:
       - Home: guides/index.md
       - Jumpstart Fullstack Course: https://learn.c4cneu.com
       - Frontend Data Architecture with Redux: guides/frontend-redux.md
+  -  "Jumpstart 2: Electric Boogaloo":
+       - Working on a ticket: jumpstart2/general/ticket.md
   - Lucy's Love Bus (LLB):
       - Home: llb/index.md
       - Feature API Specification: llb/llb-api-spec.md
@@ -53,4 +55,3 @@ nav:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:
       - Backend Deployment: aws/backend-deployment.md
-  - Test: "jumpstart2/backend/ticket.md"
