@@ -244,7 +244,7 @@ If the team name is taken or if any of the email addresses is invalid.
 
 Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
 
-`GET /teams/:team_id`
+`GET api/v1/protected/teams/:team_id`
 
 #### Request Body
 
@@ -1203,3 +1203,127 @@ Returns a list of the top 100 team's names and the blocks those teams counted, i
 ##### `400 BAD REQUEST`
 
 If the request was malformed.
+
+## Sites Router
+
+The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
+
+### Add a Site
+
+`POST api/v1/protected/sites/create`
+
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.).
+
+#### Request Body
+
+```json
+{
+  ...
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Get a Site
+
+`GET api/v1/protected/sites/:site_id`
+
+Returns all the info about a specific site. Used mainly to display the site page to users. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  ...
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+### Update a Site
+
+`POST api/v1/protected/sites/update`
+
+Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. 
+
+#### Request Body
+
+```json
+{
+  ...
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully updated.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Delete Site (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/delete`
+
+Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Mark Site for QA (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/qa`
+
+Used to indicate that a site needs to be checked. This can be done for an individual site or can be part of marking an entire block for QA and then every site associated with that block will be marked for QA. This is done by creating a new entry in the `site_entries` table with `qa` set to `true`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked for QA.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
