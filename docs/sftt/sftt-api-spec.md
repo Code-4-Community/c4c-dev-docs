@@ -844,8 +844,6 @@ The given `newUsername` is already in use.
 
 ### Delete User
 
-!!! missing "This route has not been implemented yet"
-
 `POST api/v1/protected/user/delete`
 
 Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
@@ -873,8 +871,6 @@ If the given user ID does not exist.
 If the password is wrong.
 
 ### Change Privilege Level (Admin Only)
-
-!!! missing "This route still needs to be implemented"
 
 `POST api/v1/protected/user/change_privilege`
 
@@ -1118,15 +1114,46 @@ If the request was malformed.
 
 If the user is not a super admin.
 
+### Import Reservations
+
+`POST api/v1/protected/import/reservations`
+
+Used to import reservations into the database. The referenced blocks, users and teams must be in the database. If they're not an error will occur when the "invalid" reservation is reached. `userId` and `teamId` can be left blank, in which case the reservation will be attributed to the super admin calling the route. `performedAt` must be in the form `"mm\/dd\/yyyy"`.
+
+#### Request Body
+
+```json
+{
+  "reservations": [
+    {
+      "blockId": INT,
+      "userId": INT,
+      "teamId": INT,
+      "actionType": STRING,
+      "performedAt": STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Reservations imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+If the user is not a super admin.
+
 ### Import Trees
 
 !!! missing "This route has not been implemented yet"
-
-### Import Reservations
-
-!!! missing "This route has not been implemented yet"
-
-`POST api/v1/protected/import/reservations`
 
 ## Leaderboard Router
 
@@ -1138,7 +1165,7 @@ A completed block is a block for which the last entry is either `complete` or `q
 
 `GET api/v1/leaderboard/users`
 
-Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded. The `previousDays` represent how many days in the past the leaderboard is representing. This is a required value.
 
 #### Request Body
 
@@ -1173,7 +1200,7 @@ If the request was malformed.
 
 `GET api/v1/leaderboard/teams`
 
-Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The `previousDays` represent how many days in the past the leaderboard is representing.
 
 #### Request Body
 
