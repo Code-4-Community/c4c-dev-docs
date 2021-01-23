@@ -1288,13 +1288,55 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 `POST api/v1/protected/sites/create`
 
-Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.).
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
 
 #### Request Body
 
 ```json
 {
-  ...
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "tree_present": BOOLEAN,
+  "status": STRING,
+  "genus": STRING,
+  "species": STRING,
+  "common_name": STRING,
+  "confidence": STRING,
+  "diameter": DOUBLE,
+  "circumference": DOUBLE,
+  "coverage": STRING,
+  "pruning": STRING,
+  "condition": STRING,
+  "discoloring": BOOLEAN,
+  "leaning": BOOLEAN,
+  "grate": BOOLEAN,
+  "wounds": BOOLEAN,
+  "pooling": BOOLEAN,
+  "stakes_with": BOOLEAN,
+  "stakes_without": BOOLEAN,
+  "light": BOOLEAN,
+  "bicycle": BOOLEAN,
+  "bag_with": BOOLEAN,
+  "bag_without": BOOLEAN,
+  "tape": BOOLEAN,
+  "sucker_growth": BOOLEAN,
+  "site_type": STRING,
+  "sidewalk_width": STRING,
+  "site_width": STRING,
+  "pit_length": STRING,
+  "material": STRING,
+  "raised_bed":,
+  "fence": STRING,
+  "trash": STRING,
+  "wires": STRING,
+  "grate": STRING,
+  "stump": STRING,
+  "tree_notes": STRING,
+  "site_notes": STRING
 }
 ```
 
@@ -1312,7 +1354,7 @@ If the request body is malformed.
 
 `GET api/v1/protected/sites/:site_id`
 
-Returns all the info about a specific site. Used mainly to display the site page to users. 
+Returns all the info about a specific site. This includes all the entries linked to the site, in reverse chronological order (most recent first).
 
 #### Request Body
 
@@ -1324,7 +1366,58 @@ No request body.
 
 ```json
 {
-  ...
+  "site_id": INT,
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "entries": [
+    {
+      "id": INT,
+      "username": INT,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN,
+      "status": STRING,
+      "genus": STRING,
+      "species": STRING,
+      "common_name": STRING,
+      "confidence": STRING,
+      "diameter": DOUBLE,
+      "circumference": DOUBLE,
+      "coverage": STRING,
+      "pruning": STRING,
+      "condition": STRING,
+      "discoloring": BOOLEAN,
+      "leaning": BOOLEAN,
+      "grate": BOOLEAN,
+      "wounds": BOOLEAN,
+      "pooling": BOOLEAN,
+      "stakes_with": BOOLEAN,
+      "stakes_without": BOOLEAN,
+      "light": BOOLEAN,
+      "bicycle": BOOLEAN,
+      "bag_with": BOOLEAN,
+      "bag_without": BOOLEAN,
+      "tape": BOOLEAN,
+      "sucker_growth": BOOLEAN,
+      "site_type": STRING,
+      "sidewalk_width": STRING,
+      "site_width": STRING,
+      "pit_length": STRING,
+      "material": STRING,
+      "raised_bed":,
+      "fence": STRING,
+      "trash": STRING,
+      "wires": STRING,
+      "grate": STRING,
+      "stump": STRING,
+      "tree_notes": STRING,
+      "site_notes": STRING
+    },
+    ...
+  ]
 }
 ```
 
@@ -1336,13 +1429,49 @@ If the site id specified is invalid.
 
 `POST api/v1/protected/sites/update`
 
-Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. 
+Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. Every field can be `NULL`.
 
 #### Request Body
 
 ```json
 {
-  ...
+  "tree_present": BOOLEAN,
+  "status": STRING,
+  "genus": STRING,
+  "species": STRING,
+  "common_name": STRING,
+  "confidence": STRING,
+  "diameter": DOUBLE,
+  "circumference": DOUBLE,
+  "coverage": STRING,
+  "pruning": STRING,
+  "condition": STRING,
+  "discoloring": BOOLEAN,
+  "leaning": BOOLEAN,
+  "grate": BOOLEAN,
+  "wounds": BOOLEAN,
+  "pooling": BOOLEAN,
+  "stakes_with": BOOLEAN,
+  "stakes_without": BOOLEAN,
+  "light": BOOLEAN,
+  "bicycle": BOOLEAN,
+  "bag_with": BOOLEAN,
+  "bag_without": BOOLEAN,
+  "tape": BOOLEAN,
+  "sucker_growth": BOOLEAN,
+  "site_type": STRING,
+  "sidewalk_width": STRING,
+  "site_width": STRING,
+  "pit_length": STRING,
+  "material": STRING,
+  "raised_bed":,
+  "fence": STRING,
+  "trash": STRING,
+  "wires": STRING,
+  "grate": STRING,
+  "stump": STRING,
+  "tree_notes": STRING,
+  "site_notes": STRING
 }
 ```
 
