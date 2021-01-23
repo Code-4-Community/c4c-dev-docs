@@ -1009,7 +1009,34 @@ No request body.
 
 #####  `200 OK`
 
-!!! missing "This still needs to figured out"
+```json
+{
+  "type": "FeatureCollection",
+  "name": "sites",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": INT,
+        "tree_present": BOOLEAN,
+        "diameter": DOUBLE,
+        "species": STRING,
+        "updated_at": TIMESTAMP,
+        "updated_by": STRING,
+        "address": STRING
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          LONG,
+          LONG
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
 
 ## Import Router
 
@@ -1072,7 +1099,7 @@ Blocks imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
@@ -1110,7 +1137,7 @@ Neighborhoods imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
@@ -1147,13 +1174,35 @@ Reservations imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
-### Import Trees
+### Import Sites
 
-!!! missing "This route has not been implemented yet"
+`POST api/v1/protected/import/sites`
+
+#### Request Body
+
+```json
+{
+  ...
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Sites imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a super admin.
 
 ## Leaderboard Router
 
