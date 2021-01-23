@@ -16,7 +16,12 @@ and ask. Good luck on your tickets!
       - Model, View, Controller (MVC)
     - What will we need to do?
 3. Making Changes
-    - ???
+    - Modify the API specification
+    - Create a new database migration
+    - Create a notes sub-router API
+    - Create a new notes DTO
+    - Create a new notes processor
+    - Create a new create note endpoint
 4. Testing!!!
 5. Pull Requests
 
@@ -168,12 +173,11 @@ And since we haven't handled notes in either the API or database before, there a
 once a request is received and pass it to the database, so we'll need to create a processor implementation. Let's list
 all of this out.
 
-1. Modify the API specification to include the new note endpoint
+1. Modify the API specification
 2. Create a new database migration
 3. Create a notes sub-router API
 4. Create a new notes DTO
-5. Create a new notes processor
-6. Create a processor method to add the note to the database
+5. Create a new notes processor 
 7. Create a new create note endpoint
 
 That might seem like a lot to do, and it is relatively complex compared to writing a single method which gets a request
@@ -186,17 +190,6 @@ Let's see how to actually make these changes.
 
 ## Making Changes
 
-For clarity, we'll do this one step at a time, in a slightly different order than what we showed previously. 
-We'll also add a step or two. We'll do it like this:
-
-1. Modify the API specification to include the new note endpoint
-2. Create a new database migration
-3. Create a notes sub-router API
-4. Create a new notes DTO
-5. Create a new notes processor
-6. Create a processor method to add the note to the database
-7. Create a new create note endpoint
-
 Before you even start making changes, you'll want to check out a new branch for your feature in git. You can
 do that by running `git checkout -b <branch_name>`, where branch_name is usually descriptive of what you're working
 on. For example, we'd probably want to run `git checkout -b add-notes` for this branch. Some organizations
@@ -204,7 +197,89 @@ also like it when you add your name or initials to the branch name, like `cn.add
 `CN-add-notes`, ..., so you can do that too if you prefer. __If you haven't used git before, be sure you [check out 
 the Jumpstart Git Workshop](https://learn.c4cneu.com/jumpstart/week-1.5-git/) before working on a ticket.__ 
 
-Let's get the database migration out of the way first.
+### Modify the API Specification
+
+The very first step you'll want to take before diving into the development work of your ticket is to modify the
+API specification for your project. Usually you'll find one of those in the 
+[c4c dev docs repo](https://github.com/Code-4-Community/c4c-dev-docs) under the project's directory, but
+since the backend-scaffold doesn't have one, we'll just go through the process of doing that here. The general
+structure of an API spec looks like this:
+
+```
+# Table of Contents
+
+- Individual Notes
+    - `PUT /api/v1/protected/notes/:note_id`
+    - `DELETE /api/v1/protected/notes/:note_id`
+    - ...
+- ...
+
+## Individual Notes
+
+### `PUT /api/v1/protected/notes/:note_id`
+
+Updates an individual note available in the database. This requires that the user is signed up and logged in.
+
+Any other useful information about the route can be placed here.
+
+#### Path Params
+
+##### :note_id
+
+Represents the id of a note.
+
+#### Query Params
+
+##### INCLUDE_TITLE: STRING
+
+Represents whether the title should be included in the response.
+
+#### Request Body
+
+ ```
+{
+    "title": STRING,
+    "body": STRING
+}
+ ```
+ 
+#### Responses
+
+`200 OK`
+
+The note was successfully updated.
+
+ ```
+{
+    "title": STRING,
+    "body": STRING,
+    "last_updated": TIMESTAMP,
+    "times_updated": INT
+}
+ ```
+ 
+`404 NOT FOUND`
+
+The note does not already exist.
+
+```
+
+Generally, when you're updating the API specification, you'll want to update the table of contents and add
+the note in at the spot where it fits best. More sections can be added, and sections that aren't used can
+be removed, so try to thoroughly document the API updates as you see fit.
+
+!!! note "Path parameters"
+    The colon in front of a part of the path represents a variable that can be inserted. For example,
+    with `GET /api/v1/protected/notes/:note_id`, the `:note_id` param can be 1, 2, ... and so on, and 
+    that `:note_id` value can be retrieved later on. It could look something like this:
+    `GET /api/v1/protected/notes/1`.
+
+!!! note "Query Parameters"
+    A query parameter is information that can be appended to a request. It begins
+    with a question mark (?), and multiple values are separated by ampersands (&). The above query param can
+    be done like this: `GET /api/v1/protected/notes/:note_id?raw=true`, where `raw=true` has the key/value pair
+    `raw` set to `true`.
+
 
 ### The Database Migration
 
@@ -454,23 +529,259 @@ We're all done with the DTO now, so let's take a look at the processor.
 Now we need to create what's called a processor for notes. In C4C, we use the term processor to define
 a class which deals with the interactions between an API and jOOQ type, both for incoming and outgoing data.
 
+Each module in a project is compiled separately of each other. Because of this, if you want to include a 
+module's classes in another module, you have to include it as a dependency on that project. If you take a look at the
+pom.xml file in service/, you'll notice that the api/, persist/, and common/ modules are all included 
+in the dependencies list. You can sort of think of dependencies as a sort of directed graph, where a
+project can include a dependency, which can include other dependencies as well. One property that 
+dependencies have, though, is that there can't be any cycles in the dependency list. What this means, is that
+we can't have the service/ module depend on the api/ module, and have the api/ module depend on service/ as well.
+This property makes development a little tricky, since we aren't able to tell any classes in api/ what to do
+with service/ without introducing some kind declaration of what methods can be expected in a processor. 
+That's where interfaces come in.
 
+We're able to create a new interface in api/, which will give the new `NotesRouter` class we created an idea
+of what can be done in the service/ module. This interface can then be implemented by our processor in service/,
+since service/ will have access to all public classes and interfaces available in api/. Let's create that interface
+now in the `api` package of api/. We'll want to include a method in there that knows what to do with 
+`CreateNoteRequest` DTOs. The method we create will also want to take in some user information to, 
+like a user's `id`. We'll just pass that in as an `int`. We don't really need any information back, so we
+can make that method's return value `void`.
 
+```java
+public interface INotesProcessor {
+  public void createNote(CreateNoteRequest req, String userId);
+}
+```
 
+Super simple, right? Now we can create our `NotesProcessorImpl` in service/. You can do that in the 
+`processor` package. Since we're going to be working with database tables too, we'll need to also create a 
+constructor that can take in some database information when it's instantiated. This is done with a `DSLContext` 
+class provided by jOOQ.
 
+```java 
+public class NotesProcessorImpl implements INotesProcessor {
+  private final DSLContext db;
 
+  public NotesProcessorImpl(DSLContext db) {
+    this.db = db;
+  }
 
+  @Override
+  public void createNote(CreateNoteRequest req, String userId) {
 
+  }
+}
+```
 
+Now that we have our `NotesProcessorImpl`, what do we do next? Well, we'll add the note to the database.
+Earlier, you saw the `NotesTable` class that was generated for us by jOOQ. We'll use the `db` field to
+get a new instance of `NotesRecord`, set the values, and then call `NotesRecord.store()` to save it to the 
+database.
 
+Now our finished `NotesProcessorImpl` class will look like this.
 
+```java 
+public class NotesProcessorImpl implements INotesProcessor {
+  private final DSLContext db;
 
+  public NotesProcessorImpl(DSLContext db) {
+    this.db = db;
+  }
 
+  @Override
+  public void createNote(CreateNoteRequest req, int userId) {
+    NotesRecord notesRecord = db.newRecord(Tables.NOTES);
+    notesRecord.setUserId(userId);
+    notesRecord.setTitle(req.getTitle());
+    notesRecord.setBody(req.getBody());
+    notesRecord.store();
+  }
+}
+```
 
+Now we need to construct this in `ServiceMain`, so that it can get a `DSLContext` and begin processing 
+requests. We'll also need to go back after and create a way for the api/ module to reference this new
+processor. In the `ServiceMain.initializeServer()` method, we'll create a new `NotesProcessorImpl` and pass
+it in to the `ApiRouter`'s constructor.
 
+```java 
+  /** Initialize the server and get all the supporting classes going. */
+  private void initializeServer() {
+    ...
 
-Again, in the api/ module, there's an api/ package at `com.codeforcommunity` where you can define a processor's 
-interface. We'll be creating the `INotesProcessor` interface right now. Since we're only planning to add a 
-create-note-like route, we'll ad
+    // Create the processor implementation instances
+    IAuthProcessor authProc = new AuthProcessorImpl(this.db, emailer, jwtCreator);
+    IProtectedUserProcessor protectedUserProc = new ProtectedUserProcessorImpl(this.db, emailer);
+    INotesProcessor notesProcessor = new NotesProcessorImpl(this.db);
 
+    // Create the API router and start the HTTP server
+    ApiRouter router = new ApiRouter(authProc, protectedUserProc, notesProcessor, jwtAuthorizer);
+    startApiServer(router, vertx);
+  }
+```
 
+Now, back in the api/ module, go to the `ApiMain` class in the `rest` package, and modify the constructor to take
+in the `INotesProcessor`. Then add the `INotesProcessor` to the `NotesRouter`'s constructor, and modify the 
+`NotesRouter` constructor  to take in an `INotesProcessor`.
+
+!!! warning 
+    You can see we're passing in an `INotesRouter` to both the `ApiRouter` and `NotesRouter` classes. This
+    is extremely important, since we don't have access to the `NotesProcessorImpl` class available in service/.
+    Remember that we can't have a dependency on the service/ module in api/, since api/ is already a dependency
+    on service/. 
+
+```java 
+public class ApiRouter implements IRouter {
+  ...
+  
+    public ApiRouter(
+      IAuthProcessor authProcessor,
+      IProtectedUserProcessor protectedUserProcessor,
+      INotesProcessor notesProcessor,
+      JWTAuthorizer jwtAuthorizer) {
+    this.commonRouter = new CommonRouter(jwtAuthorizer);
+    this.authRouter = new AuthRouter(authProcessor);
+    this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
+    this.notesRouter = new NotesRouter(notesProcessor);
+  }
+
+  ...
+}
+```
+
+```java 
+public class NotesRouter implements IRouter {
+  private final INotesProcessor processor;
+
+  public NotesRouter(INotesProcessor notesProcessor) {
+    this.processor = notesProcessor;
+  }
+  
+  ...
+}
+```
+
+Awesome! You're done creating and dealing with your processor. All that's left to do is define our new endpoint!
+
+### Create a new create note endpoint
+
+There are three things we need to do here to create our new endpoint. 
+
+1. Create a method to handle the route whenever it's called
+2. Create a method to register the route with the Vertx router
+3. Call the method to register the route in `initializeRouter()`
+
+#### Creating a route handler
+
+To create a route handler, you'll have a method that can take in a Vertx `RoutingContext`, which contains
+all of the information you'll need to handle the request. You can check out the `RestFunctions` utility class
+in the `rest` package, which handles getting the user's information from the `RoutingContext`. You may also
+want to check out the `end()` methods in `ApiRouter`, which is what we'll use to actually finish up the request
+when we're done.
+
+First, you'll need to get the user's information. In one of the methods for setting up protected routes
+(which, if you remember, the `NotesRouter` was mounted in), a `JWTData` object containing the user's information
+was added to the `RoutingContext`. You can get that by calling `RoutingContext.get()` with the 'jwt_data' key. 
+This has two important fields on it: one for the user's id, and another for the user's privilege level. We won't
+need the privilege level for this ticket, but it's important to know that it exists there.
+
+Next, you'll need to get the body of the request into the `CreateNoteRequest` class, which can be done with
+`RestFunctions.getJsonBodyAsClass()`. It's a static method which you can call by passing in the `RoutingContext` and
+a class object of DTO you want to load the data into (also called unmarshalling). That method will return an
+instance of the `CreateNoteRequest` class with all of the required values filled in.
+
+Now that you have all of the required information for the `NotesProcessor`'s `createNote()` method, go ahead and call
+it. It will proceed with adding the note to the database.
+
+Finally, you can end the request and return a response with the `end()` method that was mentioned earlier. The 
+first parameter of that method is a `HttpServerResponse`, which you can get by calling `RoutingContext.response()`.
+Then you can give it the status code, 200 in this case since it was a success, and a JSON response if desired.
+We can just add a string there saying something like "Note successfully created".
+
+Our finished method will look something like this.
+
+```java 
+private void handleCreateNote(RoutingContext ctx) {
+  JWTData userData = ctx.get("jwt_data");
+  CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
+
+  processor.createNote(noteRequest, userData.getUserId());
+
+  end(ctx.response(), 200, "Note successfully created");
+}
+```
+
+That's it for the handler.
+
+#### Create a route register method
+
+This one is pretty quick too. Here, we'll create a method which takes in the Vertx `Router` we created in 
+`initializeRouter()`, get a `Route` object out of it that represents the actual route we want to deal with,
+and add the handler we created before.
+
+The `Router` has a couple of methods for getting `Route` objects out of it, one for each type of request. Each
+request is overloaded to take in no parameters or a single string representing the path. In this
+case, we'll be using the `post()` method, and adding a path for '/create', which will handle requests for
+`POST /api/v1/protected/notes/create`.
+
+Lastly, you'll be able to call the `handler()` method and pass in a 
+[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html) to let the 
+router know which method should be used when the route is called.
+
+```java 
+private void registerCreateNote(Router router) {
+  Route createNoteRequest = router.post("/create");
+  createNoteRequest.handler(this::handleCreateNote);
+}
+```
+
+#### Call the register method
+
+To finish up our project, all you have to do is call `registerCreateNote()` in `initializeRouter()`.
+
+```java
+@Override
+public Router initializeRouter(Vertx vertx) {
+  Router router = Router.router(vertx);
+
+  registerCreateNote(router);
+
+  return router;
+}
+```
+
+That's it, we're done. You can now try calling the `POST /api/v1/protected/notes/create` in a request client
+like [Postman](https://www.postman.com/), and you should get back the response you set it up with once you 
+log in with a user! You should also then see the note in the database!
+
+!!! info "Logging in with a user and making a request"
+    Here are some steps to try out that should let you create a user, log in, and make a request.
+
+    First, start up the project. This can be done by clicking the green arrow in `ServiceMain`.
+    If you get an error about properties not being found, go to the common/ module and copy the
+    server.properties.example to server.properties in the resources directory. Make sure you
+    go in and set the `database_password` key if you haven't yet.
+
+    You may also need to go in and create a backend-scaffold database if you haven't yet.
+
+    1. Sign up with a new user. You can do this by POSTing to the `/api/v1/user/signup` route with the
+       following data in a JSON. You'll get back an `accessToken` and a `refreshToken` that can be used to make
+       your request, so skip to step 3 if you have it.
+        - email
+        - password
+        - firstName
+        - lastName
+    2. Log in as the user if you don't have an `accessToken` or `refreshToken`. You can do this by POSTing to the
+       `/api/v1/user/login` route with the following data in a JSON. You'll get back an `accessToken` 
+       and a `refreshToken` like you did when you signed up. Note: logging in again will invalidate any
+       previously valid tokens.
+        - email
+        - password
+    3. Add an `X-Access-Token` header with the `accessToken` value to any request you make. For the request to
+       create a new note, you'll just add a `title` and `body` JSON to the request.
+
+## Testing!!!
+
+Testing is an extremely important part of the development process, as it ensures that the changes we are pushing
+don't introduce new bugs into the product. There are really only two 
