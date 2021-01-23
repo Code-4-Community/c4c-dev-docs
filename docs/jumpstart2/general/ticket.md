@@ -44,7 +44,8 @@ For the purpose of this document, we'll assume the following is our ticket.
     __Description:__ Currently, there is no way to add a new note to the database.
     We want to be able to add a note through a REST API and have it be stored in the 
     database. 
-    __Points__: 1
+
+    __Points__: 3
 
 ??? tip "Definitions"
     Here are a couple of definitions in case you haven't seen them before.
@@ -55,7 +56,7 @@ For the purpose of this document, we'll assume the following is our ticket.
       the way that our frontend application can make requests to the backend. This is
       managed by the api/ module in the backend repo.
     - Database: A program that enables simpl management of atomic data (numbers, dates, text...).
-    - __Points__: Usually when working using Agile methodologies, tickets, or tasks, are 
+    - Points: Usually when working using Agile methodologies, tickets, or tasks, are 
       assigned point values representing the amount of work that's expected. 
     - Agile/Scrum: A set of principles for developing software efficiently.
 
@@ -118,24 +119,7 @@ You might not end up working with a lot of these files (mostly just the files in
 and service/), but it's still super useful to know what they do. Now let's take a look at the structure 
 of a basic module.
 
-```
-- <module_name>
-  | - pom.xml
-  | - src
-    | - main
-      | - java
-      | | - com.codeforcommunity
-      |   | - <maybe_some_files>
-      |   | - <packages>
-      |     | - <files>
-      |   | - <more_packages>
-      |     | - <more_files>
-      | - resources (optional)
-        | - <files_and_directories>
-    | - test
-      | - com.codeforcommunity
-        | - ...
-```          
+![Example of a package's structure](./images/module_file_structure.jpg)
 
 Firstly, you should notice that there's another pom.xml here. There is a difference between the pom.xml in the 
 root of the project and the poms for each of the modules. The root pom defines project setup, dependency versions, and
@@ -184,11 +168,13 @@ And since we haven't handled notes in either the API or database before, there a
 once a request is received and pass it to the database, so we'll need to create a processor implementation. Let's list
 all of this out.
 
-1. Create a notes sub-router API
-2. Create a new create note endpoint
-3. Create a new database migration
-4. Create a new notes processor
-5. Create a processor method to add the note to the database
+1. Modify the API specification to include the new note endpoint
+2. Create a new database migration
+3. Create a notes sub-router API
+4. Create a new notes DTO
+5. Create a new notes processor
+6. Create a processor method to add the note to the database
+7. Create a new create note endpoint
 
 That might seem like a lot to do, and it is relatively complex compared to writing a single method which gets a request
 and inserts the new note into the database, but this allows for a much cleaner code structure. You'll also get pretty
@@ -203,19 +189,20 @@ Let's see how to actually make these changes.
 For clarity, we'll do this one step at a time, in a slightly different order than what we showed previously. 
 We'll also add a step or two. We'll do it like this:
 
-1. Create a new database migration
-2. Create a notes sub-router API
-3. Create a new notes DTO
-4. Create a new notes processor
-5. Create a processor method to add the note to the database
-6. Create a new create note endpoint
+1. Modify the API specification to include the new note endpoint
+2. Create a new database migration
+3. Create a notes sub-router API
+4. Create a new notes DTO
+5. Create a new notes processor
+6. Create a processor method to add the note to the database
+7. Create a new create note endpoint
 
 Before you even start making changes, you'll want to check out a new branch for your feature in git. You can
 do that by running `git checkout -b <branch_name>`, where branch_name is usually descriptive of what you're working
 on. For example, we'd probably want to run `git checkout -b add-notes` for this branch. Some organizations
 also like it when you add your name or initials to the branch name, like `cn.add-notes`, `cn-add-notes`, 
-`CN-add-notes`, ..., so you can do that too if you prefer. __If you haven't used git before, be sure you check out 
-the Jumpstart Git Workshop before working on a ticket.__
+`CN-add-notes`, ..., so you can do that too if you prefer. __If you haven't used git before, be sure you [check out 
+the Jumpstart Git Workshop](https://learn.c4cneu.com/jumpstart/week-1.5-git/) before working on a ticket.__ 
 
 Let's get the database migration out of the way first.
 
@@ -258,7 +245,7 @@ and the build succeeded, you should be able to see the following tables in which
 - `blacklisted_refreshes`: Contains a list of invalid verification key hashes so that the keys can be invalidated
   when a user logs out.
 - `flyway_schema_history`: The current migration status for Flyway, so that it knows which migrations should be applied
-  on a build.
+  on a build. This table isn't created in a migration file, it's created automatically for us by Flyway.
 - `users`: a table containing user information.
 - `verification_keys`: Session information for a user.
 
@@ -269,9 +256,9 @@ and the build succeeded, you should be able to see the following tables in which
 
 We're going to want another table, `notes`, to store notes for a use. If you know SQL, try creating one on your
 own in a `V2__Notes_Table.sql` file in the same directory that `V1__Initial_Import.sql` exists in 
-(*there are __two__ underscores between V2 and Notes). We'll have an answer in the dropdown below.
+(*there are __two__ underscores between V2 and Notes*). We'll have an answer in the dropdown below.
 
-??? example "Answer"
+??? question "Can you write a migration for the notes table?"
     ``` postgresql
     CREATE TABLE IF NOT EXISTS notes (
         id          SERIAL          PRIMARY KEY,
@@ -315,6 +302,8 @@ functionality. In the api/ module directory, the main entrypoint is the `ApiMain
 This class handles starting up the part of the server that listens for incoming connections. Part of the `startApi()` 
 method of `ApiMain` is that the `ApiRouter` class is set as the application's main router. What that means is that 
 the `ApiRouter` handles actually performing the expected functionality when a route is called. 
+
+<> TODO: find documentation describing routing and stuff
 
 At C4C, we have created an `IRouter` interface, detailing a method routers and subrouters must implement, so that
 they can be properly initialized. This interface defines a single method,`initializeRouter(Router)`, which 
@@ -369,7 +358,7 @@ public class ApiRouter implements IRouter {
     Router router = Router.router(vertx);
     
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
-    router.mountSubRouter("/notes", notesRouter.initiallizeRouter(vertx));
+    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx));
 
     return router;
   }
@@ -378,6 +367,9 @@ public class ApiRouter implements IRouter {
 }
 ```
 
+!!! info
+    The lines we actually added stuff on are 5, 14, and 23.
+
 As you can see in the previous example, all we did was add and instantiate a new `NotesRouter`. We'll need to create
 the interface to a processor which can handle our new notes.
 
@@ -385,7 +377,9 @@ the interface to a processor which can handle our new notes.
 
 You've probably seen the term "DTO" a couple of times now. A DTO, or Data Transfer Object, is a class whose only 
 purpose is to hold information and transfer the information between different places. Let's go through the process
-of creating a new Notes DTO. If you look in com.codeforcommunity.dto, you can see some of the classes that have 
+of creating a new Notes DTO. 
+
+If you look in `com.codeforcommunity.dto`, you can see some of the classes that have 
 been created for DTOs. You'll notice a couple of other packages for groups of DTO types, as well as an `ApiDto` abstract 
 class, which deals with defining DTO validation for incoming data. The DTO we're about to create, which will deal with
 handling incoming note JSON objects, will utilize `ApiDto` for ensuring some of the properties we guaranteed in
@@ -440,12 +434,18 @@ As you can see, it basically just has getters and setters, as well as a `validat
 you can use to define whether or not a given field is valid or not. If it's not valid, you can add the field name
 to a list which gets returned from the method, indicating the fields which have an invalid value. 
 
-If you remember from the migration, we defined the ID field with a `SERIAL` value, which lets the database assign
-a value for that field. Furthermore, the `user_id` field can be retrieved from methods provided later on, 
+If you remember what we had in our migration, you've probably noticed that there are a few fields missing
+from the DTO that we'll need for the database. Two of them, the `id` and `date` fields, will be handled for us
+by the database. The `SERIAL` value we added to modify the `id` field tells the database that it can
+automatically set the value using an auto increment, so each insert will have the `id` of the previous entry
++ 1. Similarly, we manually set a `DEFAULT` on the `date` field to automatically enter the current timestamp
+as a value for that field (unless explicitly specified, but we won't be doing that).
+
+The other field, `user_id`, can be retrieved from methods provided later on, 
 so it's not something that has to be included as part of the request. You also wouldn't want to include that
 as part of the request because then people would be able to set notes as other people! Make sure you pay attention
-to where you get user information from, and ensure you're not introducing possible bugs into the application through
-permission issues.
+to where you get user information from, and ensure you're not introducing possible bugs or security issues 
+into the application.
 
 We're all done with the DTO now, so let's take a look at the processor.
 
