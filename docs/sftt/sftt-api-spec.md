@@ -783,8 +783,6 @@ The given `newUsername` is already in use.
 
 ### Delete User
 
-!!! missing "This route has not been implemented yet"
-
 `POST api/v1/protected/user/delete`
 
 Sets this users deleted_at timestamp to now, thereby marking this account as deleted in the database.
@@ -812,8 +810,6 @@ If the given user ID does not exist.
 If the password is wrong.
 
 ### Change Privilege Level (Admin Only)
-
-!!! missing "This route still needs to be implemented"
 
 `POST api/v1/protected/user/change_privilege`
 
@@ -1061,7 +1057,7 @@ If the user is not a super admin.
 
 `POST api/v1/protected/import/reservations`
 
-Used to import reservations into the database. The referenced blocks, users and teams must be in the database. If they're not an error will occur when the "invalid" reservation is reached. `user_id` and `team_id` can be left blank, in which case the reservation will be attributed to the super admin calling the route.
+Used to import reservations into the database. The referenced blocks, users and teams must be in the database. If they're not an error will occur when the "invalid" reservation is reached. `userId` and `teamId` can be left blank, in which case the reservation will be attributed to the super admin calling the route. `performedAt` must be in the form `"mm\/dd\/yyyy"`.
 
 #### Request Body
 
@@ -1069,11 +1065,11 @@ Used to import reservations into the database. The referenced blocks, users and 
 {
   "reservations": [
     {
-      "block_id": INT,
-      "user_id": INT,
-      "team_id": INT,
-      "action_type": STRING,
-      "performed_at": ???
+      "blockId": INT,
+      "userId": INT,
+      "teamId": INT,
+      "actionType": STRING,
+      "performedAt": STRING
     },
     ...
   ]
