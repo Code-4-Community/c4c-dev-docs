@@ -23,7 +23,7 @@ and ask. Good luck on your tickets!
     - Create a new notes processor
     - Create a new create note endpoint
 4. Testing!!!
-5. Pull Requests
+5. Making the Pull Request
 
 ## Reading Through Your Ticket
 
@@ -467,7 +467,7 @@ public class CreateNoteRequest extends ApiDto {
   private String title;
   private String body;
 
-  private CreateNoteRequest() {
+  public CreateNoteRequest() {
   }
 
   public String getTitle() {
@@ -784,4 +784,146 @@ log in with a user! You should also then see the note in the database!
 ## Testing!!!
 
 Testing is an extremely important part of the development process, as it ensures that the changes we are pushing
-don't introduce new bugs into the product. There are really only two 
+don't introduce new bugs into the product. There are really only two modules that you really need to work on
+testing when working on a ticket: the service/ module and the common/ module. 
+
+The api/ module doesn't need to
+be tested because a lot of the logic should be extremely simple and handled almost entirely by Vertx, so 
+testing whether or not routes are registered or calling the methods you expect will be immediately apparent 
+when doing manual testing. In fact, the way we tested if the note was successfully added to the database
+in the previous section is a perfect example of how to test manually. 
+
+The persist/ module also doesn't need to be tested, since the only changes you should have to make there are
+to create database migrations. You'll be testing that module when you build your project and see the new migrations
+reflected in the database.
+
+The `createNote()` method we created in the processor is a method that we should go through and test. Let's 
+create a new class in the test directory within service/. Your test directory should, in a way, mirror the main
+directory containing all of your code. By that, I mean if the class you want to test appears in a specific package,
+you'll want to place your test class in a matching package and name it the name of the class + "Test". For
+the `NotesProcessorImpl` class, we'll create a `NotesProcessorImplTest` class in the `processor` package.
+
+Once you have your `NotesProcessorImplTest` class set up, you're going to start by creating a field for storing
+an instance of a `NotesProcessorImpl`. We'll have that automatically be set up for us by creating a method
+with the `@BeforeEach` annotation; one that is used by JUnit so that it can be called before each test to
+set up whatever information you need for your tests. We're using that setup annotation here because every test in this
+class will be testing the `NotesProcessorImpl`. Therefore, it's useful to have it be set up prior to a test instead
+of copying code all over the place to set it up the same way every time.
+
+Since we were using an external dependency, jOOQ in that method, we need a way to mock its behavior since we don't
+actually want to insert data into the database in a test like this. To do that, we created a `JooqMock` class
+to handle testing methods which have jOOQ interactions in them. You'll also want to add that as a field to your
+class, since it has a `DSLContext` that will be passed into the `NotesProcessorImpl`.
+
+Our setup method should now look something like this.
+
+```java 
+public class NotesProcessorImplTest {
+  private NotesProcessorImpl processor;
+  private JooqMock db;
+
+  @BeforeEach
+  public void setup() {
+    this.db = new JooqMock();
+    this.processor = new NotesProcessorImpl(db.getContext());
+  }
+}
+```
+
+Let's go ahead and create our `createNoteTest()`. Make a `public void` method with the `@Test` annotation
+on the line above, and then we can start setting up the `JooqMock` for our test. Since we're only calling 
+`NotesRecord.store()`, we're not expecting a record to be returned (this isn't a `SELECT` operation). 
+Therefore, you can set up the `JooqMock` by telling it to expect to return nothing, which is done
+by calling the `JooqMock.addEmptyReturn()` method. Since we're expecting an `INSERT` operation to occur,
+we can pass in "INSERT" as the parameter for the operation. The `JooqMock` also has the ability to assign
+a new id to the record when it's inserted, so we'll want to get that value and validate it later on. 
+Use the `JooqMock.getId()` method to get the value that will be used next.
+
+Next, you can create a `CreateNoteRequest` and set it up with whatever values you're expecting. 
+Call `NotesProcessor.createNote()` with the `CreateNoteRequest` and a value you choose for a `userId`.
+
+Let's start validating properties about the record that was created. There are two methods that you'll
+focus on for this: `JooqMock.timesCalled()` and `JooqMock.getSqlBindings()`. 
+
+`timesCalled()` takes in a 
+string for the SQL operation you're expecting, and returns an int representing the number of times that
+operation was called. In this case we're expecting it to be 1. 
+
+Here's what our `createNoteTest` looks like right now.
+
+```java 
+@Test
+public void createNoteTest() {
+  db.addEmptyReturn("INSERT");
+  int expectedId = db.getId();
+
+  String title = "Some Title";
+  String body = "Some Body";
+  int userId = 12345;
+  CreateNoteRequest req = new CreateNoteRequest();
+  req.setTitle(title);
+  req.setBody(body);
+
+  processor.createNote(req, userId);
+
+  // Test that INSERT was only called once
+  assertEquals(1, db.timesCalled("INSERT"));
+}
+```
+
+`getSqlBindings()` is a little bit more involved. The `JooqMock` records values that are inserted during
+an operation, and saves them in a nested array of objects. Let's dissect it right now, since it may be
+confusing to see at first. `getSqlBindings()` returns a `Map<String, List<Object[]>>`, and at the surface
+level, it maps operations to a list of invocations. An individual invocation is the `Object[]` containing
+the values inserted into the database, so the list of invocations comes into play when you call an operation
+multiple times. Therefore, each value in the `List<Object[]>` represents the set of values the operation was
+called with each time it was called.
+
+The first thing we want to do with `getSqlBindings()` is verify that the length of the list for 
+`INSERT` operations is the same as the value for `timesCalled()`. We'll also want to verify that the length
+of the underlying array is what we're expecting; that is, we want to verify that each of the values we added
+to the `NotesRecord` was included, +1 for the `id` that jOOQ automatically adds for us.
+
+Finally, we'll go through and check each of the values that were added there to make sure they're what we're
+expecting. For this, you may need to run your debugger and see what order they were added in, and then 
+use the ordering you find in your tests.
+
+If we had more than one database operation occur during the test, we would also go through and test the following
+positions in the list of invocations in a similar manner. The resulting test is shown below.
+
+```java 
+@Test
+public void createNoteTest() {
+  db.addEmptyReturn("INSERT");
+  int expectedId = db.getId();
+
+  String title = "Some Title";
+  String body = "Some Body";
+  int userId = 12345;
+  CreateNoteRequest req = new CreateNoteRequest();
+  req.setTitle(title);
+  req.setBody(body);
+
+  processor.createNote(req, userId);
+
+  // Test that INSERT was only called once
+  assertEquals(1, db.timesCalled("INSERT"));
+  // Test that the length of the insert invocations is the same as the number of times called
+  assertEquals(1, db.getSqlBindings().get("INSERT").size());
+  // Test that the number of values inserted in the first invocation is the length we're expecting
+  assertEquals(4, db.getSqlBindings().get("INSERT").get(0).length);
+  // Test each of the values in the first invocation
+  assertEquals(expectedId, db.getSqlBindings().get("INSERT").get(0)[0]);
+  assertEquals(title, db.getSqlBindings().get("INSERT").get(0)[1]);
+  assertEquals(body, db.getSqlBindings().get("INSERT").get(0)[2]);
+  assertEquals(userId, db.getSqlBindings().get("INSERT").get(0)[3]);
+}
+```
+
+If there were edge cases present or features of the method that weren't tested by the test we just created,
+then we'd go ahead and validate those too. Since that successfully tests the entire method though, we're
+done with testing!
+
+Now we'll finish up our ticket by making sure everything is pushed to GitHub and starting a pull request.
+
+## Making the Pull Request
