@@ -927,3 +927,59 @@ done with testing!
 Now we'll finish up our ticket by making sure everything is pushed to GitHub and starting a pull request.
 
 ## Making the Pull Request
+
+Alright, so you've read through your ticket, worked on the implementation, tested your code, and you're ready
+to merge it in. So now what? At C4C (and probably all of your co-ops), merging your work right when you're done
+usually isn't the best practice. Usually you'll want someone to look over your work and make sure 
+your code works as expected for two main reasons: you'll want to make sure you're not introducing unintended
+side effects through typos and bugs you may have missed, and you'll also want to make sure it actually fulfills
+the requirements of the ticket. It's also a really good time to let someone else see if there are improvements
+that can be made to your implementation. 
+
+The way that these reviews are usually done is through a pull request (PR) on GitHub (or almost any git hosting 
+alternative). The pull request tool is a convenient way to have a discussion about your work, request someone
+to review it, perform reviews, and run checks on your code to make sure it can successfully build.
+
+You can open up a pr by viewing your branch in GitHub and clicking on the "Pull request" button
+on the upper right (it should appear right above the total number of commits). Once you do that,
+you'll have the chance to see the changes made in your code and add information about what changes you're
+making in the title or comment. After that, you can open the request by clicking on the green "Create pull 
+request" button. 
+
+You from now on, you can access your pull request by visiting the repository and clicking on the "Pull Requests" tab
+at the top. The pr page should look a bit like this.
+
+![Open Pull Request](./images/pr-open.jpg)
+
+There, people can come and leave comments on your code.
+
+![Pull Request Comments](./images/pr-comments.jpg)
+
+On the "Files changed" tab, you can see all of the changes made on your branch. People can also leave
+reviews, summarizing their opinions on the changes you've made. If they think the changes you made
+are good, then they can also approve. Otherwise, if there are changes to be made, they can submit reviews
+as either regular comments or requests for changes.
+
+![Pull Request Files Changed](./images/pr-files-changed.jpg)
+
+At this stage of the development cycle, you'll probably go through a couple of rounds of changes followed 
+by reviews. You can just keep committing to your branch and pushing to GitHub normally, and your changes
+will show up for your reviewer(s) to see. Whenever you want (another) review, make sure you Slack them to make sure
+they're aware that you have something ready to be reviewed. 
+
+At the bottom of the main review page, you can see the status of your PR. You can see below that you are blocked
+from merging your request until two things happen: you get an approving review and all checks have passed.
+Before merging your request, make sure all comments have been addressed (either through discussions or 
+implementations). Once you're ready to merge things in, and you have gotten both a review and passing checks,
+the "Merge pull request" button at the bottom of the status section will light up green. Click it, and your changes
+will be merged into master. 
+
+![Pull Request Status Section](./images/pr-status.jpg)
+
+And that's it, you're done with your ticket! Be sure to click the button to delete your branch, and you'll be
+set. 
+
+![Pull Request Closed](./images/pr-closed.jpg)
+
+If you have any improvements to make to this tutorial, plesae be sure to edit the doc (and make a PR for it)! Thanks
+for reading.
