@@ -1163,17 +1163,15 @@ A completed block is a block for which the last entry is either `complete` or `q
 
 ### Get Users Leaderboard
 
-`GET api/v1/leaderboard/users`
+`GET api/v1/leaderboard/users?previousDays=INT`
 
-Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded. The `previousDays` represent how many days in the past the leaderboard is representing. This is a required value.
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded.
 
-#### Request Body
+#### Query Params
 
-```json
-{
-  "previousDays": INT
-}
-```
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
 
 #### Responses
 
@@ -1198,17 +1196,15 @@ If the request was malformed.
 
 ### Get Teams Leaderboard
 
-`GET api/v1/leaderboard/teams`
+`GET api/v1/leaderboard/teams?previousDays=INT`
 
-Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The `previousDays` represent how many days in the past the leaderboard is representing.
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown.
 
-#### Request Body
+#### Query Params
 
-```json
-{
-  "previousDays": INT
-}
-```
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
 
 #### Responses
 
