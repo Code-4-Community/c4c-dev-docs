@@ -169,7 +169,7 @@ Body:
 ```
 
 
-## `GET user/verify/:secret_key`
+## `POST user/verify/:secret_key`
 
 > Used for confirming an account email
 
