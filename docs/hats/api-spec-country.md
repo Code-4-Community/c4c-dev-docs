@@ -1,5 +1,16 @@
 # HATS School API Specification
 
+## Notes
+
+The field `country` is represented by an enum that can have the following values:
+ - `"UNITED_STATES"`
+ - `"ANTIGUA_AND_BARBUDA"`
+ - `"DOMINICA"`
+ - `"GRENADA"`
+ - `"ST_KITTS_AND_NEVIS"`
+ - `"ST_LUCIA"`
+ - `"ST_VINCENT_AND_THE_GRENADINES"`
+
 ## Protected Routes
 These routes are called by a user that is not yet authenticated.
 
