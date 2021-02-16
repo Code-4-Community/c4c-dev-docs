@@ -184,4 +184,7 @@ Used to mark the specified school as no longer "hidden".
 Responses:
 
 `200 OK`: the school was successfully updated.
+
+   
+ 
  
