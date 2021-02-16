@@ -38,7 +38,7 @@ Used to create a new report for a specified school that has a library.
   
   Responses:
   
-  `200 OK`: returns the report that was successfully created for a school that has a library in progress.
+  `201 OK`: returns the report that was successfully created for a school that has a library in progress.
  ```json
 {
   "numberOfChildren": 150,
@@ -58,7 +58,7 @@ Used to create a new report for a specified school that has a library.
  
  
   Responses: 
-  `200 OK`: returns the report that was successfully created for library in progress for the school.
+  `201 OK`: returns the report that was successfully created for library in progress for the school.
    ```json
   {
       "numberOfChildren": 150,
