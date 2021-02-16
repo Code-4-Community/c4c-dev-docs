@@ -9,7 +9,7 @@ Used to create a new report for a specified school that has a library.
  
  Responses:
  
- `200 OK`: returns the report with library that was successfully created for the school.
+ `201 OK`: returns the report with library that was successfully created for the school.
  ```json
 {
     "numberOfChildren": 150,
