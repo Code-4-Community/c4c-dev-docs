@@ -27,7 +27,9 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
   * [`POST api/v1/protected/requests/:request_id/approve`](#-post-api-v1-protected-requests--request-id-approve-)
   * [`POST api/v1/protected/requests/:request_id/reject`](#-post-api-v1-protected-requests--request-id-reject-)
   * [`GET api/v1/protected/requests/:request_id`](#-get-api-v1-protected-requests--request-id-)
-- [Site Announcements](#site-announcements)
+- [Public Site Announcements](#public-site-announcements)
+  * [`GET api/v1/announcements`](#-get-api-v1-announcements-)
+- [Protected Site Announcements](#protected-site-announcements)
   * [`GET api/v1/protected/announcements`](#-get-api-v1-protected-announcements-)
   * [`GET api/v1/protected/announcements/:event_id`](#-get-api-v1-protected-announcements--event-id-)
   * [`POST api/v1/protected/announcements`](#-post-api-v1-protected-announcements-)
@@ -625,9 +627,50 @@ Getting the statuses of all requests the calling user has made to become a PF.
 
 
 
+# Public Site Announcements
 
+**NOTE: Site-wide and event specific announcements have uniquely identifying ID numbers.**
 
-# Site Announcements
+## `GET api/v1/announcements`
+
+Gets a list of site-wide announcements. The announcements will be returned in chronological order, from newest to oldest.
+
+### Query Params
+
+##### start: DATE-STRING
+
+The beginning date of when to get announcements from. All returned announcements are created ON or after the given date string that is given in mm/dd/yyyy format, e.g. 01/19/2020. Defaults to 3 weeks from `end` or the current date.
+
+##### end: DATE-STRING
+
+The end date of when to get announcements from. All returned announcements will happen ON or before the given date string that is given in mm/dd/yyyy format, e.g. 12/03/2009. Defaults to the current date.
+
+##### count: INTEGER
+
+The maximum number of announcements to return. The route will return AT MOST count number of announcements. Defaults to 50 or all events that exist.
+
+### Responses
+
+#### `200 OK`
+
+The announcements were retrieved successfully.
+
+```json
+{
+  "announcements": [
+    {
+      "id": ID,
+      "title": STRING,
+      "description": STRING,
+      "created": TIMESTAMP
+    },
+    ...
+  ],
+  "totalCount": INTEGER
+}
+```
+
+# Protected Site Announcements
 
 **NOTE: Site-wide and event specific announcements have uniquely identifying ID numbers.**
 
