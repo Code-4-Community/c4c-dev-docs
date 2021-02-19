@@ -16,7 +16,10 @@ This section contains the specification for all school API calls (e.g creating a
 
 This section contains the specification for all school contact API calls (e.g. updating a school's contacts).
 
-
-## [School Reports API Specification](./api-spec-school-report.md)
+## [Reports API Specification](./api-spec-school-report.md)
 
 This section contains the specification for all school report API calls (e.g. creating a library report).
+
+## [Books API Specification](./api-spec-school-books.md)
+
+This section contains the specification for all school book logs API calls (e.g. getting the book log).

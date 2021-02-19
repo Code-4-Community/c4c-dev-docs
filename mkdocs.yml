@@ -45,7 +45,8 @@ nav:
       - Countries API Specification: hats/api-spec-country.md
       - Schools API Specification: hats/api-spec-school.md
       - School Contacts API Specification: hats/api-spec-school-contact.md
-      - School Reports API Specification: hats/api-spec-school-report.md
+      - Reports API Specification: hats/api-spec-school-report.md
+      - Books API Specification: hats/api-spec-school-books.md
   - C4C Website:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:

@@ -1,4 +1,4 @@
-# HATS School Report API Specification
+# HATS Report API Specification
 
 ## Notes
 
