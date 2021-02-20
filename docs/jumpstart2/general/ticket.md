@@ -1,5 +1,8 @@
 # Working Through a Backend Ticket
 
+!!! info
+    This document is still a work in progress.
+
 Hey there! If you're reading this, you're probably pretty new to C4C, or you're refreshing
 on how to tickets. In either case, I'm glad you could stop by to read this document. Here,
 we're going to go through the basic process of doing work on a ticket. A lot of this will
@@ -93,6 +96,7 @@ For the purpose of this document, we'll assume the following is our ticket.
     your supervisor to help.
 
 To start off, let's take a look at the backend-scaffold. Here's a quick overview of what you're probably seeing.
+Open up the Backend-Scaffold project and work through the exercises locally as you read through this document.
 
 ### Project Structure
 
@@ -124,7 +128,7 @@ You might not end up working with a lot of these files (mostly just the files in
 and service/), but it's still super useful to know what they do. Now let's take a look at the structure 
 of a basic module.
 
-![Example of a package's structure](./images/module_file_structure.jpg)
+![Example of a package's structure](images/module_file_structure.jpg)
 
 Firstly, you should notice that there's another pom.xml here. There is a difference between the pom.xml in the 
 root of the project and the poms for each of the modules. The root pom defines project setup, dependency versions, and
@@ -194,7 +198,8 @@ Before you even start making changes, you'll want to check out a new branch for 
 do that by running `git checkout -b <branch_name>`, where branch_name is usually descriptive of what you're working
 on. For example, we'd probably want to run `git checkout -b add-notes` for this branch. Some organizations
 also like it when you add your name or initials to the branch name, like `cn.add-notes`, `cn-add-notes`, 
-`CN-add-notes`, ..., so you can do that too if you prefer. __If you haven't used git before, be sure you [check out 
+`CN-add-notes`, ..., so you can do that too if you prefer. You should ask your team lead for their preferred method
+of branch naming before you start working. __If you haven't used git before, be sure you [check out 
 the Jumpstart Git Workshop](https://learn.c4cneu.com/jumpstart/week-1.5-git/) before working on a ticket.__ 
 
 ### Modify the API Specification
@@ -209,30 +214,17 @@ structure of an API spec looks like this:
 # Table of Contents
 
 - Individual Notes
-    - `PUT /api/v1/protected/notes/:note_id`
-    - `DELETE /api/v1/protected/notes/:note_id`
+    - `POST /api/v1/protected/notes/create`
     - ...
 - ...
 
 ## Individual Notes
 
-### `PUT /api/v1/protected/notes/:note_id`
+### `POST /api/v1/protected/notes/create`
 
-Updates an individual note available in the database. This requires that the user is signed up and logged in.
+Creates an individual note in the database. This requires that the user is signed up and logged in.
 
-Any other useful information about the route can be placed here.
-
-#### Path Params
-
-##### :note_id
-
-Represents the id of a note.
-
-#### Query Params
-
-##### INCLUDE_TITLE: STRING
-
-Represents whether the title should be included in the response.
+** Any other useful information about the route can be placed here. **
 
 #### Request Body
 
@@ -247,15 +239,10 @@ Represents whether the title should be included in the response.
 
 `200 OK`
 
-The note was successfully updated.
+When the note was successfully created.
 
  ```
-{
-    "title": STRING,
-    "body": STRING,
-    "last_updated": TIMESTAMP,
-    "times_updated": INT
-}
+"The note was successfully created"
  ```
  
 `404 NOT FOUND`
@@ -266,7 +253,8 @@ The note does not already exist.
 
 Generally, when you're updating the API specification, you'll want to update the table of contents and add
 the note in at the spot where it fits best. More sections can be added, and sections that aren't used can
-be removed, so try to thoroughly document the API updates as you see fit.
+be removed, so try to thoroughly document the API updates as you see fit. Path and query parameters may also
+show up in the spec, and you'll usually see those denoted by a colon (`:`) preceding the parameter name.
 
 !!! note "Path parameters"
     The colon in front of a part of the path represents a variable that can be inserted. For example,
@@ -352,11 +340,8 @@ Now that we have the migration created you may be wondering two very important q
 
 Fortunately, the answer to both questions is easy. All you have to do is run Maven! With migrations, you'll 
 want to run `mvn clean install` (a shorthand for this command is just `mvn`!), since sometimes issues can pop 
-up when jOOQ is constructing your ORM classes. Try it out, and then if you go to `ServiceMain` in the service/ 
-module and confirm that IntelliJ will let you import it. Your class should be named `NotesRecord`, and you'll
-have to import it from the `org.jooq.generated.tables.records` package. If you ++cmd+"click"++ or ++ctrl+"click"++ 
-the `NotesRecord` class, you can see a bit about the class jOOQ has generated for us. Don't forget to delete
-the record class in service/ you added when you're done.
+up when jOOQ is constructing your ORM classes. Try it out, and then you'll be able to see that a `NotesRecord` 
+class was generated in the persist/target/generated-sources/jooq/... directory of the persist module. 
 
 ??? error "If you get an error mentioning `@Generated`, read this!"
     If you're getting the `@Generated` error, that means the wrong version of Java was used with Maven.
@@ -364,19 +349,29 @@ the record class in service/ you added when you're done.
     able to locate it at the top of the right toolbar.
 
     If you're still getting issues, go to File > Project Structure > Project, and make sure your language
-    level is 8. You may also need to set the Project SDK to Java 11 too. If that doesn't solve it,
-    reach out to your supervisor for help.
+    level is 8. You may also need to set the Project SDK to Java 8 too. If that doesn't solve it,
+    reach out to your team lead for help.
 
 Cool, now we're done with working in persist/. Let's move on to creating the Note sub-router.
 
 ### The Notes Sub-router
 
 Creating a new sub-router is pretty simple, but first let's take a look at what routing even means. Routing is
-when an application receives a request at a certain endpoint, usually a path in a URL, and performs some associated 
-functionality. In the api/ module directory, the main entrypoint is the `ApiMain` class, which is called by `ServiceMain`. 
+when an application receives a request at a certain endpoint, usually a path in a URL, and runs a method to respond
+to the information provided. In the api/ module directory, the main entrypoint is the `ApiMain` class, which is called by `ServiceMain`. 
 This class handles starting up the part of the server that listens for incoming connections. Part of the `startApi()` 
 method of `ApiMain` is that the `ApiRouter` class is set as the application's main router. What that means is that 
 the `ApiRouter` handles actually performing the expected functionality when a route is called. 
+
+Let's go through a high-level example of exactly what happens when a request is made. Let's say you load a webpage,
+what's going on there? Once your computer initiates the request, the server hosting the webpage receives a little bit 
+of information about you and what you are trying to do. The most important piece of information included there is 
+the path, which could end up looking like the path we put in our API spec (`/api/v1/protected/notes/create`). 
+The first thing that the server will do is try to figure out if there are any paths in a list of registered paths
+that match the request path. If one is found, then a method that's been associated with that path will get called, and
+the other information that the server has been sent in your request gets passed to the method. The method can then
+do whatever work it needs to do and add a response with whatever information it wants to send back. That's basically
+what happens when a request is made.
 
 <> TODO: find documentation describing routing and stuff
 
@@ -414,8 +409,8 @@ to adjust the following methods:
 public class ApiRouter implements IRouter {
   private final CommonRouter;
   private final AuthRouter authRouter;
-  private final ProtectedUserHandler protectedUserHandler;
-  private final NotesRouter notesHandler;
+  private final ProtectedUserRouter protectedUserRouter;
+  private final NotesRouter notesRouter;
   
   public ApiRouter(
       IAuthProcessor authProcessor,
@@ -424,7 +419,7 @@ public class ApiRouter implements IRouter {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRotuer(authProcessor);
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
-    this.notesHandler = new NotesHandler();
+    this.notesRouter = new NotesRouter();
   }
   
   ...
@@ -451,7 +446,8 @@ the interface to a processor which can handle our new notes.
 ### Create a new notes DTO
 
 You've probably seen the term "DTO" a couple of times now. A DTO, or Data Transfer Object, is a class whose only 
-purpose is to hold information and transfer the information between different places. Let's go through the process
+purpose is to hold information and transfer the information between different places. They are exactly comparable
+to the JSON bodies available in the specification. Let's go through the process
 of creating a new Notes DTO. 
 
 If you look in `com.codeforcommunity.dto`, you can see some of the classes that have 
@@ -505,7 +501,7 @@ public class CreateNoteRequest extends ApiDto {
 }
 ```
 
-As you can see, it basically just has getters and setters, as well as a `validate(String)` method, which 
+As you can see, it basically just has getters and setters, as well as a `validateFields(String)` method, which 
 you can use to define whether or not a given field is valid or not. If it's not valid, you can add the field name
 to a list which gets returned from the method, indicating the fields which have an invalid value. 
 
@@ -532,13 +528,8 @@ a class which deals with the interactions between an API and jOOQ type, both for
 Each module in a project is compiled separately of each other. Because of this, if you want to include a 
 module's classes in another module, you have to include it as a dependency on that project. If you take a look at the
 pom.xml file in service/, you'll notice that the api/, persist/, and common/ modules are all included 
-in the dependencies list. You can sort of think of dependencies as a sort of directed graph, where a
-project can include a dependency, which can include other dependencies as well. One property that 
-dependencies have, though, is that there can't be any cycles in the dependency list. What this means, is that
-we can't have the service/ module depend on the api/ module, and have the api/ module depend on service/ as well.
-This property makes development a little tricky, since we aren't able to tell any classes in api/ what to do
-with service/ without introducing some kind declaration of what methods can be expected in a processor. 
-That's where interfaces come in.
+in the dependencies list. Let's make an interface in api/ that will provide a method signature to the 
+routers we've been working with created.
 
 We're able to create a new interface in api/, which will give the new `NotesRouter` class we created an idea
 of what can be done in the service/ module. This interface can then be implemented by our processor in service/,
@@ -568,7 +559,7 @@ public class NotesProcessorImpl implements INotesProcessor {
   }
 
   @Override
-  public void createNote(CreateNoteRequest req, String userId) {
+  public void createNote(CreateNoteRequest req, int userId) {
 
   }
 }
@@ -909,14 +900,16 @@ public void createNoteTest() {
   // Test that INSERT was only called once
   assertEquals(1, db.timesCalled("INSERT"));
   // Test that the length of the insert invocations is the same as the number of times called
-  assertEquals(1, db.getSqlBindings().get("INSERT").size());
+  List<Object[]> inserts = db.getSqlBindings().get("INSERT");
+  assertEquals(1, inserts.size());
   // Test that the number of values inserted in the first invocation is the length we're expecting
-  assertEquals(4, db.getSqlBindings().get("INSERT").get(0).length);
+  Object[] firstInsert = inserts.get(0);
+  assertEquals(4, firstInsert.length);
   // Test each of the values in the first invocation
-  assertEquals(expectedId, db.getSqlBindings().get("INSERT").get(0)[0]);
-  assertEquals(title, db.getSqlBindings().get("INSERT").get(0)[1]);
-  assertEquals(body, db.getSqlBindings().get("INSERT").get(0)[2]);
-  assertEquals(userId, db.getSqlBindings().get("INSERT").get(0)[3]);
+  assertEquals(expectedId, firstInsert[0]);
+  assertEquals(title, firstInsert[1]);
+  assertEquals(body, firstInsert[2]);
+  assertEquals(userId, firstInsert[3]);
 }
 ```
 
@@ -949,18 +942,18 @@ request" button.
 You from now on, you can access your pull request by visiting the repository and clicking on the "Pull Requests" tab
 at the top. The pr page should look a bit like this.
 
-![Open Pull Request](./images/pr-open.jpg)
+![Open Pull Request](images/pr-open.jpg)
 
 There, people can come and leave comments on your code.
 
-![Pull Request Comments](./images/pr-comments.jpg)
+![Pull Request Comments](images/pr-comments.jpg)
 
 On the "Files changed" tab, you can see all of the changes made on your branch. People can also leave
 reviews, summarizing their opinions on the changes you've made. If they think the changes you made
 are good, then they can also approve. Otherwise, if there are changes to be made, they can submit reviews
 as either regular comments or requests for changes.
 
-![Pull Request Files Changed](./images/pr-files-changed.jpg)
+![Pull Request Files Changed](images/pr-files-changed.jpg)
 
 At this stage of the development cycle, you'll probably go through a couple of rounds of changes followed 
 by reviews. You can just keep committing to your branch and pushing to GitHub normally, and your changes
@@ -974,12 +967,12 @@ implementations). Once you're ready to merge things in, and you have gotten both
 the "Merge pull request" button at the bottom of the status section will light up green. Click it, and your changes
 will be merged into master. 
 
-![Pull Request Status Section](./images/pr-status.jpg)
+![Pull Request Status Section](images/pr-status.jpg)
 
 And that's it, you're done with your ticket! Be sure to click the button to delete your branch, and you'll be
 set. 
 
-![Pull Request Closed](./images/pr-closed.jpg)
+![Pull Request Closed](images/pr-closed.jpg)
 
-If you have any improvements to make to this tutorial, plesae be sure to edit the doc (and make a PR for it)! Thanks
+If you have any improvements to make to this tutorial, please be sure to edit the doc (and make a PR for it)! Thanks
 for reading.
