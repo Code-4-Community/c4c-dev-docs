@@ -208,14 +208,14 @@ Responses:
 ```
 
 
-## Get Latest Reports With Library For One School
-Used to return a list of all reports for the given school.
+## Get Latest Report For One School
+Used to return the most recent report for the given school. Report type given by `libraryStatus`
 
-`GET` request to `/api/v1/protected/schools/:school_id/reports/with-library`
+`GET` request to `/api/v1/protected/schools/:school_id/report`
 
 Responses:
 
-`200 OK`: returns the latest report:
+`200 OK`: returns the latest report without library if `libraryStatus` is `"EXISTS"`:
 ```json
 {
     "id": 3,
@@ -243,15 +243,7 @@ Responses:
 }
 ```
 
-
-## Get Latest Reports Without Library For One School
-Used to return a list of all reports for the given school.
-
-`GET` request to `/api/v1/protected/schools/:school_id/reports/with-library`
-
-Responses:
-
-`200 OK`: returns the latest report:
+`200 OK`: returns the latest report without library if `libraryStatus` is `"DOES_NOT_EXIST"`:
 ```json
 {
     "id": 3,
@@ -270,3 +262,4 @@ Responses:
     "readyTimeline": "YEAR_AFTER_NEXT"
 }
 ```
+`404 No Report Found`: Report not found for school with id
