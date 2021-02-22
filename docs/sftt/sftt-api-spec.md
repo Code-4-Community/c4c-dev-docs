@@ -842,6 +842,35 @@ The password does not match the calling user's current password.
 ##### `409 Conflict`
 The given `newUsername` is already in use.
 
+### Change Email
+
+`POST api/v1/protected/user/change_email`
+
+Allows a user to change their email address. The new email address cannot be in use already. Also sends the user a confirmation email.
+
+#### Request Body
+
+```json
+{
+  "newEmail": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The email address change was successful.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
+##### `409 Conflict`
+The given `newEmail` is already in use.
+
 ### Delete User
 
 `POST api/v1/protected/user/delete`
