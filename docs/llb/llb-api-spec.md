@@ -662,6 +662,8 @@ The announcements were retrieved successfully.
       "id": ID,
       "title": STRING,
       "description": STRING,
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL,
       "created": TIMESTAMP
     },
     ...
@@ -705,6 +707,8 @@ The announcements were retrieved successfully.
       "id": ID,
       "title": STRING,
       "description": STRING,
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL,
       "created": TIMESTAMP
     },
     ...
@@ -738,7 +742,8 @@ The announcements were retrieved successfully.
       "title": STRING,
       "description": STRING,
       "created": TIMESTAMP,
-      "event_id": ID
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL
     },
     ...
   ],
@@ -749,47 +754,7 @@ The announcements were retrieved successfully.
 
 ## `POST api/v1/protected/announcements`
 
-Creates a new site-wide announcement. Can only be accessed by admins.
-
-### Request
-
-Body:
-
-```json
-{
-    "announcement": {
-        "title": STRING,
-        "description": STRING
-    }
-}
-```
-
-### Responses
-
-#### `200 OK`
-
-The announcement was created successfully.
-
-```json
-{
-  "id": ID,
-  "title": STRING,
-  "description": STRING,
-  "created": TIMESTAMP
-}
-```
-
-#### `401 Unauthorized`
-
-```json
-The calling user does not have the required privilege level
-```
-
-If the calling user is not an admin.
-
-## `POST api/v1/protected/announcements/:event_id`
-
-Creates a new announcement for the given event. Can only be accessed by admins.
+Creates a new site-wide announcement. Can only be accessed by admins. The `imageSrc` field is optional.
 
 ### Request
 
@@ -798,7 +763,8 @@ Body:
 ```json
 {
     "title": STRING,
-    "description": STRING
+    "description": STRING,
+    "imageSrc": STRING
 }
 ```
 
@@ -814,7 +780,49 @@ The announcement was created successfully.
   "title": STRING,
   "description": STRING,
   "created": TIMESTAMP,
-  "event_id": ID
+  "eventId": ID OR NULL,
+  "imageSrc": STRING OR NULL
+}
+```
+
+#### `401 Unauthorized`
+
+```json
+The calling user does not have the required privilege level
+```
+
+If the calling user is not an admin.
+
+## `POST api/v1/protected/announcements/:event_id`
+
+Creates a new announcement for the given event. Can only be accessed by admins. The `imageSrc` field is optional.
+
+### Request
+
+Body:
+
+```json
+{
+    "title": STRING,
+    "description": STRING,
+    "imageSrc": STRING
+}
+```
+
+### Responses
+
+#### `200 OK`
+
+The announcement was created successfully.
+
+```json
+{
+  "id": ID,
+  "title": STRING,
+  "description": STRING,
+  "created": TIMESTAMP,
+  "eventId": ID OR NULL,
+  "imageSrc": STRING OR NULL
 }
 ```
 
