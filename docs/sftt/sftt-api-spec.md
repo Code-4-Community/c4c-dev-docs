@@ -1182,11 +1182,93 @@ If the user is not a super admin.
 
 `POST api/v1/protected/import/sites`
 
+Used to import sites into the database. See below for a description of each ambiguous field.
+
+`status`: Alive or Dead but standing<br/>
+`confidence`: Confidence in species or genus identification<br/>
+`coverage`: Percent of tree that is green<br/>
+`pruning`: Amount of pruning seen in tree<br/>
+`condition`: Tree condition (Good, Fair, Poor, Dead)<br/>
+`discoloring`: Discoloring of leaves<br/>
+`leaning`: Tree is leaning<br/>
+`constricting_grate`: Metal grate constricting tree trunk growth<br/>
+`wounds`: Trunk wounds<br/>
+`pooling`: Pooling water in tree pit<br/>
+`stakes_with_wires`: Wooden stakes near tree WITH wires around tree<br/>
+`stakes_without_wires`: Wooden stakes near tree WITHOUT wires<br/>
+`lights`: Lights in tree<br/>
+`bicycle`: Bicycle locked to tree trunk<br/>
+`bag_empty`: Watering bag that is empty<br/>
+`bag_filled`: Watering bag that has water in it<br/>
+`tape`: Tape around trunk<br/>
+`site_type`: Pit, Continuous/Lawn or Planter<br/>
+`material`: Material in site (Plain dirt, mulch, grass, etc.)<br/>
+`fence`: Do you see a fence or perimeter guard?<br/>
+`trash`: Do you see loose trash?<br/>
+`wires`: Wires overhead?<br/>
+`grate`: Do you see a metal grate, either with or without a tree?<br/>
+`melnea_cass_trees`: Part of a program, not used anymore, only in database<br/>
+`mcb_number`: Melnea Cass number, not used anymore, only in database<br/>
+`tree_dedicated_to`: Tree dedication, not used currently<br/>
+
 #### Request Body
 
 ```json
 {
-  ...
+  "sites": [
+    {
+      "site_id": INT,
+      "block_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "city": STRING,
+      "zip": STRING,
+      "address": STRING,
+      "username": INT,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN,
+      "status": STRING,
+      "genus": STRING,
+      "species": STRING,
+      "common_name": STRING,
+      "confidence": STRING,
+      "diameter": DOUBLE,
+      "circumference": DOUBLE,
+      "coverage": STRING,
+      "pruning": STRING,
+      "condition": STRING,
+      "discoloring": BOOLEAN,
+      "leaning": BOOLEAN,
+      "constricting_grate": BOOLEAN,
+      "wounds": BOOLEAN,
+      "pooling": BOOLEAN,
+      "stakes_with_wires": BOOLEAN,
+      "stakes_without_wires": BOOLEAN,
+      "light": BOOLEAN,
+      "bicycle": BOOLEAN,
+      "bag_empty": BOOLEAN,
+      "bag_filled": BOOLEAN,
+      "tape": BOOLEAN,
+      "sucker_growth": BOOLEAN,
+      "site_type": STRING,
+      "sidewalk_width": STRING,
+      "site_width": STRING,
+      "site_length": STRING,
+      "material": STRING,
+      "raised_bed": BOOLEAN,
+      "fence": STRING,
+      "trash": STRING,
+      "wires": STRING,
+      "grate": STRING,
+      "stump": STRING,
+      "tree_notes": STRING,
+      "site_notes": STRING,
+      "melnea_cass_trees": STRING,
+      "mcb_number": INT,
+      "tree_dedicated_to": STRING
+    },
+    ...
+  ]
 }
 ```
 
@@ -1294,49 +1376,49 @@ Used to create a new site. Will create two entries in the database. One in the `
 
 ```json
 {
-  "block_id": INT,
-  "lat": LONG,
-  "lng": LONG,
-  "city": STRING,
-  "zip": STRING,
-  "address": STRING,
-  "tree_present": BOOLEAN,
-  "status": STRING,
-  "genus": STRING,
-  "species": STRING,
-  "common_name": STRING,
-  "confidence": STRING,
-  "diameter": DOUBLE,
-  "circumference": DOUBLE,
-  "coverage": STRING,
-  "pruning": STRING,
-  "condition": STRING,
-  "discoloring": BOOLEAN,
-  "leaning": BOOLEAN,
-  "grate": BOOLEAN,
-  "wounds": BOOLEAN,
-  "pooling": BOOLEAN,
-  "stakes_with": BOOLEAN,
-  "stakes_without": BOOLEAN,
-  "light": BOOLEAN,
-  "bicycle": BOOLEAN,
-  "bag_with": BOOLEAN,
-  "bag_without": BOOLEAN,
-  "tape": BOOLEAN,
-  "sucker_growth": BOOLEAN,
-  "site_type": STRING,
-  "sidewalk_width": STRING,
-  "site_width": STRING,
-  "pit_length": STRING,
-  "material": STRING,
-  "raised_bed":,
-  "fence": STRING,
-  "trash": STRING,
-  "wires": STRING,
-  "grate": STRING,
-  "stump": STRING,
-  "tree_notes": STRING,
-  "site_notes": STRING
+    "block_id": INT,
+    "lat": LONG,
+    "lng": LONG,
+    "city": STRING,
+    "zip": STRING,
+    "address": STRING,
+    "tree_present": BOOLEAN,
+    "status": STRING,
+    "genus": STRING,
+    "species": STRING,
+    "common_name": STRING,
+    "confidence": STRING,
+    "diameter": DOUBLE,
+    "circumference": DOUBLE,
+    "coverage": STRING,
+    "pruning": STRING,
+    "condition": STRING,
+    "discoloring": BOOLEAN,
+    "leaning": BOOLEAN,
+    "constricting_grate": BOOLEAN,
+    "wounds": BOOLEAN,
+    "pooling": BOOLEAN,
+    "stakes_with_wires": BOOLEAN,
+    "stakes_without_wires": BOOLEAN,
+    "light": BOOLEAN,
+    "bicycle": BOOLEAN,
+    "bag_empty": BOOLEAN,
+    "bag_filled": BOOLEAN,
+    "tape": BOOLEAN,
+    "sucker_growth": BOOLEAN,
+    "site_type": STRING,
+    "sidewalk_width": STRING,
+    "site_width": STRING,
+    "site_length": STRING,
+    "material": STRING,
+    "raised_bed": BOOLEAN,
+    "fence": STRING,
+    "trash": STRING,
+    "wires": STRING,
+    "grate": STRING,
+    "stump": STRING,
+    "tree_notes": STRING,
+    "site_notes": STRING,
 }
 ```
 
@@ -1391,7 +1473,7 @@ No request body.
       "condition": STRING,
       "discoloring": BOOLEAN,
       "leaning": BOOLEAN,
-      "grate": BOOLEAN,
+      "constricting_grate": BOOLEAN,
       "wounds": BOOLEAN,
       "pooling": BOOLEAN,
       "stakes_with": BOOLEAN,
@@ -1405,7 +1487,7 @@ No request body.
       "site_type": STRING,
       "sidewalk_width": STRING,
       "site_width": STRING,
-      "pit_length": STRING,
+      "site_length": STRING,
       "material": STRING,
       "raised_bed":,
       "fence": STRING,
@@ -1427,7 +1509,7 @@ If the site id specified is invalid.
 
 ### Update a Site
 
-`POST api/v1/protected/sites/update`
+`POST api/v1/protected/sites/:site_id/update`
 
 Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. Every field can be `NULL`.
 
@@ -1448,30 +1530,30 @@ Used to update the state of a site. A new entry will be made in the `site_entrie
   "condition": STRING,
   "discoloring": BOOLEAN,
   "leaning": BOOLEAN,
-  "grate": BOOLEAN,
+  "constricting_grate": BOOLEAN,
   "wounds": BOOLEAN,
   "pooling": BOOLEAN,
-  "stakes_with": BOOLEAN,
-  "stakes_without": BOOLEAN,
+  "stakes_with_wires": BOOLEAN,
+  "stakes_without_wires": BOOLEAN,
   "light": BOOLEAN,
   "bicycle": BOOLEAN,
-  "bag_with": BOOLEAN,
-  "bag_without": BOOLEAN,
+  "bag_empty": BOOLEAN,
+  "bag_filled": BOOLEAN,
   "tape": BOOLEAN,
   "sucker_growth": BOOLEAN,
   "site_type": STRING,
   "sidewalk_width": STRING,
   "site_width": STRING,
-  "pit_length": STRING,
+  "site_length": STRING,
   "material": STRING,
-  "raised_bed":,
+  "raised_bed": BOOLEAN,
   "fence": STRING,
   "trash": STRING,
   "wires": STRING,
   "grate": STRING,
   "stump": STRING,
   "tree_notes": STRING,
-  "site_notes": STRING
+  "site_notes": STRING,
 }
 ```
 
