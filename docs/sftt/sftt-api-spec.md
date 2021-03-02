@@ -1432,6 +1432,48 @@ Site successfully added.
 
 If the request body is malformed.
 
+### Add a Potential Site
+
+`POST api/v1/protected/sites/create_potential`
+
+Creates a potential site, which is a place where the city could potentially place a planting site. Below is a description of each field.
+
+`light_pole`: 10 feet from light pole</br>
+`drive_way`: 10 feet from driveway</br>
+`hydrant`: 10 feet from hydrant</br>
+`intersection`: 20 feet from intersections</br>
+`building_entrance`: Not in front of a building entrance
+
+#### Request Body
+
+```json
+{
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "deleted_at": TIMESTAMP,
+  "light_pole": BOOLEAN,
+  "drive_way": BOOLEAN,
+  "hydrant": BOOLEAN,
+  "intersection": BOOLEAN,
+  "building_entrance": BOOLEAN,
+  "notes": TEXT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
 ### Get a Site
 
 `GET api/v1/protected/sites/:site_id`
