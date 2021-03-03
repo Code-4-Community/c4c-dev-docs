@@ -59,7 +59,8 @@ Responses:
     "reasonNoStudentLibrarians": null,
     "hasSufficientTraining": true,
     "teacherSupport": "Teacher Support Example",
-    "parentSupport": "Parent Support Example"
+    "parentSupport": "Parent Support Example",
+    "visitReason": "Visit Reason Example"
 }
 ```
  
@@ -81,7 +82,8 @@ Responses:
     "wantsLibrary": true,
     "hasSpace": false,
     "currentStatus": "Found a space",
-    "readyTimeline": "YEAR_AFTER_NEXT"
+    "readyTimeline": "YEAR_AFTER_NEXT",
+    "visitReason": "Visit Reason Example"
 }
 ```
 
@@ -121,7 +123,8 @@ Responses:
             "reasonNoStudentLibrarians": null,
             "hasSufficientTraining": true,
             "teacherSupport": "Teacher Support Example",
-            "parentSupport": "Parent Support Example"
+            "parentSupport": "Parent Support Example",
+            "visitReason": "Visit Reason Example"
         },
         {
             "id": 2,
@@ -145,7 +148,8 @@ Responses:
             "reasonNoStudentLibrarians": null,
             "hasSufficientTraining": true,
             "teacherSupport": "Teacher Support Example",
-            "parentSupport": "Parent Support Example"
+            "parentSupport": "Parent Support Example",
+            "visitReason": "Visit Reason Example"
         },
         {
             "id": 2,
@@ -161,7 +165,8 @@ Responses:
             "hasSpace": false,
             "currentStatus": "Found a space",
             "reason": "Funding",
-            "readyTimeline": "YEAR_AFTER_NEXT"
+            "readyTimeline": "YEAR_AFTER_NEXT",
+            "visitReason": "Visit Reason Example"
         },
         {
             "id": 3,
@@ -185,7 +190,8 @@ Responses:
             "reasonNoStudentLibrarians": null,
             "hasSufficientTraining": true,
             "teacherSupport": "Teacher Support Example",
-            "parentSupport": "Parent Support Example"
+            "parentSupport": "Parent Support Example",
+            "visitReason": "Visit Reason Example"
         },
         {
             "id": 3,
@@ -201,7 +207,8 @@ Responses:
             "hasSpace": false,
             "currentStatus": "Found a space",
             "reason": "Funding",
-            "readyTimeline": "YEAR_AFTER_NEXT"
+            "readyTimeline": "YEAR_AFTER_NEXT",
+            "visitReason": "Visit Reason Example"
         }
     ]
 }
@@ -239,7 +246,8 @@ Responses:
     "reasonNoStudentLibrarians": null,
     "hasSufficientTraining": true,
     "teacherSupport": "Teacher Support Example",
-    "parentSupport": "Parent Support Example"
+    "parentSupport": "Parent Support Example",
+    "visitReason": "Visit Reason Example"
 }
 ```
 
@@ -259,7 +267,8 @@ Responses:
     "hasSpace": false,
     "currentStatus": "Found a space",
     "reason": "Funding",
-    "readyTimeline": "YEAR_AFTER_NEXT"
+    "readyTimeline": "YEAR_AFTER_NEXT",
+    "visitReason": "Visit Reason Example"
 }
 ```
 `404 No Report Found`: Report not found for school with id
