@@ -392,7 +392,7 @@ Body:
     "diagnosis": STRING OR NULL,
     "medication": STRING OR NULL,
     "notes": STRING OR NULL,
-    "profilePicture": IMAGE OR NULL,
+    "profilePicture": STRING OR NULL,
   },
   "additionalContacts": [
     {
