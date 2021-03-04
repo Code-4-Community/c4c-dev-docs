@@ -20,11 +20,11 @@ and ask. Good luck on your tickets!
     - What will we need to do?
 3. Making Changes
     - Modify the API specification
-    - Create a new database migration
-    - Create a notes sub-router API
     - Create a new notes DTO
+    - Create a notes processor interface
+    - Create a notes sub-router API and note endpoint
+    - Create a new database migration
     - Create a new notes processor
-    - Create a new create note endpoint
 4. Testing!!!
 5. Making the Pull Request
 
@@ -171,18 +171,18 @@ this basically just separates out functionality into three different main functi
 Alright so, we know that we need to add a way to create a note, but what does that actually entail? There are two
 main things that are required: 1) creating a way for something to request the creation of a note, and 2) actually
 storing the note in the database. Our database up to this point doesn't really have much in it, so that means
-we'll also have to create a database migration so that the database knows what to expect. We also don't have any
+we'll have to create a database migration SQL script so that the database knows what to expect. We also don't have any
 concept of notes in our API, so we need to add the creation of a new API sub-router to our growing list of tasks. 
 And since we haven't handled notes in either the API or database before, there aren't any ways to handle the note
 once a request is received and pass it to the database, so we'll need to create a processor implementation. Let's list
 all of this out.
 
 1. Modify the API specification
-2. Create a new database migration
-3. Create a notes sub-router API
-4. Create a new notes DTO
-5. Create a new notes processor 
-7. Create a new create note endpoint
+2. Create a new notes DTO
+3. Create a notes processor interface
+4. Create a notes sub-router API and note endpoint
+5. Create a new database migration
+6. Create a new notes processor
 
 That might seem like a lot to do, and it is relatively complex compared to writing a single method which gets a request
 and inserts the new note into the database, but this allows for a much cleaner code structure. You'll also get pretty
@@ -268,193 +268,18 @@ show up in the spec, and you'll usually see those denoted by a colon (`:`) prece
     be done like this: `GET /api/v1/protected/notes/:note_id?raw=true`, where `raw=true` has the key/value pair
     `raw` set to `true`.
 
-
-### The Database Migration
-
-We'll be starting with the database migration first in this case because we'll be dealing with SQL 
-for this task, while the remaining tasks are all in Java. In your future tickets, you can do this part 
-later on if you'd prefer.
-
-Again, the persist directory is where the model part and database interactivity parts of our application are located. 
-When you open the directory, you'll notice that there is no java/ directory located within src/main/. That's because
-we actually don't manually create any classes here. An external ORM dependency, [jOOQ](https://www.jooq.org/), manages
-that for us. Therefore, all of our files will be in
-the resources/ directory that was mentioned earlier. There's a config set somewhere that tells Flyway, another
-dependency for performing migrations, to look for the migration files in the db.migration directory. Flyway will 
-run migrations that haven't been performed in the order of their version numbers
-the next time the project is built, and jOOQ will generate ORM classes for each table. 
-
-!!! danger
-    Remember that __you can never edit a migration once it's been committed to master__, or else environments
-    that have already run that migration will either notice something has changed and *delete all information in 
-    the database* (which is really dangerous), or *avoid running the change you made, which can put the database in
-    a bad state and cause future migrations to behave incorrectly or fail*. Also, __do not add a migration with a 
-    version number that is less than or equal to any already existing migration versions__. This will also end up
-    deleting any database information, which is *very bad*.
-
-??? tip "Definitions"
-    - Migration: A SQL script defining modifications to a database. They're often done in separate steps as migrations
-      rather than as one single large SQL script because you can avoid deleting information
-      in the database, especially in a production environment. Therefore, each of these migrations describe the
-      changes to get the database's structure updated from the previous migration. 
-    - Object Relational Mapper (ORM): A library that generates a method of working with
-      incompatable type systems (Java objects and SQL database tables in our case) natively from one syntax. In 
-      our case, it allows us to write SQL queries using Java classes and interact with classes as if 
-      they were an object.
-
-Let's take a look at the already existing tables in the database. If you've run `mvn` or `mvn install` before, 
-and the build succeeded, you should be able to see the following tables in whichever data viewer you're using.
-
-- `blacklisted_refreshes`: Contains a list of invalid verification key hashes so that the keys can be invalidated
-  when a user logs out.
-- `flyway_schema_history`: The current migration status for Flyway, so that it knows which migrations should be applied
-  on a build. This table isn't created in a migration file, it's created automatically for us by Flyway.
-- `users`: a table containing user information.
-- `verification_keys`: Session information for a user.
-
-!!! info
-    You can feel free to use whichever data viewer you would like. We recommend against using the PostgreSQL 
-    console directly (unless you need to for certain tasks), and instead think you should focus on using PGAdmin, 
-    the Database Viewer in IntelliJ, or the JetBrains DataGrip. 
-
-We're going to want another table, `notes`, to store notes for a use. If you know SQL, try creating one on your
-own in a `V2__Notes_Table.sql` file in the same directory that `V1__Initial_Import.sql` exists in 
-(*there are __two__ underscores between V2 and Notes*). We'll have an answer in the dropdown below.
-
-??? question "Can you write a migration for the notes table?"
-    ``` postgresql
-    CREATE TABLE IF NOT EXISTS notes (
-        id          SERIAL          PRIMARY KEY,
-        created     TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-        title       VARCHAR(255)    NOT NULL,
-        body        TEXT            NOT NULL,
-        user_id     INTEGER         NOT NULL,
-        CONSTRAINT notes_user_id_fk FOREIGN KEY (user_id)
-            REFERENCES users (id)
-    );
-    ```
-Now that we have the migration created you may be wondering two very important questions:
-
-1. How do we run this migration in the database?
-2. How do we get jOOQ to create our ORM classes?
-
-Fortunately, the answer to both questions is easy. All you have to do is run Maven! With migrations, you'll 
-want to run `mvn clean install` (a shorthand for this command is just `mvn`!), since sometimes issues can pop 
-up when jOOQ is constructing your ORM classes. Try it out, and then you'll be able to see that a `NotesRecord` 
-class was generated in the persist/target/generated-sources/jooq/... directory of the persist module. 
-
-??? error "If you get an error mentioning `@Generated`, read this!"
-    If you're getting the `@Generated` error, that means the wrong version of Java was used with Maven.
-    To fix this, you'll want to make sure you're running Maven with the IntelliJ Maven tool. You should be 
-    able to locate it at the top of the right toolbar.
-
-    If you're still getting issues, go to File > Project Structure > Project, and make sure your language
-    level is 8. You may also need to set the Project SDK to Java 8 too. If that doesn't solve it,
-    reach out to your team lead for help.
-
-Cool, now we're done with working in persist/. Let's move on to creating the Note sub-router.
-
-### The Notes Sub-router
-
-Creating a new sub-router is pretty simple, but first let's take a look at what routing even means. Routing is
-when an application receives a request at a certain endpoint, usually a path in a URL, and runs a method to respond
-to the information provided. In the api/ module directory, the main entrypoint is the `ApiMain` class, which is called by `ServiceMain`. 
-This class handles starting up the part of the server that listens for incoming connections. Part of the `startApi()` 
-method of `ApiMain` is that the `ApiRouter` class is set as the application's main router. What that means is that 
-the `ApiRouter` handles actually performing the expected functionality when a route is called. 
-
-Let's go through a high-level example of exactly what happens when a request is made. Let's say you load a webpage,
-what's going on there? Once your computer initiates the request, the server hosting the webpage receives a little bit 
-of information about you and what you are trying to do. The most important piece of information included there is 
-the path, which could end up looking like the path we put in our API spec (`/api/v1/protected/notes/create`). 
-The first thing that the server will do is try to figure out if there are any paths in a list of registered paths
-that match the request path. If one is found, then a method that's been associated with that path will get called, and
-the other information that the server has been sent in your request gets passed to the method. The method can then
-do whatever work it needs to do and add a response with whatever information it wants to send back. That's basically
-what happens when a request is made.
-
-<> TODO: find documentation describing routing and stuff
-
-At C4C, we have created an `IRouter` interface, detailing a method routers and subrouters must implement, so that
-they can be properly initialized. This interface defines a single method,`initializeRouter(Router)`, which 
-handles setting up the router's information. We'll discuss this in further depth soon.
-
-The most important thing that the `ApiRouter` does in its `initializeRouter()` method is register sub-routers for
-each of the different endpoints it provides. A sub-router is a router that works mounted at a specific endpoint.
-As an example, if we were to mount the notes router at /notes, then each route we register in the notes sub-router
-will be registered at notes/<your_notes_route_here>. Sub-routers also allow us to register certain methods
-to be called before the actual route handler, so we can perform operations before the routes in a certain
-sub-router are called, like ensuring a user is logged in. Let's actually go through the process of creating a 
-notes sub-router and mount it within the `ApiRouter`, so that the route can be called.
-
-Let's create the `NoteRouter` sub-router class in the `com.codeforcommunity.rest.subrouter` package, which 
-implements the `IRouter` interface. It should look something like this:
-
-```java
-public class NotesRouter implements IRouter {
-  @Override
-  public Router initializeRouter(Vertx vertx) {
-    Router router = Router.router(vertx);
-    
-    return router;
-  }
-}
-```
-
-Pretty simple, right? All we want to do to start out is create our new sub-router for handling all things relating 
-to notes. We'll also want to add this to the `ApiRouter` class so that it can be registered. To do that, we'll want
-to adjust the following methods:
-
-```java 
-public class ApiRouter implements IRouter {
-  private final CommonRouter;
-  private final AuthRouter authRouter;
-  private final ProtectedUserRouter protectedUserRouter;
-  private final NotesRouter notesRouter;
-  
-  public ApiRouter(
-      IAuthProcessor authProcessor,
-      IProtectedUserProcessor protectedUserProcessor,
-      JWTAuthorizer jwtAuthorizer) {
-    this.commonRouter = new CommonRouter(jwtAuthorizer);
-    this.authRouter = new AuthRotuer(authProcessor);
-    this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
-    this.notesRouter = new NotesRouter();
-  }
-  
-  ...
-  
-  private Router defineProtectedRoutes(Vertx vertx) {
-    Router router = Router.router(vertx);
-    
-    router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
-    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx));
-
-    return router;
-  }
-
-  ...
-}
-```
-
-!!! info
-    The lines we actually added stuff on are 5, 14, and 23.
-
-As you can see in the previous example, all we did was add and instantiate a new `NotesRouter`. We'll need to create
-the interface to a processor which can handle our new notes.
-
 ### Create a new notes DTO
 
-You've probably seen the term "DTO" a couple of times now. A DTO, or Data Transfer Object, is a class whose only 
+You may have heard or seen the term "DTO" before. A DTO, or Data Transfer Object, is a class whose only
 purpose is to hold information and transfer the information between different places. They are exactly comparable
 to the JSON bodies available in the specification. Let's go through the process
-of creating a new Notes DTO. 
+of creating a new Notes DTO.
 
-If you look in `com.codeforcommunity.dto`, you can see some of the classes that have 
-been created for DTOs. You'll notice a couple of other packages for groups of DTO types, as well as an `ApiDto` abstract 
+If you look in the api/ module's `com.codeforcommunity.dto` package, you can see some of the classes that have
+been created for DTOs. You'll notice a couple of packages within for groups of DTO types, as well as an `ApiDto` abstract
 class, which deals with defining DTO validation for incoming data. The DTO we're about to create, which will deal with
 handling incoming note JSON objects, will utilize `ApiDto` for ensuring some of the properties we guaranteed in
-our persist/ migrations. Since the other classes we see in the `dto` package house DTOs in packages referring to 
+our persist/ migrations. Since the other classes we see in the `dto` package house DTOs in packages referring to
 the data type's name, let's do the same for notes; let's create a note package. In there we'll create a
 `CreateNoteRequest` DTO. The following is what the `CreateNoteRequest` DTO will look like.
 
@@ -463,27 +288,39 @@ public class CreateNoteRequest extends ApiDto {
   private String title;
   private String body;
 
+  /**
+   * An empty constructor for CreateNoteRequests.
+   */ 
   public CreateNoteRequest() {
   }
 
+  /** A getter for the title. */
   public String getTitle() {
     return this.title;
   }
 
+  /** A getter for the body. */
   public String getBody() {
     return this.body;
   }
 
+  /** A setter for the title. */
   public CreateNoteRequest setTitle(String title) {
     this.title = title;
     return this;
   }
 
+  /** A setter for the body. */
   public CreateNoteRequest setBody(String body) {
     this.body = body;
     return this;
   }
 
+  /**
+   * A method for validating whether or not the titles retrieved from the request are valid. This
+   * method can perform whatever checks you want it to, but we usually just have it make sure
+   * values are non-null. Invalid values are returned in a list.
+   */
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "create_note_request.";
@@ -501,76 +338,343 @@ public class CreateNoteRequest extends ApiDto {
 }
 ```
 
-As you can see, it basically just has getters and setters, as well as a `validateFields(String)` method, which 
+As you can see, it basically just has getters and setters, as well as a `validateFields(String)` method, which
 you can use to define whether or not a given field is valid or not. If it's not valid, you can add the field name
-to a list which gets returned from the method, indicating the fields which have an invalid value. 
+to a list which gets returned from the method, indicating the fields which have an invalid value.
 
-If you remember what we had in our migration, you've probably noticed that there are a few fields missing
+If you saw in the list of questions we had for the tech lead earlier, you've probably noticed that there are a few 
+fields missing
 from the DTO that we'll need for the database. Two of them, the `id` and `date` fields, will be handled for us
 by the database. The `SERIAL` value we added to modify the `id` field tells the database that it can
 automatically set the value using an auto increment, so each insert will have the `id` of the previous entry
-+ 1. Similarly, we manually set a `DEFAULT` on the `date` field to automatically enter the current timestamp
++ 1. Similarly, we manually set a `DEFAULT` on the `date` field to automatically enter the current timestamp 
 as a value for that field (unless explicitly specified, but we won't be doing that).
 
-The other field, `user_id`, can be retrieved from methods provided later on, 
+The other field, `user_id`, can be retrieved from methods provided later on,
 so it's not something that has to be included as part of the request. You also wouldn't want to include that
 as part of the request because then people would be able to set notes as other people! Make sure you pay attention
-to where you get user information from, and ensure you're not introducing possible bugs or security issues 
+to where you get user information from, and ensure you're not introducing possible bugs or security issues
 into the application.
 
-We're all done with the DTO now, so let's take a look at the processor.
+We're all done with the DTO now, so let's take a look at the processor interface, which will tell the api/ module
+what it can do with notes.
 
-### Create a new notes processor
+### Create a notes processor interface
 
 Now we need to create what's called a processor for notes. In C4C, we use the term processor to define
 a class which deals with the interactions between an API and jOOQ type, both for incoming and outgoing data.
 
-Each module in a project is compiled separately of each other. Because of this, if you want to include a 
+Each module in a project is compiled separately of each other. Because of this, if you want to include a
 module's classes in another module, you have to include it as a dependency on that project. If you take a look at the
-pom.xml file in service/, you'll notice that the api/, persist/, and common/ modules are all included 
-in the dependencies list. Let's make an interface in api/ that will provide a method signature to the 
+pom.xml file in service/, you'll notice that the api/, persist/, and common/ modules are all included
+in the dependencies list. Let's make an interface in api/ that will provide a method signature to the
 routers we've been working with created.
 
 We're able to create a new interface in api/, which will give the new `NotesRouter` class we created an idea
 of what can be done in the service/ module. This interface can then be implemented by our processor in service/,
 since service/ will have access to all public classes and interfaces available in api/. Let's create that interface
-now in the `api` package of api/. We'll want to include a method in there that knows what to do with 
-`CreateNoteRequest` DTOs. The method we create will also want to take in some user information to, 
-like a user's `id`. We'll just pass that in as an `int`. We don't really need any information back, so we
+now in the `api` package of api/. We'll want to include a method in there that knows what to do with
+`CreateNoteRequest` DTOs. The method we create will also want to take in some user information too,
+like a user's `id`. We'll just pass that in as a `String`. We don't really need any information back, so we
 can make that method's return value `void`.
 
 ```java
 public interface INotesProcessor {
+  /**
+   * Creates a new note in the database for the given user.
+   */
   public void createNote(CreateNoteRequest req, String userId);
 }
 ```
 
-Super simple, right? Now we can create our `NotesProcessorImpl` in service/. You can do that in the 
-`processor` package. Since we're going to be working with database tables too, we'll need to also create a 
-constructor that can take in some database information when it's instantiated. This is done with a `DSLContext` 
-class provided by jOOQ.
+Super simple, right? Now we can create our notes sub-router and endpoint. You can do that in the
+`com.codeforcommunity.rest.subrouter` package. 
 
-```java 
-public class NotesProcessorImpl implements INotesProcessor {
-  private final DSLContext db;
+### Create a notes sub-router API and note endpoint
 
-  public NotesProcessorImpl(DSLContext db) {
-    this.db = db;
+Now that we have an idea of what we'll be able to do, we need to create a way for the backend to receive the information
+provided with the request, add it to the `CreateNoteRequest` class, and pas it into the `createNote` method defined
+in the previous section. If you want to read more about routing, you can check that out 
+[here](https://learn.c4cneu.com/guides/postrequest/). Let's jump into the code.
+
+#### The Sub-Router
+
+Here's the code for a sub-router for handling notes. You'll want to create this in the api/ module, under the 
+`com.codeforcommunity.rest.subrouter` package.
+
+```java
+public class NotesRouter implements IRouter {
+  // An instance of the processor interface we made
+  private final INotesProcessor processor;
+  
+  public NotesRouter(INotesProcessor processor) {
+    this.processor = processor;
   }
 
   @Override
-  public void createNote(CreateNoteRequest req, int userId) {
+  public Router initializeRouter(Vertx vertx) {
+    Router router = Router.router(vertx);
+    
+    registerCreateNote(router);
+    
+    return router;
+  }
 
+  // A method that gets called when the "create note route" is called
+  private void handleCreateNote(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
+  
+    processor.createNote(noteRequest, userData.getUserId());
+  
+    end(ctx.response(), 200, "Note successfully created");
+  }
+  
+  // A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
+  private void registerCreateNote(Router router) {
+    Route createNoteRequest = router.post("/create");
+    createNoteRequest.handler(this::handleCreateNote);
   }
 }
 ```
 
-Now that we have our `NotesProcessorImpl`, what do we do next? Well, we'll add the note to the database.
-Earlier, you saw the `NotesTable` class that was generated for us by jOOQ. We'll use the `db` field to
-get a new instance of `NotesRecord`, set the values, and then call `NotesRecord.store()` to save it to the 
-database.
+On the first line, you can see that this class implements `IRouter`. This interface provides a single method for
+initializing the router with a `Vertx` instance, and you can see that that `initializeRouter` method is overridden 
+below. We'll come back to that in a second to discuss exactly what it's doing. Next up, we have an
+instance of the `INotesProcessor` declared as a `private final` field, which is provided through the constructor.
 
-Now our finished `NotesProcessorImpl` class will look like this.
+```java
+@Override
+public Router initializeRouter(Vertx vertx) {
+  Router router = Router.router(vertx);
+  
+  registerCreateNote(router);
+  
+  return router;
+}
+```
+
+Taking a look at the `initializeRouter` method, we can see that it takes in a `Vertx` instance. Using that `Vertx` 
+instance, it gets a new `Router` from `Router.router(vertx)`, and calls the `registerCreateNote` method below. Finally,
+it returns the set up router. Let's skip down to the `registerCreateNote` method at the bottom 
+of the class next.
+
+```java 
+// A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
+private void registerCreateNote(Router router) {
+  Route createNoteRequest = router.post("/create");
+  createNoteRequest.handler(this::handleCreateNote);
+}
+```
+
+This `registerCreateNote` method, as we saw earlier, starts by taking in a `Router` instance. With that `Router` 
+instance it does two things: retrieve an individual post `Route` for the `/create` endpoint in this sub-router by 
+calling `router.post("/create")`, and set the handler for the returned `Route`. In cases where we want to perform
+another HTTP operation, we could call `router.get(<route>)` or `router.<method>(<route>)` instead. The `handler()` 
+method called on the `Route` takes in a 
+[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html), which is a type of 
+lambda available in Java. Method references tell route, and therefore the router, which method to call when the 
+route is accessed. In this case, we're having it access the `handleCreateNote` method. Let's wrap up the sub-router
+code by taking a look at that.
+
+```java 
+// A method that gets called when the "create note route" is called
+private void handleCreateNote(RoutingContext ctx) {
+  JWTData userData = ctx.get("jwt_data");
+  CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
+
+  processor.createNote(noteRequest, userData.getUserId());
+
+  end(ctx.response(), 200, "Note successfully created");
+}
+```
+
+"Route handlers", or the specific types of method references that the handler method from before can take in, take in
+a `RoutingContext`, provided by the Vert.x package, and don't return anything. That `RoutingContext` object provides
+insight into request (like the body, path parameters, query parameters, ...), and allow you to respond to the request
+when you're done. We'll later be registering this sub-router under a protected path, so we'll also be adding information
+to it, like the `jwt_data` we get on the next line. The `JWTData` object contains secure information about the user, 
+such as their id, which we'll need for completing this ticket. 
+
+On the following line, we use a custom method in
+`RestFunctions` to load the request body into the `CreateNoteRequest` class we created earlier. This 
+`getJsonBodyAsClass` method turns JSON into a class, and calls the `validateFields()` method we defined
+under `ApiDto`. Now, we have all the information we need to hand the processing of this off to the `INotesProcessor`
+the constructor took in, so we can call `processor.createNote(noteRequest, userData.getUserId())`. Now that processing
+has been completed, we can end the request by calling the `end()` method (provided by the `ApiRouter` class), which will
+prepare a response from the data passed in.
+
+!!! note
+    `RestFunctions.getJsonBodyAsClass` only takes in DTOs that subclass the `ApiDto`, so that it can call 
+    `validateFields` and make sure incoming data is as expected.
+
+That wraps up all of the work we need to do to set up the sub-router, so let's take a look at how this is set up
+in the `ApiRouter` class.
+
+#### The ApiRouter
+
+Let's now register our new `NotesRouter` sub-router with the `ApiRouter` class so that the new route can be called.
+To that, we'll need to add a new `private final NotesRouter notesRouter` field, adjust the constructor, and
+adjust the `defineProtectedRoutes` method. By the way, this class is already available in api/ under the
+`com.codeforcommunity.rest` package.
+
+```java 
+public class ApiRouter implements IRouter {
+  private final CommonRouter;
+  private final AuthRouter authRouter;
+  private final ProtectedUserRouter protectedUserRouter;
+  private final NotesRouter notesRouter;
+  
+  public ApiRouter(
+      IAuthProcessor authProcessor,
+      IProtectedUserProcessor protectedUserProcessor,
+      JWTAuthorizer jwtAuthorizer,
+      INotesProcessor notesProcessor) {
+    this.commonRouter = new CommonRouter(jwtAuthorizer);
+    this.authRouter = new AuthRotuer(authProcessor);
+    this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
+    this.notesRouter = new NotesRouter(notesProcessor);
+  }
+  
+  /** Initialize a router and register all route handlers on it. */
+  public Router initializeRouter(Vertx vertx) {
+    Router router = commonRouter.initializeRouter(vertx);
+
+    router.mountSubRouter("/user", authRouter.initializeRouter(vertx));
+    router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
+
+    return router;
+  }
+  
+  private Router defineProtectedRoutes(Vertx vertx) {
+    Router router = Router.router(vertx);
+    
+    router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
+    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx));
+
+    return router;
+  }
+
+  ...
+}
+```
+
+!!! info
+    The lines we actually added stuff on are 5, 11, 15, and 24.
+
+In `defineProtctedRoutes`, we're doing something a bit interesting; we're initializing a new sub-router for the 
+`CommonRouter`, and registering the `notesRouter` and `protectedUserRouer` routers under it. Remember how earlier we 
+mentioned that the 
+`JWTData` object gets added to the `RoutingContext` automatically? Well, here's where it happens. Whenever a router
+registered under the `CommonRouter` is called, a method runs to validate and insert that data, turning away anyone
+who is not logged in. By calling `router.mountSubRouter`, we can chain these routers along, mounting them at a certain
+paths on the parent router. The main `ApiRouter` is mounted at `/api/v1/`, so all routers registered under it have their
+routes appended after the `/api/v1/` part. For the common router, that happens at `/api/v1/protected/`. For the
+new `notesRouter`, that happens at `/api/v1/protected/notes/`. Finally, our new create note path is mounted at
+`/api/v1/protected/notes/create`.
+
+### The Database Migration
+
+Next up, we'll be writing the database migration. If you remember from before, the persist directory is where the 
+model part and database interactivity parts of our application are located.
+When you open the directory, you'll notice that there is no java/ directory located within src/main/. That's because
+we actually don't manually create any classes here. An external ORM dependency, [jOOQ](https://www.jooq.org/), manages
+that for us. Therefore, all of our files will be in
+the resources/ directory that was mentioned earlier. There's a config set somewhere that tells Flyway, another
+dependency for performing migrations, to look for the migration files in the db.migration directory. Flyway will
+run migrations that haven't been performed in the order of their version numbers
+the next time the project is built, and jOOQ will generate ORM classes for each table.
+
+!!! danger
+Remember that __you can never edit a migration once it's been committed to master__, or else environments
+that have already run that migration will either notice something has changed and *delete all information in
+the database* (which is really dangerous), or *avoid running the change you made, which can put the database in
+a bad state and cause future migrations to behave incorrectly or fail*. Also, __do not add a migration with a
+version number that is less than or equal to any already existing migration versions__. This will also end up
+deleting any database information, which is *very bad*.
+
+??? tip "Definitions"
+- Migration: A SQL script defining modifications to a database. They're often done in separate steps as migrations
+rather than as one single large SQL script because you can avoid deleting information
+in the database, especially in a production environment. Therefore, each of these migrations describe the
+changes to get the database's structure updated from the previous migration.
+- Object Relational Mapper (ORM): A library that generates a method of working with
+incompatible type systems (Java objects and SQL database tables in our case) natively from one syntax. In
+our case, it allows us to write SQL queries using Java classes and interact with classes as if
+they were an object.
+
+Let's take a look at the already existing tables in the database. If you've run `mvn` or `mvn install` before,
+and the build succeeded, you should be able to see the following tables in whichever data viewer you're using.
+
+- `blacklisted_refreshes`: Contains a list of invalid verification key hashes so that the keys can be invalidated
+  when a user logs out.
+- `flyway_schema_history`: The current migration status for Flyway, so that it knows which migrations should be applied
+  on a build. This table isn't created in a migration file, it's created automatically for us by Flyway.
+- `users`: a table containing user information.
+- `verification_keys`: Session information for a user.
+
+!!! info
+You can feel free to use whichever data viewer you would like. We recommend against using the PostgreSQL
+console directly (unless you need to for certain tasks), and instead think you should focus on using PGAdmin,
+the Database Viewer in IntelliJ, or the JetBrains DataGrip.
+
+We're going to want another table, `notes`, to store notes for a use. If you know SQL, try creating one on your
+own in a `V2__Notes_Table.sql` file in the same directory that `V1__Initial_Import.sql` exists in
+(*there are __two__ underscores between V2 and Notes*). We'll have an answer in the dropdown below.
+
+??? question "Can you write a migration for the notes table?"
+``` postgresql
+CREATE TABLE IF NOT EXISTS notes (
+id          SERIAL          PRIMARY KEY,
+created     TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+title       VARCHAR(255)    NOT NULL,
+body        TEXT            NOT NULL,
+user_id     INTEGER         NOT NULL,
+CONSTRAINT notes_user_id_fk FOREIGN KEY (user_id)
+REFERENCES users (id)
+);
+```
+Now that we have the migration created you may be wondering two very important questions:
+
+1. How do we run this migration in the database?
+2. How do we get jOOQ to create our ORM classes?
+
+Fortunately, the answer to both questions is easy. All you have to do is run Maven! With migrations, you'll
+want to run `mvn clean install` (a shorthand for this command is just `mvn`!), since sometimes issues can pop
+up when jOOQ is constructing your ORM classes. Try it out, and then you'll be able to see that a `NotesRecord`
+class was generated in the persist/target/generated-sources/jooq/... directory of the persist module.
+
+??? error "If you get an error mentioning `@Generated`, read this!"
+If you're getting the `@Generated` error, that means the wrong version of Java was used with Maven.
+To fix this, you'll want to make sure you're running Maven with the IntelliJ Maven tool. You should be
+able to locate it at the top of the right toolbar.
+
+    If you're still getting issues, go to File > Project Structure > Project, and make sure your language
+    level is 8. You may also need to set the Project SDK to Java 8 too. If that doesn't solve it,
+    reach out to your team lead for help.
+
+Cool, now we're done with working in persist/. Let's finish up the implementation details by creating the `INotesProcessor` 
+interface.
+
+### Create a new notes processor
+
+Remember from earlier when we created the interface for the `INotesProcessor`? It should look something like this:
+
+```java 
+public interface INotesProcessor {
+  /**
+   * Creates a new note in the database for the given user.
+   */
+  public void createNote(CreateNoteRequest req, String userId);
+}
+```
+
+Let's create an implementation for it now.
+
+#### Create the Implementation
+
+We're going to go through and implement it now. Go to the service/ package, under the `com.codeforcommunity.processor`
+package, and create a new `NotesProcessorImpl` class. It should start out looking like this:
 
 ```java 
 public class NotesProcessorImpl implements INotesProcessor {
@@ -591,9 +695,30 @@ public class NotesProcessorImpl implements INotesProcessor {
 }
 ```
 
-Now we need to construct this in `ServiceMain`, so that it can get a `DSLContext` and begin processing 
-requests. We'll also need to go back after and create a way for the api/ module to reference this new
-processor. In the `ServiceMain.initializeServer()` method, we'll create a new `NotesProcessorImpl` and pass
+In the constructor, and as a field, you can see we're getting and storing a `DSLContext` object. The `DSLContext` class
+is what jOOQ (remember, our ORM from the previous section), uses as an entry point for interacting with the database.
+With it, we can compose queries to do almost anything. In this case, though, we'll be using it to create a new
+`NotesRecord`. 
+
+In the `createNote()` method we override, we first call `db.newRecord(Tables.NOTES)` to create a new record
+for the `NOTES` table, which produces a new `NotesRecord` object. We can now proceed to fill in the required o
+information, adding the information passed in with the `CreateNoteRequest` and `userId` by calling the setter methods
+on `NotesRecord`. Once all of the required information has been added, we can call `notesRecord.store()` to 
+automatically compose a SQL query to add this record to the database. No SQL necessary! 
+
+
+Now that we have our `NotesProcessorImpl`, what do we do next? Well, we'll add the note to the database.
+Earlier, you saw the `NotesTable` class that was generated for us by jOOQ. We'll use the `db` field to
+get a new instance of `NotesRecord`, set the values, and then call `NotesRecord.store()` to save it to the
+database. No need to write any SQL!
+
+Let's wire this into the `ApiRouter`.
+
+#### Provide the NotesProcessorImpl to ApiRouter
+
+Finally, we need to instantiate this in `ServiceMain` so that it can get a `DSLContext` and begin processing
+requests. We'll also need to provide it to our `ApiRouter`, so that it can properly set up the `NotesRouter` too. 
+In the `ServiceMain.initializeServer()` method, we'll create a new `NotesProcessorImpl` and pass
 it in to the `ApiRouter`'s constructor.
 
 ```java 
@@ -612,165 +737,7 @@ it in to the `ApiRouter`'s constructor.
   }
 ```
 
-Now, back in the api/ module, go to the `ApiMain` class in the `rest` package, and modify the constructor to take
-in the `INotesProcessor`. Then add the `INotesProcessor` to the `NotesRouter`'s constructor, and modify the 
-`NotesRouter` constructor  to take in an `INotesProcessor`.
-
-!!! warning 
-    You can see we're passing in an `INotesRouter` to both the `ApiRouter` and `NotesRouter` classes. This
-    is extremely important, since we don't have access to the `NotesProcessorImpl` class available in service/.
-    Remember that we can't have a dependency on the service/ module in api/, since api/ is already a dependency
-    on service/. 
-
-```java 
-public class ApiRouter implements IRouter {
-  ...
-  
-    public ApiRouter(
-      IAuthProcessor authProcessor,
-      IProtectedUserProcessor protectedUserProcessor,
-      INotesProcessor notesProcessor,
-      JWTAuthorizer jwtAuthorizer) {
-    this.commonRouter = new CommonRouter(jwtAuthorizer);
-    this.authRouter = new AuthRouter(authProcessor);
-    this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
-    this.notesRouter = new NotesRouter(notesProcessor);
-  }
-
-  ...
-}
-```
-
-```java 
-public class NotesRouter implements IRouter {
-  private final INotesProcessor processor;
-
-  public NotesRouter(INotesProcessor notesProcessor) {
-    this.processor = notesProcessor;
-  }
-  
-  ...
-}
-```
-
-Awesome! You're done creating and dealing with your processor. All that's left to do is define our new endpoint!
-
-### Create a new create note endpoint
-
-There are three things we need to do here to create our new endpoint. 
-
-1. Create a method to handle the route whenever it's called
-2. Create a method to register the route with the Vertx router
-3. Call the method to register the route in `initializeRouter()`
-
-#### Creating a route handler
-
-To create a route handler, you'll have a method that can take in a Vertx `RoutingContext`, which contains
-all of the information you'll need to handle the request. You can check out the `RestFunctions` utility class
-in the `rest` package, which handles getting the user's information from the `RoutingContext`. You may also
-want to check out the `end()` methods in `ApiRouter`, which is what we'll use to actually finish up the request
-when we're done.
-
-First, you'll need to get the user's information. In one of the methods for setting up protected routes
-(which, if you remember, the `NotesRouter` was mounted in), a `JWTData` object containing the user's information
-was added to the `RoutingContext`. You can get that by calling `RoutingContext.get()` with the 'jwt_data' key. 
-This has two important fields on it: one for the user's id, and another for the user's privilege level. We won't
-need the privilege level for this ticket, but it's important to know that it exists there.
-
-Next, you'll need to get the body of the request into the `CreateNoteRequest` class, which can be done with
-`RestFunctions.getJsonBodyAsClass()`. It's a static method which you can call by passing in the `RoutingContext` and
-a class object of DTO you want to load the data into (also called unmarshalling). That method will return an
-instance of the `CreateNoteRequest` class with all of the required values filled in.
-
-Now that you have all of the required information for the `NotesProcessor`'s `createNote()` method, go ahead and call
-it. It will proceed with adding the note to the database.
-
-Finally, you can end the request and return a response with the `end()` method that was mentioned earlier. The 
-first parameter of that method is a `HttpServerResponse`, which you can get by calling `RoutingContext.response()`.
-Then you can give it the status code, 200 in this case since it was a success, and a JSON response if desired.
-We can just add a string there saying something like "Note successfully created".
-
-Our finished method will look something like this.
-
-```java 
-private void handleCreateNote(RoutingContext ctx) {
-  JWTData userData = ctx.get("jwt_data");
-  CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
-
-  processor.createNote(noteRequest, userData.getUserId());
-
-  end(ctx.response(), 200, "Note successfully created");
-}
-```
-
-That's it for the handler.
-
-#### Create a route register method
-
-This one is pretty quick too. Here, we'll create a method which takes in the Vertx `Router` we created in 
-`initializeRouter()`, get a `Route` object out of it that represents the actual route we want to deal with,
-and add the handler we created before.
-
-The `Router` has a couple of methods for getting `Route` objects out of it, one for each type of request. Each
-request is overloaded to take in no parameters or a single string representing the path. In this
-case, we'll be using the `post()` method, and adding a path for '/create', which will handle requests for
-`POST /api/v1/protected/notes/create`.
-
-Lastly, you'll be able to call the `handler()` method and pass in a 
-[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html) to let the 
-router know which method should be used when the route is called.
-
-```java 
-private void registerCreateNote(Router router) {
-  Route createNoteRequest = router.post("/create");
-  createNoteRequest.handler(this::handleCreateNote);
-}
-```
-
-#### Call the register method
-
-To finish up our project, all you have to do is call `registerCreateNote()` in `initializeRouter()`.
-
-```java
-@Override
-public Router initializeRouter(Vertx vertx) {
-  Router router = Router.router(vertx);
-
-  registerCreateNote(router);
-
-  return router;
-}
-```
-
-That's it, we're done. You can now try calling the `POST /api/v1/protected/notes/create` in a request client
-like [Postman](https://www.postman.com/), and you should get back the response you set it up with once you 
-log in with a user! You should also then see the note in the database!
-
-!!! info "Logging in with a user and making a request"
-    Here are some steps to try out that should let you create a user, log in, and make a request.
-
-    First, start up the project. This can be done by clicking the green arrow in `ServiceMain`.
-    If you get an error about properties not being found, go to the common/ module and copy the
-    server.properties.example to server.properties in the resources directory. Make sure you
-    go in and set the `database_password` key if you haven't yet.
-
-    You may also need to go in and create a backend-scaffold database if you haven't yet.
-
-    1. Sign up with a new user. You can do this by POSTing to the `/api/v1/user/signup` route with the
-       following data in a JSON. You'll get back an `accessToken` and a `refreshToken` that can be used to make
-       your request, so skip to step 3 if you have it.
-        - email
-        - password
-        - firstName
-        - lastName
-    2. Log in as the user if you don't have an `accessToken` or `refreshToken`. You can do this by POSTing to the
-       `/api/v1/user/login` route with the following data in a JSON. You'll get back an `accessToken` 
-       and a `refreshToken` like you did when you signed up. Note: logging in again will invalidate any
-       previously valid tokens.
-        - email
-        - password
-    3. Add an `X-Access-Token` header with the `accessToken` value to any request you make. For the request to
-       create a new note, you'll just add a `title` and `body` JSON to the request.
+Awesome! You're done creating and dealing with your processor. Let's test everything to make sure it works now.
 
 ## Testing!!!
 
@@ -792,21 +759,10 @@ The `createNote()` method we created in the processor is a method that we should
 create a new class in the test directory within service/. Your test directory should, in a way, mirror the main
 directory containing all of your code. By that, I mean if the class you want to test appears in a specific package,
 you'll want to place your test class in a matching package and name it the name of the class + "Test". For
-the `NotesProcessorImpl` class, we'll create a `NotesProcessorImplTest` class in the `processor` package.
+the `NotesProcessorImpl` class, we'll create a `NotesProcessorImplTest` class in the `com.codeforcommunity.processor` 
+package.
 
-Once you have your `NotesProcessorImplTest` class set up, you're going to start by creating a field for storing
-an instance of a `NotesProcessorImpl`. We'll have that automatically be set up for us by creating a method
-with the `@BeforeEach` annotation; one that is used by JUnit so that it can be called before each test to
-set up whatever information you need for your tests. We're using that setup annotation here because every test in this
-class will be testing the `NotesProcessorImpl`. Therefore, it's useful to have it be set up prior to a test instead
-of copying code all over the place to set it up the same way every time.
-
-Since we were using an external dependency, jOOQ in that method, we need a way to mock its behavior since we don't
-actually want to insert data into the database in a test like this. To do that, we created a `JooqMock` class
-to handle testing methods which have jOOQ interactions in them. You'll also want to add that as a field to your
-class, since it has a `DSLContext` that will be passed into the `NotesProcessorImpl`.
-
-Our setup method should now look something like this.
+Here's how your `NotesProcessorImplTest` should start:
 
 ```java 
 public class NotesProcessorImplTest {
@@ -821,8 +777,41 @@ public class NotesProcessorImplTest {
 }
 ```
 
-Let's go ahead and create our `createNoteTest()`. Make a `public void` method with the `@Test` annotation
-on the line above, and then we can start setting up the `JooqMock` for our test. Since we're only calling 
+Once you have your `NotesProcessorImplTest` class set up, you're going to start by creating a field for storing
+an instance of a `NotesProcessorImpl`. We'll have that automatically be set up for us by creating a method
+with the `@BeforeEach` annotation; one that is used by JUnit so that it can be called before each test to
+set up whatever information you need for your tests. We're using that setup annotation here because every test in this
+class will be testing the `NotesProcessorImpl`. Therefore, it's useful to have it be set up prior to a test instead
+of copying code all over the place to set it up the same way every time.
+
+Since we were using an external dependency, jOOQ in that method, we need a way to mock its behavior since we don't
+actually want to insert data into the database in a test like this. To do that, we created a `JooqMock` class
+to handle testing methods which have jOOQ interactions in them. You'll also want to add that as a field to your
+class, since it has a `DSLContext` that will be passed into the `NotesProcessorImpl`.
+
+Now, let's go ahead and create our first test. Down below, add the following code:
+
+```java 
+@Test
+public void createNoteTest() {
+  db.addEmptyReturn(OperationType.INSERT);
+  int expectedId = db.getId();
+
+  String title = "Some Title";
+  String body = "Some Body";
+  int userId = 12345;
+  CreateNoteRequest req = new CreateNoteRequest();
+  req.setTitle(title);
+  req.setBody(body);
+
+  processor.createNote(req, userId);
+
+  // Test that INSERT was only called once
+  assertEquals(1, db.timesCalled(OperationType.INSERT));
+}
+```
+
+We can now start setting up the `JooqMock` for our test. Since we're only calling 
 `NotesRecord.store()`, we're not expecting a record to be returned (this isn't a `SELECT` operation). 
 Therefore, you can set up the `JooqMock` by telling it to expect to return nothing, which is done
 by calling the `JooqMock.addEmptyReturn()` method. Since we're expecting an `INSERT` operation to occur,
@@ -834,35 +823,39 @@ Next, you can create a `CreateNoteRequest` and set it up with whatever values yo
 Call `NotesProcessor.createNote()` with the `CreateNoteRequest` and a value you choose for a `userId`.
 
 Let's start validating properties about the record that was created. There are two methods that you'll
-focus on for this: `JooqMock.timesCalled()` and `JooqMock.getSqlBindings()`. 
+focus on for this: `JooqMock.timesCalled()` and `JooqMock.getSqlOperationBindings()`. 
 
-`timesCalled()` takes in a 
-string for the SQL operation you're expecting, and returns an int representing the number of times that
+`timesCalled()` takes in an `OperationType` 
+for the SQL operation you're expecting, and returns an int representing the number of times that
 operation was called. In this case we're expecting it to be 1. 
 
-Here's what our `createNoteTest` looks like right now.
+Now we want to test some things about the information that would have been inserted into the database
+with `JooqMock.getSqlOperationBindings()`.
 
 ```java 
 @Test
 public void createNoteTest() {
-  db.addEmptyReturn("INSERT");
-  int expectedId = db.getId();
-
-  String title = "Some Title";
-  String body = "Some Body";
-  int userId = 12345;
-  CreateNoteRequest req = new CreateNoteRequest();
-  req.setTitle(title);
-  req.setBody(body);
-
-  processor.createNote(req, userId);
-
-  // Test that INSERT was only called once
-  assertEquals(1, db.timesCalled("INSERT"));
+  ...
+  
+  // Get the list of object arrays. Each item in the list represents a DB call, and each item in the array represents
+  // a single parameter of the DB call.
+  List<Object[]> inserts = db.getSqlOperationBindings().get(OperationTypes.INSERT);
+  
+  // Test that the length of the insert invocations is the same as the number of times called
+  assertEquals(1, inserts.size());
+  // Test that the number of values inserted in the first invocation is the length we're expecting
+  Object[] firstInsert = inserts.get(0);
+  assertEquals(4, firstInsert.length);
+  
+  // Test each of the values in the first invocation
+  assertEquals(expectedId, firstInsert[0]);
+  assertEquals(title, firstInsert[1]);
+  assertEquals(body, firstInsert[2]);
+  assertEquals(userId, firstInsert[3]);
 }
 ```
 
-`getSqlBindings()` is a little bit more involved. The `JooqMock` records values that are inserted during
+`getSqlOperationBindings()` is a little bit more involved. The `JooqMock` records values that are inserted during
 an operation, and saves them in a nested array of objects. Let's dissect it right now, since it may be
 confusing to see at first. `getSqlBindings()` returns a `Map<String, List<Object[]>>`, and at the surface
 level, it maps operations to a list of invocations. An individual invocation is the `Object[]` containing
@@ -873,43 +866,77 @@ called with each time it was called.
 The first thing we want to do with `getSqlBindings()` is verify that the length of the list for 
 `INSERT` operations is the same as the value for `timesCalled()`. We'll also want to verify that the length
 of the underlying array is what we're expecting; that is, we want to verify that each of the values we added
-to the `NotesRecord` was included, +1 for the `id` that jOOQ automatically adds for us.
+to the `NotesRecord` was included, +1 for the `id` that jOOQ automatically adds for us. We do that with the following
+part:
+
+```java 
+// Test that the length of the insert invocations is the same as the number of times called
+assertEquals(1, inserts.size());
+// Test that the number of values inserted in the first invocation is the length we're expecting
+Object[] firstInsert = inserts.get(0);
+assertEquals(4, firstInsert.length);
+```
 
 Finally, we'll go through and check each of the values that were added there to make sure they're what we're
 expecting. For this, you may need to run your debugger and see what order they were added in, and then 
 use the ordering you find in your tests.
 
-If we had more than one database operation occur during the test, we would also go through and test the following
-positions in the list of invocations in a similar manner. The resulting test is shown below.
-
 ```java 
-@Test
-public void createNoteTest() {
-  db.addEmptyReturn("INSERT");
-  int expectedId = db.getId();
+// Test each of the values in the first invocation
+assertEquals(expectedId, firstInsert[0]);
+assertEquals(title, firstInsert[1]);
+assertEquals(body, firstInsert[2]);
+assertEquals(userId, firstInsert[3]);
+```
 
-  String title = "Some Title";
-  String body = "Some Body";
-  int userId = 12345;
-  CreateNoteRequest req = new CreateNoteRequest();
-  req.setTitle(title);
-  req.setBody(body);
+If we had more than one database operation occur during the test, we would also go through and test the following
+positions in the list of invocations in a similar manner. The test class should look like this in the end:
 
-  processor.createNote(req, userId);
+```java
+public class NotesProcessorImplTest {
+  private NotesProcessorImpl processor;
+  private JooqMock db;
 
-  // Test that INSERT was only called once
-  assertEquals(1, db.timesCalled("INSERT"));
-  // Test that the length of the insert invocations is the same as the number of times called
-  List<Object[]> inserts = db.getSqlBindings().get("INSERT");
-  assertEquals(1, inserts.size());
-  // Test that the number of values inserted in the first invocation is the length we're expecting
-  Object[] firstInsert = inserts.get(0);
-  assertEquals(4, firstInsert.length);
-  // Test each of the values in the first invocation
-  assertEquals(expectedId, firstInsert[0]);
-  assertEquals(title, firstInsert[1]);
-  assertEquals(body, firstInsert[2]);
-  assertEquals(userId, firstInsert[3]);
+  @BeforeEach
+  public void setup() {
+    this.db = new JooqMock();
+    this.processor = new NotesProcessorImpl(db.getContext());
+  }
+  
+  @Test
+  public void createNoteTest() {
+    db.addEmptyReturn(OperationType.INSERT);
+    int expectedId = db.getId();
+  
+    String title = "Some Title";
+    String body = "Some Body";
+    int userId = 12345;
+    CreateNoteRequest req = new CreateNoteRequest();
+    req.setTitle(title);
+    req.setBody(body);
+  
+    // Call the processor method
+    processor.createNote(req, userId);
+  
+    // Test that INSERT was only called once
+    assertEquals(1, db.timesCalled(OperationType.INSERT));
+    
+    // Get the list of object arrays. Each item in the list represents a DB call, and each item in the array represents
+    // a single parameter of the DB call.
+    List<Object[]> inserts = db.getSqlOperationBindings().get(OperationTypes.INSERT);
+    
+    // Test that the length of the insert invocations is the same as the number of times called
+    assertEquals(1, inserts.size());
+    // Test that the number of values inserted in the first invocation is the length we're expecting
+    Object[] firstInsert = inserts.get(0);
+    assertEquals(4, firstInsert.length);
+    
+    // Test each of the values in the first invocation
+    assertEquals(expectedId, firstInsert[0]);
+    assertEquals(title, firstInsert[1]);
+    assertEquals(body, firstInsert[2]);
+    assertEquals(userId, firstInsert[3]);
+  }
 }
 ```
 
