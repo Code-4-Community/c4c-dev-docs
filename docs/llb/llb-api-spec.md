@@ -764,7 +764,7 @@ Body:
 {
     "title": STRING,
     "description": STRING,
-    "imageSrc": STRING
+    "imageSrc": STRING OR NULL
 }
 ```
 
@@ -805,7 +805,7 @@ Body:
 {
     "title": STRING,
     "description": STRING,
-    "imageSrc": STRING
+    "imageSrc": STRING OR NULL
 }
 ```
 
