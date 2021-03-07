@@ -313,6 +313,7 @@ Body:
     "diagnosis": STRING OR NULL,
     "medication": STRING OR NULL,
     "notes": STRING OR NULL,
+    "profilePicture": IMAGE OR NULL,
   },
   "additionalContacts": [
     {
@@ -327,6 +328,7 @@ Body:
         "diagnosis": STRING OR NULL,
         "medication": STRING OR NULL,
         "notes": STRING OR NULL,
+        "profilePicture": IMAGE OR NULL,
     },
     ...
   ],
@@ -342,6 +344,7 @@ Body:
       "diagnosis": STRING OR NULL,
       "medications": STRING OR NULL,
       "notes": STRING OR NULL,
+      "profilePicture": IMAGE OR NULL,
     }
     ...
   ],
@@ -349,6 +352,7 @@ Body:
 ```
 
   An EMAIL is a string representing a user's email.
+  An IMAGE is a BLOB representing the contents of an image.
   
 ### __Responses__ 
  
@@ -388,6 +392,7 @@ Body:
     "diagnosis": STRING OR NULL,
     "medication": STRING OR NULL,
     "notes": STRING OR NULL,
+    "profilePicture": STRING OR NULL,
   },
   "additionalContacts": [
     {
@@ -403,6 +408,7 @@ Body:
         "diagnosis": STRING OR NULL,
         "medication": STRING OR NULL,
         "notes": STRING OR NULL,
+        "profilePicture": IMAGE OR NULL,
     },
     ...
   ],
@@ -419,6 +425,7 @@ Body:
       "diagnosis": STRING OR NULL,
       "medications": STRING OR NULL,
       "notes": STRING OR NULL,
+      "profilePicture": IMAGE OR NULL,
     }
     ...
   ]
@@ -450,6 +457,7 @@ Body:
     "diagnosis": STRING OR NULL,
     "medication": STRING OR NULL,
     "notes": STRING OR NULL,
+    "profilePicture": IMAGE OR NULL,
   },
   "additionalContacts": [
     {
@@ -465,6 +473,7 @@ Body:
         "diagnosis": STRING OR NULL,
         "medication": STRING OR NULL,
         "notes": STRING OR NULL,
+        "profilePicture": IMAGE OR NULL,
     },
     ...
   ],
@@ -481,6 +490,7 @@ Body:
       "diagnosis": STRING OR NULL,
       "medications": STRING OR NULL,
       "notes": STRING OR NULL,
+      "profilePicture": IMAGE OR NULL,
     }
     ...
   ]
