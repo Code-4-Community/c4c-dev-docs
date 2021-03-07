@@ -1607,7 +1607,7 @@ Site successfully updated.
 
 ##### `400 BAD REQUEST`
 
-If the request body is malformed OR if the id specified is invalid.
+If the request body is malformed OR if the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Delete Site (Admin Only)
 
