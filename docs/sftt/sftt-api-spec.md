@@ -244,7 +244,7 @@ If the team name is taken or if any of the email addresses is invalid.
 
 Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
 
-`GET /teams/:team_id`
+`GET api/v1/protected/teams/:team_id`
 
 #### Request Body
 
@@ -1038,7 +1038,34 @@ No request body.
 
 #####  `200 OK`
 
-!!! missing "This still needs to figured out"
+```json
+{
+  "type": "FeatureCollection",
+  "name": "sites",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": INT,
+        "tree_present": BOOLEAN,
+        "diameter": DOUBLE,
+        "species": STRING,
+        "updated_at": TIMESTAMP,
+        "updated_by": USERNAME,
+        "address": STRING
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          LONG,
+          LONG
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
 
 ## Import Router
 
@@ -1101,7 +1128,7 @@ Blocks imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
@@ -1139,7 +1166,7 @@ Neighborhoods imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
@@ -1176,13 +1203,117 @@ Reservations imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
-### Import Trees
+### Import Sites
 
-!!! missing "This route has not been implemented yet"
+`POST api/v1/protected/import/sites`
+
+Used to import sites into the database. See below for a description of each ambiguous field.
+
+`status`: "Alive" or "Dead but standing"<br/>
+`confidence`: Confidence in species or genus identification<br/>
+`coverage`: Percent of tree that is green<br/>
+`pruning`: Amount of pruning seen in tree<br/>
+`condition`: Tree condition ("Good", "Fair", "Poor", "Dead")<br/>
+`discoloring`: Discoloring of leaves<br/>
+`leaning`: Tree is leaning<br/>
+`constricting_grate`: Metal grate constricting tree trunk growth<br/>
+`wounds`: Trunk wounds<br/>
+`pooling`: Pooling water in tree pit<br/>
+`stakes_with_wires`: Wooden stakes near tree WITH wires around tree<br/>
+`stakes_without_wires`: Wooden stakes near tree WITHOUT wires<br/>
+`lights`: Lights in tree<br/>
+`bicycle`: Bicycle locked to tree trunk<br/>
+`bag_empty`: Watering bag that is empty<br/>
+`bag_filled`: Watering bag that has water in it<br/>
+`tape`: Tape around trunk<br/>
+`site_type`: "Pit", "Continuous/Lawn" or "Planter"<br/>
+`material`: Material in site ("Plain dirt", "mulch", "grass", etc.)<br/>
+`fence`: Do you see a fence or perimeter guard?<br/>
+`trash`: Do you see loose trash?<br/>
+`wires`: Wires overhead?<br/>
+`grate`: Do you see a metal grate, either with or without a tree?<br/>
+`melnea_cass_trees`: Part of a program, not used anymore, only in database<br/>
+`mcb_number`: Melnea Cass number, not used anymore, only in database<br/>
+`tree_dedicated_to`: Tree dedication, not used currently<br/>
+
+#### Request Body
+
+```json
+{
+  "sites": [
+    {
+      "site_id": INT,
+      "block_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "city": STRING,
+      "zip": STRING,
+      "address": STRING,
+      "username": USERNAME,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN,
+      "status": STRING,
+      "genus": STRING,
+      "species": STRING,
+      "common_name": STRING,
+      "confidence": STRING,
+      "diameter": DOUBLE,
+      "circumference": DOUBLE,
+      "coverage": STRING,
+      "pruning": STRING,
+      "condition": STRING,
+      "discoloring": BOOLEAN,
+      "leaning": BOOLEAN,
+      "constricting_grate": BOOLEAN,
+      "wounds": BOOLEAN,
+      "pooling": BOOLEAN,
+      "stakes_with_wires": BOOLEAN,
+      "stakes_without_wires": BOOLEAN,
+      "light": BOOLEAN,
+      "bicycle": BOOLEAN,
+      "bag_empty": BOOLEAN,
+      "bag_filled": BOOLEAN,
+      "tape": BOOLEAN,
+      "sucker_growth": BOOLEAN,
+      "site_type": STRING,
+      "sidewalk_width": STRING,
+      "site_width": STRING,
+      "site_length": STRING,
+      "material": STRING,
+      "raised_bed": BOOLEAN,
+      "fence": STRING,
+      "trash": STRING,
+      "wires": STRING,
+      "grate": STRING,
+      "stump": STRING,
+      "tree_notes": STRING,
+      "site_notes": STRING,
+      "melnea_cass_trees": STRING,
+      "mcb_number": INT,
+      "tree_dedicated_to": STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Sites imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a super admin.
 
 ## Leaderboard Router
 
@@ -1255,3 +1386,298 @@ The number of days in the past the leaderboard is representing. Only blocks comp
 ##### `400 BAD REQUEST`
 
 If the request was malformed.
+
+## Sites Router
+
+The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
+
+### Add a Site
+
+`POST api/v1/protected/sites/create`
+
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+
+#### Request Body
+
+```json
+{
+    "block_id": INT,
+    "lat": LONG,
+    "lng": LONG,
+    "city": STRING,
+    "zip": STRING,
+    "address": STRING,
+    "tree_present": BOOLEAN | NULL,
+    "status": STRING | NULL,
+    "genus": STRING | NULL,
+    "species": STRING | NULL,
+    "common_name": STRING | NULL,
+    "confidence": STRING | NULL,
+    "diameter": DOUBLE | NULL,
+    "circumference": DOUBLE | NULL,
+    "coverage": STRING | NULL,
+    "pruning": STRING | NULL,
+    "condition": STRING | NULL,
+    "discoloring": BOOLEAN | NULL,
+    "leaning": BOOLEAN | NULL,
+    "constricting_grate": BOOLEAN | NULL,
+    "wounds": BOOLEAN | NULL,
+    "pooling": BOOLEAN | NULL,
+    "stakes_with_wires": BOOLEAN | NULL,
+    "stakes_without_wires": BOOLEAN | NULL,
+    "light": BOOLEAN | NULL,
+    "bicycle": BOOLEAN | NULL,
+    "bag_empty": BOOLEAN | NULL,
+    "bag_filled": BOOLEAN | NULL,
+    "tape": BOOLEAN | NULL,
+    "sucker_growth": BOOLEAN | NULL,
+    "site_type": STRING | NULL,
+    "sidewalk_width": STRING | NULL,
+    "site_width": STRING | NULL,
+    "site_length": STRING | NULL,
+    "material": STRING | NULL,
+    "raised_bed": BOOLEAN | NULL,
+    "fence": STRING | NULL,
+    "trash": STRING | NULL,
+    "wires": STRING | NULL,
+    "grate": STRING | NULL,
+    "stump": STRING | NULL,
+    "tree_notes": STRING | NULL,
+    "site_notes": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Add a Potential Site
+
+`POST api/v1/protected/sites/create_potential`
+
+Creates a potential site, which is a place where the city could potentially place a planting site. Below is a description of each field.
+
+`light_pole`: 10 feet from light pole</br>
+`drive_way`: 10 feet from driveway</br>
+`hydrant`: 10 feet from hydrant</br>
+`intersection`: 20 feet from intersections</br>
+`building_entrance`: Not in front of a building entrance
+
+#### Request Body
+
+```json
+{
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "deleted_at": TIMESTAMP,
+  "light_pole": BOOLEAN,
+  "drive_way": BOOLEAN,
+  "hydrant": BOOLEAN,
+  "intersection": BOOLEAN,
+  "building_entrance": BOOLEAN,
+  "notes": TEXT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Get a Site
+
+`GET api/v1/protected/sites/:site_id`
+
+Returns all the info about a specific site. This includes all the entries linked to the site, in reverse chronological order (most recent first).
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "site_id": INT,
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "entries": [
+    {
+      "id": INT,
+      "username": USERNAME,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN | NULL,
+      "status": STRING | NULL,
+      "genus": STRING | NULL,
+      "species": STRING | NULL,
+      "common_name": STRING | NULL,
+      "confidence": STRING | NULL,
+      "diameter": DOUBLE | NULL,
+      "circumference": DOUBLE | NULL,
+      "coverage": STRING | NULL,
+      "pruning": STRING | NULL,
+      "condition": STRING | NULL,
+      "discoloring": BOOLEAN | NULL,
+      "leaning": BOOLEAN | NULL,
+      "constricting_grate": BOOLEAN | NULL,
+      "wounds": BOOLEAN | NULL,
+      "pooling": BOOLEAN | NULL,
+      "stakes_with": BOOLEAN | NULL,
+      "stakes_without": BOOLEAN | NULL,
+      "light": BOOLEAN | NULL,
+      "bicycle": BOOLEAN | NULL,
+      "bag_with": BOOLEAN | NULL,
+      "bag_without": BOOLEAN | NULL,
+      "tape": BOOLEAN | NULL,
+      "sucker_growth": BOOLEAN | NULL,
+      "site_type": STRING | NULL,
+      "sidewalk_width": STRING | NULL,
+      "site_width": STRING | NULL,
+      "site_length": STRING | NULL,
+      "material": STRING | NULL,
+      "raised_bed": STRING | NULL,
+      "fence": STRING | NULL,
+      "trash": STRING | NULL,
+      "wires": STRING | NULL,
+      "grate": STRING | NULL,
+      "stump": STRING | NULL,
+      "tree_notes": STRING | NULL,
+      "site_notes": STRING | NULL
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+### Update a Site
+
+`POST api/v1/protected/sites/:site_id/update`
+
+Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. Every field can be `NULL`.
+
+#### Request Body
+
+```json
+{
+  "tree_present": BOOLEAN | NULL,
+  "status": STRING | NULL,
+  "genus": STRING | NULL,
+  "species": STRING | NULL,
+  "common_name": STRING | NULL,
+  "confidence": STRING | NULL,
+  "diameter": DOUBLE | NULL,
+  "circumference": DOUBLE | NULL,
+  "coverage": STRING | NULL,
+  "pruning": STRING | NULL,
+  "condition": STRING | NULL,
+  "discoloring": BOOLEAN | NULL,
+  "leaning": BOOLEAN | NULL,
+  "constricting_grate": BOOLEAN | NULL,
+  "wounds": BOOLEAN | NULL,
+  "pooling": BOOLEAN | NULL,
+  "stakes_with_wires": BOOLEAN | NULL,
+  "stakes_without_wires": BOOLEAN | NULL,
+  "light": BOOLEAN | NULL,
+  "bicycle": BOOLEAN | NULL,
+  "bag_empty": BOOLEAN | NULL,
+  "bag_filled": BOOLEAN | NULL,
+  "tape": BOOLEAN | NULL,
+  "sucker_growth": BOOLEAN | NULL,
+  "site_type": STRING | NULL,
+  "sidewalk_width": STRING | NULL,
+  "site_width": STRING | NULL,
+  "site_length": STRING | NULL,
+  "material": STRING | NULL,
+  "raised_bed": BOOLEAN | NULL,
+  "fence": STRING | NULL,
+  "trash": STRING | NULL,
+  "wires": STRING | NULL,
+  "grate": STRING | NULL,
+  "stump": STRING | NULL,
+  "tree_notes": STRING | NULL,
+  "site_notes": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully updated.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed OR if the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+
+### Delete Site (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/delete`
+
+Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Mark Site for QA (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/qa`
+
+Used to indicate that a site needs to be checked. This can be done for an individual site or can be part of marking an entire block for QA and then every site associated with that block will be marked for QA. This is done by creating a new entry in the `site_entries` table with `qa` set to `true`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked for QA.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
