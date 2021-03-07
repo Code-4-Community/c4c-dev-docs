@@ -528,7 +528,7 @@ If the calling user is not an admin.
     "pronouns": STRING,
     "allergies": STRING OR NULL,
     "diagnosis": STRING OR NULL,
-    "medication": STRING OR NULL,
+    "medications": STRING OR NULL,
     "notes": STRING OR NULL,
   },
   "additionalContacts": [
@@ -543,7 +543,7 @@ If the calling user is not an admin.
         "pronouns": STRING,
         "allergies": STRING OR NULL,
         "diagnosis": STRING OR NULL,
-        "medication": STRING OR NULL,
+        "medications": STRING OR NULL,
         "notes": STRING OR NULL,
     },
     ...
