@@ -254,21 +254,48 @@ Responses:
 `200 OK`: returns the latest report without library if `libraryStatus` is `"DOES_NOT_EXIST"`:
 ```json
 {
-    "id": 3,
-    "createdAt": "Tue Feb 16 18:29:38 EST 2021",
-    "updatedAt": "Tue Feb 16 18:29:38 EST 2021",
-    "schoolId": 439,
-    "userId": 1,
-    "numberOfChildren": 20,
-    "numberOfBooks": 10,
-    "mostRecentShipmentYear": 2019,
-    "libraryStatus": "DOES_NOT_EXIST",
-    "wantsLibrary": true,
-    "hasSpace": false,
-    "currentStatus": "Found a space",
-    "reason": "Funding",
-    "readyTimeline": "YEAR_AFTER_NEXT",
-    "visitReason": "Visit Reason Example"
+  "id": 3,
+  "createdAt": "Tue Feb 16 18:29:38 EST 2021",
+  "updatedAt": "Tue Feb 16 18:29:38 EST 2021",
+  "schoolId": 439,
+  "userId": 1,
+  "numberOfChildren": 20,
+  "numberOfBooks": 10,
+  "mostRecentShipmentYear": 2019,
+  "libraryStatus": "DOES_NOT_EXIST",
+  "wantsLibrary": true,
+  "hasSpace": false,
+  "currentStatus": "Found a space",
+  "reason": "Funding",
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "visitReason": "Visit Reason Example"
 }
 ```
 `404 No Report Found`: Report not found for school with id
+
+## Get Report As CSV
+Used to return a given report as a CSV
+
+`GET` request to `/api/v1/protected/schools/reports/with-library/:report_id`
+
+OR
+
+`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id`
+
+depending on whether the school has a library or not
+
+Responses:
+
+`200 OK`: returns the report as a CSV formatted as a String (with library)
+```
+Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit Reason,Is Shared Space,Has Inviting Space,Assigned Person Role,Assigned Person Title,Apprenticeship Program,Trains Mentors and Apprentices,Has Checkin Timetables,Has Book Checkout System,Number of Student Librarians,Has Sufficient Training,Teacher Support,Parent Support
+1,Mon Mar 15 00:23:44 EDT 2021,Mon Mar 15 00:23:44 EDT 2021,1,1,1,1,1,EXISTS,Visit Reason Example,true,true,PART_TIME,LIBRARIAN,OTHER,true,true,true,0,true,Teacher Support Example,Parent Support Example
+```
+
+`200 OK`: returns the report as a CSV formatted as a String (without library)
+```
+Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit ReasonWants Library,Has Space,Current Status,Reason,Ready Timeline
+1,Tue Mar 23 17:25:04 EDT 2021,Tue Mar 23 17:25:04 EDT 2021,1,1,1,1,1,DOES_NOT_EXIST,hi,true,true,hi,,UPCOMING_SCHOOL_YEAR
+```
+
+`404 No Report By Id Found`: Report not found for report with id
