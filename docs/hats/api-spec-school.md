@@ -6,7 +6,6 @@ The field `libraryStatus` is represented by an enum that can have the following 
  - `"UNKNOWN"`
  - `"EXISTS"`
  - `"DOES_NOT_EXIST"`
- - `"IN_PROGRESS"`
  
 The field `country` is represented by an enum that can have the following values:
  - `"UNITED_STATES"`
@@ -184,4 +183,7 @@ Used to mark the specified school as no longer "hidden".
 Responses:
 
 `200 OK`: the school was successfully updated.
+
+   
+ 
  
