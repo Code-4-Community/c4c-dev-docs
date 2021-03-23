@@ -28,6 +28,7 @@ nav:
       - Home: guides/index.md
       - Jumpstart Fullstack Course: https://learn.c4cneu.com
       - Frontend Data Architecture with Redux: guides/frontend-redux.md
+      - Scaffold Repositories: guides/scaffold-repos.md
   - Lucy's Love Bus (LLB):
       - Home: llb/index.md
       - Feature API Specification: llb/llb-api-spec.md
