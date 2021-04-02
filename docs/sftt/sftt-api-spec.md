@@ -501,7 +501,7 @@ Successfully left team.
 
 ##### `400 BAD REQUEST`
 
-If the user is not on the team or the team id is invalid.
+If the user is not on the team or the team id is invalid or if the user is the only leader of the team. 
 
 ### Disband a Team
 
