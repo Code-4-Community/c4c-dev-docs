@@ -17,7 +17,8 @@ Responses:
 {
     "count": 101,
     "date": "2021-02-19T20:01:16Z",
-    "notes": "First Shipment"
+    "notes": "First Shipment",
+    "id": 1
 }
 ```
  
@@ -52,8 +53,8 @@ Used to update a book log report for a given school
 {
   "count": 100,
   "date": "2021-02-19T20:01:16Z",
-  "notes" : "Book Log notes"
-
+  "notes" : "Book Log notes",
+  "id": 1
 }
 ```
 Response: `200 OK`
