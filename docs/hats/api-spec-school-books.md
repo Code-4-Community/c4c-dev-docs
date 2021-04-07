@@ -51,7 +51,7 @@ Used to update a book log report for a given school
 ```json
 {
   "count": 100,
-  "date": Timestamp,
+  "date": "2021-02-19T20:01:16Z",
   "notes" : "Book Log notes"
 
 }
