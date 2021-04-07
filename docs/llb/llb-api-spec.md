@@ -9,7 +9,9 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
 ```
 
 # Table Of Contents
-- [Getting Events](#getting-events)
+- [Getting Public Events](#getting-public-events)
+  * [`GET api/v1/events?ids=1,2,3,...`](#-get-api-v1-events-ids-1-2-3--)
+- [Getting Protected Events](#getting-protected-events)
   * [`GET api/v1/protected/events/qualified`](#-get-api-v1-protected-events-qualified-)
   * [`GET api/v1/protected/events/signed_up`](#-get-api-v1-protected-events-signed-up-)
   * [`GET api/v1/protected/events?ids=1,2,3,...`](#-get-api-v1-protected-events-ids-1-2-3--)
@@ -25,7 +27,9 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
   * [`POST api/v1/protected/requests/:request_id/approve`](#-post-api-v1-protected-requests--request-id-approve-)
   * [`POST api/v1/protected/requests/:request_id/reject`](#-post-api-v1-protected-requests--request-id-reject-)
   * [`GET api/v1/protected/requests/:request_id`](#-get-api-v1-protected-requests--request-id-)
-- [Site Announcements](#site-announcements)
+- [Public Site Announcements](#public-site-announcements)
+  * [`GET api/v1/announcements`](#-get-api-v1-announcements-)
+- [Protected Site Announcements](#protected-site-announcements)
   * [`GET api/v1/protected/announcements`](#-get-api-v1-protected-announcements-)
   * [`GET api/v1/protected/announcements/:event_id`](#-get-api-v1-protected-announcements--event-id-)
   * [`POST api/v1/protected/announcements`](#-post-api-v1-protected-announcements-)
@@ -36,9 +40,46 @@ Any response of `401 UNAUTHORIZED` with the following body indicates that the us
   * [`PUT api/v1/protected/checkout/register/:event_id`](#-put-api-v1-protected-checkout-register--event-id-)
   * [`POST api/v1/webhooks/stripe`](#-post-api-v1-webhooks-stripe)
 
+# Getting Public Events
 
+## `GET api/v1/events?ids=1,2,3,...`
 
-# Getting Events
+Get the event bodies for the public events with the ids that are specified in the query parameter.
+
+### Query Params
+
+##### ids: INT-LIST
+
+The event ids that are being requested. Ids are numbers and they should be seperated by a single comma. If this query parameter is missing, this route returns all future events. Ignore duplicated values. Ignore ids that do not correspond to any existing event.
+
+### Responses
+
+Equivelent to above routes:
+
+```json
+{
+  "events": [
+    {
+      "id": ID,
+      "title": STRING,
+      "spotsAvailable": INT,
+      "capacity": INT,
+      "thumbnail": URL,
+      "price": INT,
+      "details": {
+        "description": STRING,
+        "location": STRING,
+        "start": TIMESTAMP,
+        "end": TIMESTAMP
+      }
+    },
+    ...
+  ],
+  "totalCount": INTEGER
+}
+```
+
+# Getting Protected Events
 
 ## `GET api/v1/protected/events/qualified`
 
@@ -81,6 +122,7 @@ The events were sent successfully.
       "thumbnail": URL,
       "ticketCount": INT,
       "canRegister": BOOLEAN,
+      "price": INT,
       "details": {
         "description": STRING,
         "location": STRING,
@@ -151,7 +193,6 @@ The events were sent successfully.
 ```
 
 ticketCount is the number of tickets the calling user has reserved for this event. It will be 0 if the user is not registered for the event.
-
 
 ## `GET api/v1/protected/events?ids=1,2,3,...`
 
@@ -487,7 +528,7 @@ If the calling user is not an admin.
     "pronouns": STRING,
     "allergies": STRING OR NULL,
     "diagnosis": STRING OR NULL,
-    "medication": STRING OR NULL,
+    "medications": STRING OR NULL,
     "notes": STRING OR NULL,
   },
   "additionalContacts": [
@@ -502,7 +543,7 @@ If the calling user is not an admin.
         "pronouns": STRING,
         "allergies": STRING OR NULL,
         "diagnosis": STRING OR NULL,
-        "medication": STRING OR NULL,
+        "medications": STRING OR NULL,
         "notes": STRING OR NULL,
     },
     ...
@@ -586,9 +627,52 @@ Getting the statuses of all requests the calling user has made to become a PF.
 
 
 
+# Public Site Announcements
 
+**NOTE: Site-wide and event specific announcements have uniquely identifying ID numbers.**
 
-# Site Announcements
+## `GET api/v1/announcements`
+
+Gets a list of site-wide announcements. The announcements will be returned in chronological order, from newest to oldest.
+
+### Query Params
+
+##### start: DATE-STRING
+
+The beginning date of when to get announcements from. All returned announcements are created ON or after the given date string that is given in mm/dd/yyyy format, e.g. 01/19/2020. Defaults to 3 weeks from `end` or the current date.
+
+##### end: DATE-STRING
+
+The end date of when to get announcements from. All returned announcements will happen ON or before the given date string that is given in mm/dd/yyyy format, e.g. 12/03/2009. Defaults to the current date.
+
+##### count: INTEGER
+
+The maximum number of announcements to return. The route will return AT MOST count number of announcements. Defaults to 50 or all events that exist.
+
+### Responses
+
+#### `200 OK`
+
+The announcements were retrieved successfully.
+
+```json
+{
+  "announcements": [
+    {
+      "id": ID,
+      "title": STRING,
+      "description": STRING,
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL,
+      "created": TIMESTAMP
+    },
+    ...
+  ],
+  "totalCount": INTEGER
+}
+```
+
+# Protected Site Announcements
 
 **NOTE: Site-wide and event specific announcements have uniquely identifying ID numbers.**
 
@@ -623,6 +707,8 @@ The announcements were retrieved successfully.
       "id": ID,
       "title": STRING,
       "description": STRING,
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL,
       "created": TIMESTAMP
     },
     ...
@@ -656,7 +742,8 @@ The announcements were retrieved successfully.
       "title": STRING,
       "description": STRING,
       "created": TIMESTAMP,
-      "event_id": ID
+      "eventId": ID OR NULL,
+      "imageSrc": STRING OR NULL
     },
     ...
   ],
@@ -667,47 +754,7 @@ The announcements were retrieved successfully.
 
 ## `POST api/v1/protected/announcements`
 
-Creates a new site-wide announcement. Can only be accessed by admins.
-
-### Request
-
-Body:
-
-```json
-{
-    "announcement": {
-        "title": STRING,
-        "description": STRING
-    }
-}
-```
-
-### Responses
-
-#### `200 OK`
-
-The announcement was created successfully.
-
-```json
-{
-  "id": ID,
-  "title": STRING,
-  "description": STRING,
-  "created": TIMESTAMP
-}
-```
-
-#### `401 Unauthorized`
-
-```json
-The calling user does not have the required privilege level
-```
-
-If the calling user is not an admin.
-
-## `POST api/v1/protected/announcements/:event_id`
-
-Creates a new announcement for the given event. Can only be accessed by admins.
+Creates a new site-wide announcement. Can only be accessed by admins. The `imageSrc` field is optional.
 
 ### Request
 
@@ -716,7 +763,8 @@ Body:
 ```json
 {
     "title": STRING,
-    "description": STRING
+    "description": STRING,
+    "imageSrc": STRING OR NULL
 }
 ```
 
@@ -732,7 +780,49 @@ The announcement was created successfully.
   "title": STRING,
   "description": STRING,
   "created": TIMESTAMP,
-  "event_id": ID
+  "eventId": ID OR NULL,
+  "imageSrc": STRING OR NULL
+}
+```
+
+#### `401 Unauthorized`
+
+```json
+The calling user does not have the required privilege level
+```
+
+If the calling user is not an admin.
+
+## `POST api/v1/protected/announcements/:event_id`
+
+Creates a new announcement for the given event. Can only be accessed by admins. The `imageSrc` field is optional.
+
+### Request
+
+Body:
+
+```json
+{
+    "title": STRING,
+    "description": STRING,
+    "imageSrc": STRING OR NULL
+}
+```
+
+### Responses
+
+#### `200 OK`
+
+The announcement was created successfully.
+
+```json
+{
+  "id": ID,
+  "title": STRING,
+  "description": STRING,
+  "created": TIMESTAMP,
+  "eventId": ID OR NULL,
+  "imageSrc": STRING OR NULL
 }
 ```
 

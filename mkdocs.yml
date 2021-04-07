@@ -32,6 +32,7 @@ nav:
       - Home: guides/index.md
       - Jumpstart Fullstack Course: https://learn.c4cneu.com
       - Frontend Data Architecture with Redux: guides/frontend-redux.md
+      - Scaffold Repositories: guides/scaffold-repos.md
   -  "Jumpstart 2: Electric Boogaloo":
        - Working on a ticket: jumpstart2/general/ticket.md
   - Lucy's Love Bus (LLB):
@@ -43,14 +44,16 @@ nav:
       - How to style AntD components with styled-components: llb/antd-styled-components.md
   - Speak for the Trees (SFTT):
       - Home: sftt/index.md
-      - ArcGIS Architecture: sftt/arcgis-architecture.md
       - API Specification: sftt/sftt-api-spec.md
+      - ArcGIS Architecture: sftt/arcgis-architecture.md
   - Hands Across the Sea (HATS):
       - Home: hats/index.md
       - Auth API Specification: hats/api-spec-auth.md
       - Countries API Specification: hats/api-spec-country.md
       - Schools API Specification: hats/api-spec-school.md
       - School Contacts API Specification: hats/api-spec-school-contact.md
+      - Reports API Specification: hats/api-spec-school-report.md
+      - Books API Specification: hats/api-spec-school-books.md
   - C4C Website:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:

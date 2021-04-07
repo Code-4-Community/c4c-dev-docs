@@ -11,10 +11,12 @@ This is the official API specification for the SFTT back end. The back end is im
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
 
-- `None` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
+- `NONE` - The user is not on the team. This is possible after a user is rejected from a team or leaves a team.
 - `MEMBER` - The is a member of the team.
 - `LEADER` - The user is a leader of the team. This grants them special privileges such as being able to accept or reject pending members and being able to disband the team.
-- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `None`
+- `PENDING` - The user has applied to the team but has not been accepted or rejected yet. If they're accepted they become a member, if they're rejected their status is set to `NONE`
+
+A user is said to be on a team if their role is `MEMBER` or `LEADER`. 
 
 ### Privilege Level
 
@@ -207,11 +209,11 @@ If the block id specified is invalid.
 
 ## Teams Router
 
-This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `None` team role, meaning they have left the team or have been rejected.
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `NONE` team role, meaning they have left the team or have been rejected.
 
 ### Create a Team
 
-`POST api/v1/protected/teams`
+`POST api/v1/protected/teams/create`
 
 Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
 
@@ -222,7 +224,7 @@ Create a team. The team will only contain the member that created it who is now 
   "name": STRING,
   "bio": STRING,
   "inviteEmails": [
-    STRING,
+    EMAIL,
     ...
   ]
 }
@@ -232,17 +234,17 @@ Create a team. The team will only contain the member that created it who is now 
 
 ##### `200 OK`
 
-!!! missing "Should return the same as the get team route"
+Returns the same response as the "Get a Team" route for the newly created team.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team name is already taken"
+If the team name is taken or if any of the email addresses is invalid.
 
 ### Get a Team
 
-!!! missing "This route needs to be reimplemented due to the change in goals"
+Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
 
-`GET /teams/:team_id`
+`GET api/v1/protected/teams/:team_id`
 
 #### Request Body
 
@@ -252,29 +254,84 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "JSON body"
+```json
+{
+  "id": INT,
+  "name": STRING,
+  "bio": STRING,
+  "members": [
+    {
+      "user_id": INT,
+      "username": STRING,
+      "team_role": TEAM_ROLE,
+    },
+    ...
+  ],
+  "goals": [
+    {
+      "id": INT,
+      "goal": INT,
+      "progress": INT,
+      "start_date": TIMESTAMP,
+      "complete_by": TIMESTAMP,
+      "completion_date": TIMESTAMP | NULL
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the team id is invalid.
 
 ### Add a Goal
 
 `POST api/v1/protected/teams/:team_id/add_goal`
 
-Adds a goal to this team's list of goals.
+Team leader only. Adds a goal to this team's list of goals.
 
-!!! missing "This route has not been implemented yet"
+#### Request Body
+
+```json
+{
+  "goal": INT,
+  "start_at": TIMESTAMP,
+  "complete_by": TIMESTAMP
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the goal is negative or the `complete_by` date is before the `start_at` date.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
 
 ### Delete a Goal
 
-Deletes a goal from this team's list of goals. Simply removes the record from the table.
+Team leader only. Deletes a goal from this team's list of goals. Simply removes the record from the table.
 
-`POST api/v1/protected/teams/:team_id/delete_goal`
+`POST api/v1/protected/teams/:team_id/delete_goal/:goal_id`
 
-!!! missing "This route has not been implemented yet"
+#### Request Body
+
+No request body.
+
+##### `400 BAD REQUEST`
+
+If the goal id is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
 
 ### Invite a User
 
 `POST api/v1/protected/teams/:team_id/invite`
 
-Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated.
+Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
 
 #### Request Body
 
@@ -294,11 +351,11 @@ Invite someone to join a team. Will send an email to all specified people that i
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Users invited.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+If the team id is invalid.
 
 ### Get Applicants
 
@@ -328,7 +385,11 @@ No request body.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is not a team leader"
+If the team id is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a team leader
 
 ### Apply to a Team
 
@@ -344,11 +405,11 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Applied successfully.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid or if the user is already on the team"
+If the team id is invalid or if the user is already on the team"
 
 ### Approve a User
 
@@ -368,17 +429,17 @@ This member has joined the team.
 
 ##### `400 BAD REQUEST`
 
-If the team or request specified in the id is invalid OR the user that had created the request no longer exists.
+If the team or request specified in the id is invalid or the user that had created the request no longer exists.
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Reject a User
 
-`POST /teams/:team_id/applicants/:user_id/reject`
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/reject`
 
-Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call. Their team role will be set to `NONE`.
 
 #### Request Body
 
@@ -396,13 +457,13 @@ If the team or request specified in the id is invalid OR the user that had creat
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Kick a User
 
 `POST api/v1/protected/teams/:team_id/members/:member_id/kick`
 
-Leader only. Kicks a member off this team. That member is then allowed to join or create any team now.
+Leader only. Kicks a member off this team. Sets their team role to `NONE`.
 
 #### Request Body
 
@@ -412,21 +473,21 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully kicked user.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+If the user is no longer on the team or the team id is invalid.
 
 ##### `401 Unauthorized`
 
-!!! missing "Should be an error here if the user is not a team leader"
+If the user is not a team leader.
 
 ### Leave a Team
 
 `POST api/v1/protected/teams/:team_id/leave`
 
-Leave this team that you are a part of. Cannot be called by the leader of the team.
+Leave this team that you are a part of. Cannot be called by the leader of the team. Will set team role to `NONE`.
 
 #### Request Body
 
@@ -436,17 +497,17 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully left team.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the user is no longer on the team or the team id is invalid"
+If the user is not on the team or the team id is invalid or if the user is the only leader of the team. 
 
 ### Disband a Team
 
 `POST api/v1/protected/teams/:team_id/disband`
 
-Leader only. Disband this team. The team will be deleted from the database. 
+Leader only. Disband this team. The `deleted_at` field will be set to the current timestamp.
 
 #### Request Body
 
@@ -456,19 +517,19 @@ No request body.
 
 ##### `200 OK`
 
-!!! missing "Unknown"
+Successfully deleted team.
 
 ##### `400 BAD REQUEST`
 
-!!! missing "Should be an error here if the team id is invalid"
+If the team id is invalid.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
-!!! missing "Should be an error here if the user is not the team leader"
+If the user is not the team leader.
 
 ### Transfer Team Ownership
 
-`POST /teams/:team_id/transfer_ownership`
+`POST api/v1/protected/teams/:team_id/transfer_ownership`
 
 Leader only. Makes the current team leader a regular team member and the specified user the team leader.
 
@@ -490,7 +551,7 @@ Success.
 
 If the given user ID does not exist, or if the given user is not on the team.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the requesting user is not the team leader.
 
@@ -781,9 +842,36 @@ The password does not match the calling user's current password.
 ##### `409 Conflict`
 The given `newUsername` is already in use.
 
-### Delete User
+### Change Email
 
-!!! missing "This route has not been implemented yet"
+`POST api/v1/protected/user/change_email`
+
+Allows a user to change their email address. The new email address cannot be in use already. Also sends the user a confirmation email.
+
+#### Request Body
+
+```json
+{
+  "newEmail": STRING,
+  "password": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+The email address change was successful.
+
+##### `400 BAD REQUEST`
+If the request was malformed.
+
+##### `401 Unauthorized`
+The password does not match the calling user's current password.
+
+##### `409 Conflict`
+The given `newEmail` is already in use.
+
+### Delete User
 
 `POST api/v1/protected/user/delete`
 
@@ -812,8 +900,6 @@ If the given user ID does not exist.
 If the password is wrong.
 
 ### Change Privilege Level (Admin Only)
-
-!!! missing "This route still needs to be implemented"
 
 `POST api/v1/protected/user/change_privilege`
 
@@ -853,7 +939,7 @@ This router is used to retrieve the data necessary to render blocks, neighborhoo
 
 ### Get All Blocks in GeoJSON
 
-`GET api/v1/protected/map/blocks`
+`GET api/v1/map/blocks`
 
 Returns all the blocks in GeoJSON format.
 
@@ -900,7 +986,7 @@ No request body.
 
 ### Get All Neighborhoods in GeoJSON
 
-`GET api/v1/protected/map/neighborhoods`
+`GET api/v1/map/neighborhoods`
 
 Returns all the neighborhoods in GeoJSON format. The `completion_perc` field in the properties is the percentage of blocks marked as completed compared to the total amount of blocks in that neighborhood.
 
@@ -940,7 +1026,7 @@ No request body.
 
 ### Get All Sites in GeoJSON
 
-`GET api/v1/protected/map/sites`
+`GET api/v1/map/sites`
 
 Returns all the sites in GeoJSON format.
 
@@ -952,7 +1038,34 @@ No request body.
 
 #####  `200 OK`
 
-!!! missing "This still needs to figured out"
+```json
+{
+  "type": "FeatureCollection",
+  "name": "sites",
+  "features: [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": INT,
+        "tree_present": BOOLEAN,
+        "diameter": DOUBLE,
+        "species": STRING,
+        "updated_at": TIMESTAMP,
+        "updated_by": USERNAME,
+        "address": STRING
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          LONG,
+          LONG
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
 
 ## Import Router
 
@@ -1015,7 +1128,7 @@ Blocks imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
@@ -1053,19 +1166,154 @@ Neighborhoods imported successfully.
 
 If the request was malformed.
 
-##### `401 Unauthorized`
+##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
 
-### Import Trees
-
-!!! missing "This route has not been implemented yet"
-
 ### Import Reservations
 
-!!! missing "This route has not been implemented yet"
-
 `POST api/v1/protected/import/reservations`
+
+Used to import reservations into the database. The referenced blocks, users and teams must be in the database. If they're not an error will occur when the "invalid" reservation is reached. `userId` and `teamId` can be left blank, in which case the reservation will be attributed to the super admin calling the route. `performedAt` must be in the form `"mm\/dd\/yyyy"`.
+
+#### Request Body
+
+```json
+{
+  "reservations": [
+    {
+      "blockId": INT,
+      "userId": INT,
+      "teamId": INT,
+      "actionType": STRING,
+      "performedAt": STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Reservations imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a super admin.
+
+### Import Sites
+
+`POST api/v1/protected/import/sites`
+
+Used to import sites into the database. See below for a description of each ambiguous field.
+
+`status`: "Alive" or "Dead but standing"<br/>
+`confidence`: Confidence in species or genus identification<br/>
+`coverage`: Percent of tree that is green<br/>
+`pruning`: Amount of pruning seen in tree<br/>
+`condition`: Tree condition ("Good", "Fair", "Poor", "Dead")<br/>
+`discoloring`: Discoloring of leaves<br/>
+`leaning`: Tree is leaning<br/>
+`constricting_grate`: Metal grate constricting tree trunk growth<br/>
+`wounds`: Trunk wounds<br/>
+`pooling`: Pooling water in tree pit<br/>
+`stakes_with_wires`: Wooden stakes near tree WITH wires around tree<br/>
+`stakes_without_wires`: Wooden stakes near tree WITHOUT wires<br/>
+`lights`: Lights in tree<br/>
+`bicycle`: Bicycle locked to tree trunk<br/>
+`bag_empty`: Watering bag that is empty<br/>
+`bag_filled`: Watering bag that has water in it<br/>
+`tape`: Tape around trunk<br/>
+`site_type`: "Pit", "Continuous/Lawn" or "Planter"<br/>
+`material`: Material in site ("Plain dirt", "mulch", "grass", etc.)<br/>
+`fence`: Do you see a fence or perimeter guard?<br/>
+`trash`: Do you see loose trash?<br/>
+`wires`: Wires overhead?<br/>
+`grate`: Do you see a metal grate, either with or without a tree?<br/>
+`melnea_cass_trees`: Part of a program, not used anymore, only in database<br/>
+`mcb_number`: Melnea Cass number, not used anymore, only in database<br/>
+`tree_dedicated_to`: Tree dedication, not used currently<br/>
+
+#### Request Body
+
+```json
+{
+  "sites": [
+    {
+      "site_id": INT,
+      "block_id": INT,
+      "lat": LONG,
+      "lng": LONG,
+      "city": STRING,
+      "zip": STRING,
+      "address": STRING,
+      "username": USERNAME,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN,
+      "status": STRING,
+      "genus": STRING,
+      "species": STRING,
+      "common_name": STRING,
+      "confidence": STRING,
+      "diameter": DOUBLE,
+      "circumference": DOUBLE,
+      "coverage": STRING,
+      "pruning": STRING,
+      "condition": STRING,
+      "discoloring": BOOLEAN,
+      "leaning": BOOLEAN,
+      "constricting_grate": BOOLEAN,
+      "wounds": BOOLEAN,
+      "pooling": BOOLEAN,
+      "stakes_with_wires": BOOLEAN,
+      "stakes_without_wires": BOOLEAN,
+      "light": BOOLEAN,
+      "bicycle": BOOLEAN,
+      "bag_empty": BOOLEAN,
+      "bag_filled": BOOLEAN,
+      "tape": BOOLEAN,
+      "sucker_growth": BOOLEAN,
+      "site_type": STRING,
+      "sidewalk_width": STRING,
+      "site_width": STRING,
+      "site_length": STRING,
+      "material": STRING,
+      "raised_bed": BOOLEAN,
+      "fence": STRING,
+      "trash": STRING,
+      "wires": STRING,
+      "grate": STRING,
+      "stump": STRING,
+      "tree_notes": STRING,
+      "site_notes": STRING,
+      "melnea_cass_trees": STRING,
+      "mcb_number": INT,
+      "tree_dedicated_to": STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Sites imported successfully.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a super admin.
 
 ## Leaderboard Router
 
@@ -1075,17 +1323,15 @@ A completed block is a block for which the last entry is either `complete` or `q
 
 ### Get Users Leaderboard
 
-`GET api/v1/leaderboard/users`
+`GET api/v1/leaderboard/users?previousDays=INT`
 
-Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. The time_period represent how many days in the past the leaderboard is representing. This is a required value.
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded.
 
-#### Request Body
+#### Query Params
 
-```json
-{
-  "time_period": INT
-}
-```
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
 
 #### Responses
 
@@ -1095,8 +1341,9 @@ Returns a list of the top 100 users with counted blocks, of usernames and the bl
 {
   "users": [
     {
-      "username": STRING,
-      "blocks": INT
+      "id": INT,
+      "name": STRING,
+      "blocksCounted": INT
     },
     ...
   ]
@@ -1109,17 +1356,15 @@ If the request was malformed.
 
 ### Get Teams Leaderboard
 
-`GET api/v1/leaderboard/teams`
+`GET api/v1/leaderboard/teams?previousDays=INT`
 
-Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown. The time_period represent how many days in the past the leaderboard is representing.
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown.
 
-#### Request Body
+#### Query Params
 
-```json
-{
-  "time_period": INT
-}
-```
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
 
 #### Responses
 
@@ -1129,8 +1374,9 @@ Returns a list of the top 100 team's names and the blocks those teams counted, i
 {
   "teams": [
     {
-      "team_name": STRING,
-      "blocks": INT
+      "id": INT,
+      "name": STRING,
+      "blocksCounted": INT
     },
     ...
   ]
@@ -1140,3 +1386,298 @@ Returns a list of the top 100 team's names and the blocks those teams counted, i
 ##### `400 BAD REQUEST`
 
 If the request was malformed.
+
+## Sites Router
+
+The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
+
+### Add a Site
+
+`POST api/v1/protected/sites/create`
+
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+
+#### Request Body
+
+```json
+{
+    "block_id": INT,
+    "lat": LONG,
+    "lng": LONG,
+    "city": STRING,
+    "zip": STRING,
+    "address": STRING,
+    "tree_present": BOOLEAN | NULL,
+    "status": STRING | NULL,
+    "genus": STRING | NULL,
+    "species": STRING | NULL,
+    "common_name": STRING | NULL,
+    "confidence": STRING | NULL,
+    "diameter": DOUBLE | NULL,
+    "circumference": DOUBLE | NULL,
+    "coverage": STRING | NULL,
+    "pruning": STRING | NULL,
+    "condition": STRING | NULL,
+    "discoloring": BOOLEAN | NULL,
+    "leaning": BOOLEAN | NULL,
+    "constricting_grate": BOOLEAN | NULL,
+    "wounds": BOOLEAN | NULL,
+    "pooling": BOOLEAN | NULL,
+    "stakes_with_wires": BOOLEAN | NULL,
+    "stakes_without_wires": BOOLEAN | NULL,
+    "light": BOOLEAN | NULL,
+    "bicycle": BOOLEAN | NULL,
+    "bag_empty": BOOLEAN | NULL,
+    "bag_filled": BOOLEAN | NULL,
+    "tape": BOOLEAN | NULL,
+    "sucker_growth": BOOLEAN | NULL,
+    "site_type": STRING | NULL,
+    "sidewalk_width": STRING | NULL,
+    "site_width": STRING | NULL,
+    "site_length": STRING | NULL,
+    "material": STRING | NULL,
+    "raised_bed": BOOLEAN | NULL,
+    "fence": STRING | NULL,
+    "trash": STRING | NULL,
+    "wires": STRING | NULL,
+    "grate": STRING | NULL,
+    "stump": STRING | NULL,
+    "tree_notes": STRING | NULL,
+    "site_notes": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Add a Potential Site
+
+`POST api/v1/protected/sites/create_potential`
+
+Creates a potential site, which is a place where the city could potentially place a planting site. Below is a description of each field.
+
+`light_pole`: 10 feet from light pole</br>
+`drive_way`: 10 feet from driveway</br>
+`hydrant`: 10 feet from hydrant</br>
+`intersection`: 20 feet from intersections</br>
+`building_entrance`: Not in front of a building entrance
+
+#### Request Body
+
+```json
+{
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "deleted_at": TIMESTAMP,
+  "light_pole": BOOLEAN,
+  "drive_way": BOOLEAN,
+  "hydrant": BOOLEAN,
+  "intersection": BOOLEAN,
+  "building_entrance": BOOLEAN,
+  "notes": TEXT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+### Get a Site
+
+`GET api/v1/protected/sites/:site_id`
+
+Returns all the info about a specific site. This includes all the entries linked to the site, in reverse chronological order (most recent first).
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "site_id": INT,
+  "block_id": INT,
+  "lat": LONG,
+  "lng": LONG,
+  "city": STRING,
+  "zip": STRING,
+  "address": STRING,
+  "entries": [
+    {
+      "id": INT,
+      "username": USERNAME,
+      "updated_at": TIMESTAMP,
+      "tree_present": BOOLEAN | NULL,
+      "status": STRING | NULL,
+      "genus": STRING | NULL,
+      "species": STRING | NULL,
+      "common_name": STRING | NULL,
+      "confidence": STRING | NULL,
+      "diameter": DOUBLE | NULL,
+      "circumference": DOUBLE | NULL,
+      "coverage": STRING | NULL,
+      "pruning": STRING | NULL,
+      "condition": STRING | NULL,
+      "discoloring": BOOLEAN | NULL,
+      "leaning": BOOLEAN | NULL,
+      "constricting_grate": BOOLEAN | NULL,
+      "wounds": BOOLEAN | NULL,
+      "pooling": BOOLEAN | NULL,
+      "stakes_with": BOOLEAN | NULL,
+      "stakes_without": BOOLEAN | NULL,
+      "light": BOOLEAN | NULL,
+      "bicycle": BOOLEAN | NULL,
+      "bag_with": BOOLEAN | NULL,
+      "bag_without": BOOLEAN | NULL,
+      "tape": BOOLEAN | NULL,
+      "sucker_growth": BOOLEAN | NULL,
+      "site_type": STRING | NULL,
+      "sidewalk_width": STRING | NULL,
+      "site_width": STRING | NULL,
+      "site_length": STRING | NULL,
+      "material": STRING | NULL,
+      "raised_bed": STRING | NULL,
+      "fence": STRING | NULL,
+      "trash": STRING | NULL,
+      "wires": STRING | NULL,
+      "grate": STRING | NULL,
+      "stump": STRING | NULL,
+      "tree_notes": STRING | NULL,
+      "site_notes": STRING | NULL
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+### Update a Site
+
+`POST api/v1/protected/sites/:site_id/update`
+
+Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. Every field can be `NULL`.
+
+#### Request Body
+
+```json
+{
+  "tree_present": BOOLEAN | NULL,
+  "status": STRING | NULL,
+  "genus": STRING | NULL,
+  "species": STRING | NULL,
+  "common_name": STRING | NULL,
+  "confidence": STRING | NULL,
+  "diameter": DOUBLE | NULL,
+  "circumference": DOUBLE | NULL,
+  "coverage": STRING | NULL,
+  "pruning": STRING | NULL,
+  "condition": STRING | NULL,
+  "discoloring": BOOLEAN | NULL,
+  "leaning": BOOLEAN | NULL,
+  "constricting_grate": BOOLEAN | NULL,
+  "wounds": BOOLEAN | NULL,
+  "pooling": BOOLEAN | NULL,
+  "stakes_with_wires": BOOLEAN | NULL,
+  "stakes_without_wires": BOOLEAN | NULL,
+  "light": BOOLEAN | NULL,
+  "bicycle": BOOLEAN | NULL,
+  "bag_empty": BOOLEAN | NULL,
+  "bag_filled": BOOLEAN | NULL,
+  "tape": BOOLEAN | NULL,
+  "sucker_growth": BOOLEAN | NULL,
+  "site_type": STRING | NULL,
+  "sidewalk_width": STRING | NULL,
+  "site_width": STRING | NULL,
+  "site_length": STRING | NULL,
+  "material": STRING | NULL,
+  "raised_bed": BOOLEAN | NULL,
+  "fence": STRING | NULL,
+  "trash": STRING | NULL,
+  "wires": STRING | NULL,
+  "grate": STRING | NULL,
+  "stump": STRING | NULL,
+  "tree_notes": STRING | NULL,
+  "site_notes": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully updated.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed OR if the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+
+### Delete Site (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/delete`
+
+Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Mark Site for QA (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/qa`
+
+Used to indicate that a site needs to be checked. This can be done for an individual site or can be part of marking an entire block for QA and then every site associated with that block will be marked for QA. This is done by creating a new entry in the `site_entries` table with `qa` set to `true`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked for QA.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.

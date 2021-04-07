@@ -1,5 +1,22 @@
 # HATS School API Specification
 
+## Notes
+
+The field `libraryStatus` is represented by an enum that can have the following values:
+ - `"UNKNOWN"`
+ - `"EXISTS"`
+ - `"DOES_NOT_EXIST"`
+ 
+The field `country` is represented by an enum that can have the following values:
+ - `"UNITED_STATES"`
+ - `"ANTIGUA_AND_BARBUDA"`
+ - `"DOMINICA"`
+ - `"GRENADA"`
+ - `"ST_KITTS_AND_NEVIS"`
+ - `"ST_LUCIA"`
+ - `"ST_VINCENT_AND_THE_GRENADINES"`
+
+
 ## Protected Routes
 All of these routes must be called by a user that is already authenticated.
 
@@ -43,20 +60,28 @@ Responses:
 `200 OK`: returns information about the requested school:
 ```json
 {
-  "id": 1,
-  "name": "Northeastern University",
-  "address": "360 Huntington Ave",
-  "country": "UNITED_STATES",
-  "hidden": false,
-  "contacts": [
-    {
-      "id": 1,
-      "name": "Joseph Aoun",
-      "address": "360 Huntington Ave",
-      "email": "president@gmail.com",
-      "phone": "6015551234"
-    }
-  ]
+    "id": 439,
+    "name": "Northeastern University",
+    "address": "360 Huntington Ave",
+    "email": "office@northeastern.edu",
+    "phone": "617-000-1234",
+    "notes": "Best University",
+    "area": "Greater Boston",
+    "country": "UNITED_STATES",
+    "hidden": false,
+    "libraryStatus": "EXISTS",
+    "contacts": [
+        {
+            "id": 1,
+            "schoolId": 439,
+            "firstName": "Johnny",
+            "lastName": "Appleseed",
+            "email": "principal@gmail.com",
+            "address": "New Address",
+            "phone": "6010001111",
+            "type": "PRINCIPAL"
+        }
+    ]
 }
 ```
 
@@ -70,17 +95,36 @@ and update the hidden field to the given value.
 `POST` request to `/api/v1/protected/schools` with body:
 ```json
 {
-    "name": "New School Name",
-    "address": "Address 01",
-    "country": "DOMINICA",
+    "name": "Northeastern University",
+    "address": "360 Huntington Ave",
+    "country": "UNITED_STATES",
+    "phone": "617-000-1234",
+    "email": "office@northeastern.edu",
+    "area": "Greater Boston",
+    "notes": "Best University",
     "hidden": false,
-    "contacts": []
+    "libraryStatus": "EXISTS"
 }
 ```
 
 Responses:
 
-`201 Created`: the school was successfully created / un-hidden / un-deleted
+`201 Created`: the school was successfully created / un-hidden / un-deleted:
+```json
+{
+    "id": 439,
+    "name": "Northeastern University",
+    "address": "360 Huntington Ave",
+    "email": "office@northeastern.edu",
+    "phone": "617-000-1234",
+    "notes": "Best University",
+    "area": "Greater Boston",
+    "country": "UNITED_STATES",
+    "hidden": false,
+    "libraryStatus": "EXISTS",
+    "contacts": []
+}
+```
 
 `409 Conflict`: the given school already exists:
 ```
@@ -94,10 +138,15 @@ Used to update the given school to have a new name, address, and country.
 `PUT` request to `/api/v1/protected/schools/:school_id` with body:
 ```json
 {
-  "name": "Northeastern University",
-  "address": "360 Huntington Ave",
-  "country": "UNITED_STATES",
-  "hidden": false
+    "name": "Tufts Uni",
+    "address": "123 Main Street",
+    "country": "UNITED_STATES",
+    "phone": "617-111-0000",
+    "email": "office@tufts.edu",
+    "notes": "Tufts Medical School",
+    "area": "Greater Boston",
+    "hidden": false,
+    "libraryStatus": "DOES_NOT_EXIST"
 }
 ```
 
@@ -134,4 +183,7 @@ Used to mark the specified school as no longer "hidden".
 Responses:
 
 `200 OK`: the school was successfully updated.
+
+   
+ 
  
