@@ -41,3 +41,19 @@ Responses:
     ]
 }
 ```
+
+
+## Update School Book Log (Admin or report creator only)
+Used to update a book log report for a given school
+
+`PUT` request to `/api/v1/protected/schools/:school_id/books/:book_id`
+
+```json
+{
+  "count": 100,
+  "date": Timestamp,
+  "notes" : "Book Log notes"
+
+}
+```
+Response: `200 OK`
