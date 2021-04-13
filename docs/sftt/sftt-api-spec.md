@@ -1686,7 +1686,7 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/sites/:site_id/favorite`
 
-Favorite this site.
+Favorite the given site. Creates a record in the favorites table linking the user and the the site.
 
 #### Request Body
 
@@ -1706,7 +1706,7 @@ If the site id specified is invalid.
 
 `POST api/v1/protected/sites/:site_id/unfavorite`
 
-Remove this site as favorite.
+Remove this site as favorite for the calling user. Removes the record from the favorites table.
 
 #### Request Body
 
