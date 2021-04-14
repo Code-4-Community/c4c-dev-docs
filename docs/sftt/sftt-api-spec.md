@@ -1739,7 +1739,7 @@ If the calling user is not an admin or the user listed on the activity.
 
 `GET api/v1/protected/sites/:site_id/stewardship_activities`
 
-Returns all the recorded stewardship activities for the indicated site. Will be sorted by id from high to low, meaning the most recent activity is the first entry in the array.
+Returns all the recorded stewardship activities for the indicated site. Array will be sorted by date, from most recent to least recent, and a secondary sort on id. 
 
 #### Request Body
 
