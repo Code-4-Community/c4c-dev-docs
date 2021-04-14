@@ -1681,3 +1681,70 @@ If the site id specified is invalid.
 ##### `401 UNAUTHORIZED`
 
 If the calling user is not an admin.
+
+### Favorite a Site
+
+`POST api/v1/protected/sites/:site_id/favorite`
+
+Favorite the given site. Creates a record in the favorites table linking the user and the the site.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked as favorite.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+### Remove Site as Favorite
+
+`POST api/v1/protected/sites/:site_id/unfavorite`
+
+Remove this site as favorite for the calling user. Removes the record from the favorites table.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully removed site as favorite.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid OR if the site was not marked as a favorite before.
+
+### Get Favorite Sites
+
+`GET api/v1/protected/sites/favorites`
+
+Get all the favorite sites of the calling user.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Return a list of integers representing the site ID's of the users favorite sites. Can be an empty list.
+
+```json
+{
+  "favorites": [
+    INT,
+    INT,
+    INT,
+    ...
+  ]
+}
+```
