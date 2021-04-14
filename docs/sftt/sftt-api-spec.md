@@ -1686,7 +1686,7 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/sites/:site_id/record_stewardship`
 
-Records a stewardship activity for the given site. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.
+Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`. 
 
 #### Request Body
 
@@ -1755,7 +1755,7 @@ No request body.
     {
       "id": INT,
       "user_id": INT,
-      "date": TIMESTAMP,
+      "date": DATE,
       "duration": INT | NULL,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
