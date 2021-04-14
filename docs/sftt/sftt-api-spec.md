@@ -1748,3 +1748,92 @@ Return a list of integers representing the site ID's of the users favorite sites
   ]
 }
 ```
+
+### Record Stewardship Activity
+
+`POST api/v1/protected/sites/:site_id/record_stewardship`
+
+Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
+
+#### Request Body
+
+```json
+{
+  "date": DATE,
+  "duration": INT | NULL,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully recorded.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid OR if all activities are `False`.
+
+### Delete Stewardship Activity (Admin and Author Only)
+
+`POST api/v1/protected/sites/remove_stewardship/:activity_id`
+
+Deletes the stewardship activity from the database. This is in case either SFTT believes the activity was not performed or if the activity recorder made a mistake.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully removed.
+
+##### `400 BAD REQUEST`
+
+If the activity id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin or the user listed on the activity.
+
+### Get Stewardship Activities By Site
+
+`GET api/v1/protected/sites/:site_id/stewardship_activities`
+
+Returns all the recorded stewardship activities for the indicated site. Array will be sorted by date, from most recent to least recent, and a secondary sort on id. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "activities": [
+    {
+      "id": INT,
+      "user_id": INT,
+      "date": DATE,
+      "duration": INT | NULL,
+      "watered": BOOLEAN,
+      "mulched": BOOLEAN,
+      "cleaned": BOOLEAN,
+      "weeded": BOOLEAN
+    }, 
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
