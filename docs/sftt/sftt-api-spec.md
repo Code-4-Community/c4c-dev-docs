@@ -1686,13 +1686,13 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/sites/:site_id/record_stewardship`
 
-Records a stewardship activity for the given site. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.
+Records a stewardship activity for the given site. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.
 
 #### Request Body
 
 ```json
 {
-  "date": TIMESTAMP,
+  "date": DATE,
   "duration": INT | NULL,
   "watered": BOOLEAN,
   "mulched": BOOLEAN,
@@ -1739,7 +1739,7 @@ If the calling user is not an admin or the user listed on the activity.
 
 `GET api/v1/protected/sites/:site_id/stewardship_activities`
 
-Returns all the recorded stewardship activities for the indicated site. 
+Returns all the recorded stewardship activities for the indicated site. Will be sorted by id from high to low, meaning the most recent activity is the first entry in the array.
 
 #### Request Body
 
@@ -1756,7 +1756,7 @@ No request body.
       "id": INT,
       "user_id": INT,
       "date": TIMESTAMP,
-      "duration": INT,
+      "duration": INT | NULL,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
