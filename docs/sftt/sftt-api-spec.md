@@ -1686,7 +1686,7 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/sites/:site_id/record_stewardship`
 
-Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`. 
+Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
 
 #### Request Body
 
@@ -1709,7 +1709,7 @@ Activity successfully recorded.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified is invalid.
+If the site id specified is invalid OR if all activities are `False`.
 
 ### Delete Stewardship Activity (Admin and Author Only)
 
