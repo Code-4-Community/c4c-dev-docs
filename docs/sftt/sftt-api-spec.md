@@ -1681,3 +1681,92 @@ If the site id specified is invalid.
 ##### `401 UNAUTHORIZED`
 
 If the calling user is not an admin.
+
+### Record Stewardship Activity
+
+`POST api/v1/protected/sites/:site_id/record_stewardship`
+
+Records a stewardship activity for the given site. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.
+
+#### Request Body
+
+```json
+{
+  "date": TIMESTAMP,
+  "duration": INT | NULL,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully recorded.
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
+
+### Delete Stewardship Activity (Admin and Author Only)
+
+`POST api/v1/protected/sites/remove_stewardship/:activity_id`
+
+Deletes the stewardship activity from the database. This is in case either SFTT believes the activity was not performed or if the activity recorder made a mistake.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully removed.
+
+##### `400 BAD REQUEST`
+
+If the activity id specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin or the user listed on the activity.
+
+### Get Stewardship Activities By Site
+
+`GET api/v1/protected/sites/:site_id/stewardship_activities`
+
+Returns all the recorded stewardship activities for the indicated site. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "activities": [
+    {
+      "id": INT,
+      "user_id": INT,
+      "date": TIMESTAMP,
+      "duration": INT,
+      "watered": BOOLEAN,
+      "mulched": BOOLEAN,
+      "cleaned": BOOLEAN,
+      "weeded": BOOLEAN
+    }, 
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the site id specified is invalid.
