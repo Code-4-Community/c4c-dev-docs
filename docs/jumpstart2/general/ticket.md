@@ -416,12 +416,31 @@ We'll have to actually implement this interface later, but we'll set up our rout
 Now that we have an idea of what we'll be able to do, we need to create a way for the backend to receive the information
 provided with the request, add it to the `CreateNoteRequest` DTO, and pass that data into the `createNote` method of our interface
 from the previous section. If you want to read more about HTTP requests and routing, you can check that out 
-[here](https://learn.c4cneu.com/guides/postrequest/). Let's jump into the code.
+[here](https://learn.c4cneu.com/guides/postrequest/).
+
+We handle our routing using the [Vert.x Web](https://vertx.io/docs/vertx-web/java/#_using_vert_x_web) library.
+VertX lets us define routes, routers, and subrouters to match the URL of the route we're trying to implement.
+The route we're trying to implement is `POST /api/v1/protected/notes/create`.
+
+The ApiRouter class in the `com.codeforcommunity.rest` package has an `initializeRouter(Vertx vertx)` method
+where we can define all route URLs. The `/api/v1` prefix is common to all C4C API routes, and any routes we
+add in the `initalizeRouter` method, is assumed to start with that in their URL. The next part of our route that we
+need is `/protected`, this is a special keyword in our URL that tells the backend that this route can only be
+called by users that are fully signed in. ApiRouter also handles this for us and lets us define all protected
+routes in the `defineProtectedRoutes(Vertx vertx)` method.
+
+At this point we still need to add routers for the `/notes/create` part of our URL. Because this is the first route
+we're making that relates to notes, we'll create a subrouter class that can handle all routes that start with `/apiv1/protected/notes`.
+This way when we implement other notes API routes like `GET /api/v1/protected/notes` or `POST /api/v1/protected/notes/1/deadline`
+we will only have to edit our subrouter class instead of having to also change ApiRouter as well.
+
+Let's first create the subrouter, and then modify ApiRouter to register it.
 
 #### The Sub-Router
 
 Here's the code for a sub-router for handling notes. You'll want to create this in the api/ module, under the 
-`com.codeforcommunity.rest.subrouter` package.
+`com.codeforcommunity.rest.subrouter` package. Remember that every route we register here we are assuming has
+a URL that starts with `/api/v1/protected/notes`.
 
 ```java
 public class NotesRouter implements IRouter {
@@ -441,7 +460,17 @@ public class NotesRouter implements IRouter {
     return router;
   }
 
-  // A method that gets called when the "create note route" is called
+  /**
+   * A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
+   */
+  private void registerCreateNote(Router router) { 
+    Route createNoteRequest = router.post("/create");
+    createNoteRequest.handler(this::handleCreateNote);
+  }
+
+  /**
+   * A method that gets called when the "create note route" is called
+   */
   private void handleCreateNote(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
@@ -449,12 +478,6 @@ public class NotesRouter implements IRouter {
     processor.createNote(noteRequest, userData.getUserId());
   
     end(ctx.response(), 200, "Note successfully created");
-  }
-  
-  // A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
-  private void registerCreateNote(Router router) {
-    Route createNoteRequest = router.post("/create");
-    createNoteRequest.handler(this::handleCreateNote);
   }
 }
 ```
@@ -464,7 +487,7 @@ initializing the router with a `Vertx` instance, and you can see that that `init
 below. We'll come back to that in a second to discuss exactly what it's doing. Next up, we have an
 instance of the `INotesProcessor` declared as a `private final` field, which is provided through the constructor.
 
-```java
+```java 
 @Override
 public Router initializeRouter(Vertx vertx) {
   Router router = Router.router(vertx);
@@ -475,10 +498,9 @@ public Router initializeRouter(Vertx vertx) {
 }
 ```
 
-Taking a look at the `initializeRouter` method, we can see that it takes in a `Vertx` instance. Using that `Vertx` 
-instance, it gets a new `Router` from `Router.router(vertx)`, and calls the `registerCreateNote` method below. Finally,
-it returns the set up router. Let's skip down to the `registerCreateNote` method at the bottom 
-of the class next.
+In the `initializeRouter` method replicated above, we take in a `Vertx` instance. Using that `Vertx` 
+instance, we get a new `Router` from `Router.router(vertx)`, and call the `registerCreateNote` method below. Finally,
+we return the set up router.
 
 ```java 
 // A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
@@ -488,14 +510,15 @@ private void registerCreateNote(Router router) {
 }
 ```
 
-This `registerCreateNote` method, as we saw earlier, starts by taking in a `Router` instance. With that `Router` 
-instance it does two things: retrieve an individual post `Route` for the `/create` endpoint in this sub-router by 
-calling `router.post("/create")`, and set the handler for the returned `Route`. In cases where we want to perform
-another HTTP operation, we could call `router.get(<route>)` or `router.<method>(<route>)` instead. The `handler()` 
-method called on the `Route` takes in a 
-[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html), which is a type of 
-lambda available in Java. Method references tell route, and therefore the router, which method to call when the 
-route is accessed. In this case, we're having it access the `handleCreateNote` method. Let's wrap up the sub-router
+This `registerCreateNote` method, starts by taking in a `Router` instance. With that `Router` instance it does two things. 
+First, it creates an individual POST `Route` for the `/create` endpoint by calling `router.post("/create")`.
+Then, it sets a handler method that should be called for the returned `Route`. If we wanted to use a different 
+HTTP operation instead of POST, we could call `router.get(<route>)` or `router.<method>(<route>)` instead. 
+The `handler()`method called on the `Route` takes in a 
+[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html), which is just a
+way of referencing a method defined in this class. 
+Method references tell the createNoteRequest route, and therefore the router it was created from, which method to call when the 
+route is called. In this case, we're having using the `handleCreateNote` method. Let's wrap up the sub-router
 code by taking a look at that.
 
 ```java 
@@ -510,51 +533,57 @@ private void handleCreateNote(RoutingContext ctx) {
 }
 ```
 
-"Route handlers", or the specific types of method references that the handler method from before can take in, take in
-a `RoutingContext`, provided by the Vert.x package, and don't return anything. That `RoutingContext` object provides
-insight into request (like the body, path parameters, query parameters, ...), and allow you to respond to the request
-when you're done. We'll later be registering this sub-router under a protected path, so we'll also be adding information
-to it, like the `jwt_data` we get on the next line. The `JWTData` object contains secure information about the user, 
-such as their id, which we'll need for completing this ticket. 
+Route handlers methods take in
+a `RoutingContext`, defined by the Vert.x library, and don't return anything. The `RoutingContext` object gives
+acess to request properties (like the body, path parameters, query parameters, ...), and allows you to respond to the request
+when you're done. We can also add our own data to the request like the `JWTData` object that is added to every
+route that has the `/protected` keyword in its URL. The `JWTData` object contains secure information about the user, 
+like their id, which we'll need for completing this ticket. 
 
-On the following line, we use a custom method in
-`RestFunctions` to load the request body into the `CreateNoteRequest` class we created earlier. This 
+After we get the `JWTData`, we use a custom method in the
+`RestFunctions` class to load the request body into the `CreateNoteRequest` DTO we created earlier. The 
 `getJsonBodyAsClass` method turns JSON into a class, and calls the `validateFields()` method we defined
-under `ApiDto`. Now, we have all the information we need to hand the processing of this off to the `INotesProcessor`
-the constructor took in, so we can call `processor.createNote(noteRequest, userData.getUserId())`. Now that processing
-has been completed, we can end the request by calling the `end()` method (provided by the `ApiRouter` class), which will
-prepare a response from the data passed in.
+earlier. If any of the fields are not filled in correctly the API will return an error to the user, so we now
+know that our noteRequest object is fully filled in.
+
+We now have all the information we need to call the method we defined earlier in `INotesProcessor`, so we 
+can call `processor.createNote(noteRequest, userData.getUserId())`. Once that method returns our processing
+is complete, and we can end the request by calling the `end()` method (defined in the `ApiRouter` class), which will
+return a response to the user who called the API. In our case, we want to give the 200 status code and return
+a static string as the response JSON body, so we simply pass 200 and the response string as our second and third
+arguments to `end()`.
 
 !!! note
-    `RestFunctions.getJsonBodyAsClass` only takes in DTOs that subclass the `ApiDto`, so that it can call 
-    `validateFields` and make sure incoming data is as expected.
+    `RestFunctions.getJsonBodyAsClass` only takes in DTOs that extend the `ApiDto` abstract class. This is 
+    so that it can call `validateFields` and make sure incoming JSON data is what we expect.
 
 That wraps up all of the work we need to do to set up the sub-router, so let's take a look at how this is set up
 in the `ApiRouter` class.
 
 #### The ApiRouter
 
-Let's now register our new `NotesRouter` sub-router with the `ApiRouter` class so that the new route can be called.
-To that, we'll need to add a new `private final NotesRouter notesRouter` field, adjust the constructor, and
+Let's now register our new `NotesRouter` sub-router with the `ApiRouter` class in the `com.codeforcommunity.rest` package,
+so that the new route can be called.
+To do that, we'll need to add a new `private final NotesRouter notesRouter` field, adjust the constructor, and
 adjust the `defineProtectedRoutes` method. By the way, this class is already available in api/ under the
 `com.codeforcommunity.rest` package.
 
-```java 
+```java
 public class ApiRouter implements IRouter {
-  private final CommonRouter;
+  private final CommonRouter commonRouter;
   private final AuthRouter authRouter;
   private final ProtectedUserRouter protectedUserRouter;
-  private final NotesRouter notesRouter;
+  private final NotesRouter notesRouter; // Added our subrouter as a field
   
   public ApiRouter(
       IAuthProcessor authProcessor,
       IProtectedUserProcessor protectedUserProcessor,
       JWTAuthorizer jwtAuthorizer,
-      INotesProcessor notesProcessor) {
+      INotesProcessor notesProcessor) { // Taking in an implementation of our interface
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRotuer(authProcessor);
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
-    this.notesRouter = new NotesRouter(notesProcessor);
+    this.notesRouter = new NotesRouter(notesProcessor); // Creating our subrouter by passing along the processor
   }
   
   /** Initialize a router and register all route handlers on it. */
@@ -571,7 +600,7 @@ public class ApiRouter implements IRouter {
     Router router = Router.router(vertx);
     
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
-    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx));
+    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx)); // Defining our subrouter under the '/notes' url
 
     return router;
   }
@@ -583,16 +612,14 @@ public class ApiRouter implements IRouter {
 !!! info
     The lines we actually added stuff on are 5, 11, 15, and 24.
 
-In `defineProtctedRoutes`, we're doing something a bit interesting; we're initializing a new sub-router for the 
-`CommonRouter`, and registering the `notesRouter` and `protectedUserRouer` routers under it. Remember how earlier we 
-mentioned that the 
-`JWTData` object gets added to the `RoutingContext` automatically? Well, here's where it happens. Whenever a router
-registered under the `CommonRouter` is called, a method runs to validate and insert that data, turning away anyone
-who is not logged in. By calling `router.mountSubRouter`, we can chain these routers along, mounting them at a certain
-paths on the parent router. The main `ApiRouter` is mounted at `/api/v1/`, so all routers registered under it have their
-routes appended after the `/api/v1/` part. For the common router, that happens at `/api/v1/protected/`. For the
-new `notesRouter`, that happens at `/api/v1/protected/notes/`. Finally, our new create note path is mounted at
-`/api/v1/protected/notes/create`.
+The main `ApiRouter` is mounted at `/api/v1/`, so all routers registered under it have their
+routes appended after the `/api/v1/` part. We then call `router.mountSubRouter()` to chain these routers along, mounting
+them at certain paths on the parent router. For the authRouter, that happens at `/api/v1/user`. For the protectedUserRouter
+that happens at `/api/v1/protected/user`. For the new `notesRouter`, that happens at `/api/v1/protected/notes/`.
+
+Note how in the first line of `intializeRouter` we're starting with the commonRouter instead of calling `Router.router(vertx)`
+like in our other router methods. `CommonRouter` is where the `JWTData` object is added to routes with the `/protected` keyword
+in them as well as any other operation that needs to happen for many routes.
 
 ### The Database Migration
 
