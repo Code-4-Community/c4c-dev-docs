@@ -1682,11 +1682,11 @@ If the site id specified is invalid.
 
 If the calling user is not an admin.
 
-### Favorite a Site
+### Adopt a Site
 
-`POST api/v1/protected/sites/:site_id/favorite`
+`POST api/v1/protected/sites/:site_id/adopt`
 
-Favorite the given site. Creates a record in the favorites table linking the user and the the site.
+Adopt the given site. Creates a record in the adopted sites table linking the user and the site.
 
 #### Request Body
 
@@ -1696,17 +1696,17 @@ No request body.
 
 ##### `200 OK`
 
-Site successfully marked as favorite.
+Site successfully marked as adopted.
 
 ##### `400 BAD REQUEST`
 
 If the site id specified is invalid.
 
-### Remove Site as Favorite
+### Remove Site as Adopted
 
-`POST api/v1/protected/sites/:site_id/unfavorite`
+`POST api/v1/protected/sites/:site_id/unadopt`
 
-Remove this site as favorite for the calling user. Removes the record from the favorites table.
+Remove this site as adopted for the calling user. Removes the record from the adopted sites table.
 
 #### Request Body
 
@@ -1716,17 +1716,17 @@ No request body.
 
 ##### `200 OK`
 
-Successfully removed site as favorite.
+Successfully removed site as adopted.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified is invalid OR if the site was not marked as a favorite before.
+If the site id specified is invalid OR if the site was not marked as adopted before.
 
-### Get Favorite Sites
+### Get Adopted Sites
 
-`GET api/v1/protected/sites/favorites`
+`GET api/v1/protected/sites/adopted_sites`
 
-Get all the favorite sites of the calling user.
+Get all the adopted sites of the calling user.
 
 #### Request Body
 
@@ -1736,7 +1736,7 @@ No request body.
 
 ##### `200 OK`
 
-Return a list of integers representing the site ID's of the users favorite sites. Can be an empty list.
+Return a list of integers representing the site ID's of the users adopted sites. Can be an empty list.
 
 ```json
 {
@@ -1753,14 +1753,13 @@ Return a list of integers representing the site ID's of the users favorite sites
 
 `POST api/v1/protected/sites/:site_id/record_stewardship`
 
-Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Duration is the time taken to perform the activity in minutes. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
+Records a stewardship activity for the given site. Date is the day on which the activity was performed, which can be in the past if the user is adding a past activity. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
 
 #### Request Body
 
 ```json
 {
   "date": DATE,
-  "duration": INT | NULL,
   "watered": BOOLEAN,
   "mulched": BOOLEAN,
   "cleaned": BOOLEAN,
@@ -1823,7 +1822,6 @@ No request body.
       "id": INT,
       "user_id": INT,
       "date": DATE,
-      "duration": INT | NULL,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
