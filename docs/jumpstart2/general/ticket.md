@@ -354,7 +354,7 @@ public class CreateNoteRequest extends ApiDto {
 }
 ```
 
-The DTO is basically just has getters and setters, as well as a `validateFields(String)` method, which
+The DTO is basically just getters and setters, as well as a `validateFields(String)` method, which
 you can use to define what constitutes a valid field. If a particular field is not valid, you can add that field name
 to a list which gets returned from the method, indicating the fields that have an invalid value.
 
