@@ -70,18 +70,7 @@ Responses:
     "country": "UNITED_STATES",
     "hidden": false,
     "libraryStatus": "EXISTS",
-    "contacts": [
-        {
-            "id": 1,
-            "schoolId": 439,
-            "firstName": "Johnny",
-            "lastName": "Appleseed",
-            "email": "principal@gmail.com",
-            "address": "New Address",
-            "phone": "6010001111",
-            "type": "PRINCIPAL"
-        }
-    ]
+    "contacts": null
 }
 ```
 
