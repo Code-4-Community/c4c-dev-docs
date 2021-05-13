@@ -42,7 +42,7 @@ All of these routes must be called by a user that is already authenticated.
 
 Used to create a new report for a specified school that has a library.
 
-`POST` request to `/api/v1/protected/schools/:school_id/reports` with body:
+`POST` request to `/api/v1/protected/schools/:school_id/reports/with-library` with body:
 
 ```json
 {
