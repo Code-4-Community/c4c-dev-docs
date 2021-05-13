@@ -34,9 +34,11 @@ The field `readyTimeline` is represented by an enum that can have the following 
 - `"YEAR_AFTER_NEXT"`
 - `"MORE_THAN_TWO_YEARS"`
 
+
 ## Protected Routes
 
 All of these routes must be called by a user that is already authenticated.
+
 
 ## Add School Report With Library
 
@@ -71,7 +73,6 @@ Used to create a new report for a specified school that has a library.
 Responses:
 
 `201 OK`: returns the report with library that was successfully created for the school.
-
 ```json
 {
   "id": 2,
@@ -101,6 +102,7 @@ Responses:
   "parentSupport": "Parent Support Example"
 }
 ```
+ 
 
 ## Add School Report Without Library
 
@@ -263,6 +265,7 @@ Responses:
 }
 ```
 
+
 ## Get Latest Report For One School
 
 Used to return the most recent report for the given school. Report type given by `libraryStatus`
@@ -328,3 +331,28 @@ Responses:
 ```
 
 `404 No Report Found`: Report not found for school with id
+
+## Get Report As CSV
+Used to return a given report as a CSV
+
+`GET` request to `/api/v1/protected/schools/reports/with-library/:report_id`
+
+OR
+
+`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id` depending on whether the school has a library or not
+
+Responses (data columns are in random order but the headers match the data):
+
+`200 OK`: returns the report as a CSV formatted as a String (with library)
+```
+Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit Reason,Is Shared Space,Has Inviting Space,Assigned Person Role,Assigned Person Title,Apprenticeship Program,Trains Mentors and Apprentices,Has Checkin Timetables,Has Book Checkout System,Number of Student Librarians,Has Sufficient Training,Teacher Support,Parent Support
+1,Mon Mar 15 00:23:44 EDT 2021,Mon Mar 15 00:23:44 EDT 2021,1,1,1,1,1,EXISTS,Visit Reason Example,true,true,PART_TIME,LIBRARIAN,OTHER,true,true,true,0,true,Teacher Support Example,Parent Support Example
+```
+
+`200 OK`: returns the report as a CSV formatted as a String (without library)
+```
+Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit ReasonWants Library,Has Space,Current Status,Reason,Ready Timeline
+1,Tue Mar 23 17:25:04 EDT 2021,Tue Mar 23 17:25:04 EDT 2021,1,1,1,1,1,DOES_NOT_EXIST,hi,true,true,hi,,UPCOMING_SCHOOL_YEAR
+```
+
+`404 No Report By Id Found`: Report not found for report with id
