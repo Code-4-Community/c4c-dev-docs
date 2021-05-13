@@ -341,7 +341,7 @@ OR
 
 `GET` request to `/api/v1/protected/schools/reports/without-library/:report_id` depending on whether the school has a library or not
 
-Responses:
+Responses (data columns are in random order but the headers match the data):
 
 `200 OK`: returns the report as a CSV formatted as a String (with library)
 ```
