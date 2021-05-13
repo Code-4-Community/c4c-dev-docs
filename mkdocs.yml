@@ -13,6 +13,10 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
   - toc:
       toc_depth: 3
 
@@ -28,6 +32,9 @@ nav:
       - Home: guides/index.md
       - Jumpstart Fullstack Course: https://learn.c4cneu.com
       - Frontend Data Architecture with Redux: guides/frontend-redux.md
+      - Scaffold Repositories: guides/scaffold-repos.md
+  -  "Jumpstart 2: Electric Boogaloo":
+       - Working on a ticket: jumpstart2/general/ticket.md
   - Lucy's Love Bus (LLB):
       - Home: llb/index.md
       - Feature API Specification: llb/llb-api-spec.md

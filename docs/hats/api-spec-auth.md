@@ -237,3 +237,92 @@ Response:
 `400 Bad Request`: if the request was malformed
 
 `401 Unauthorized`: the currentPassword does not match the calling user's current password
+
+### Update User Data 
+Used to update a user's country or privilege level
+
+`PUT` request to `/api/v1/protected/user/:user_id`
+```json
+{
+  "country": "united_states",
+  "priviledgeLevel": "standard"
+}
+```
+
+### Getting User Data 
+Used to get a user's data
+
+`GET` request to `/api/v1/protected/user/data`
+```json
+{
+    "firstName": "Test",
+    "lastName": "Test",
+    "email": "test@test.com",
+    "country": "UNITED_STATES",
+    "privilegeLevel": null
+}
+```
+
+Response: ``` 200 OK```
+
+### Get list of users
+Used to return the list of users. Admin only route.
+
+`GET` request to `/api/v1/protected/user/`
+
+Response: `200 OK` 
+```json
+{
+  "users": [
+            {
+              "firstName": "firstName",
+              "lastName": "lastName",
+              "email": "email@email.com",
+              "country": "dominica",
+              "priviledgeLevel": "admin"
+            },
+            {
+              "firstName": "firstName2",
+              "lastName": "lastName2",
+              "email": "email@email2.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard"
+            },
+            {
+              "firstName": "firstName3",
+              "lastName": "lastName3",
+              "email": "email@email3.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard"
+            }
+           ]
+}
+```
+
+Also has the option to get a list of users by country
+`GET` request to `/api/v1/protected/user/?country=<country_name>`
+
+(Notice this request was made with the country_name being united_states)
+
+Response: `200 OK` 
+```json
+{
+  "users": [
+            {
+              "firstName": "firstName2",
+              "lastName": "lastName2",
+              "email": "email@email2.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard"
+            },
+            {
+              "firstName": "firstName3",
+              "lastName": "lastName3",
+              "email": "email@email3.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard"
+            }
+           ]
+}
+```
+

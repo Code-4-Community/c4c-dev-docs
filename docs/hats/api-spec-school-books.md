@@ -17,7 +17,8 @@ Responses:
 {
     "count": 101,
     "date": "2021-02-19T20:01:16Z",
-    "notes": "First Shipment"
+    "notes": "First Shipment",
+    "id": 1
 }
 ```
  
@@ -36,8 +37,25 @@ Responses:
       {
         "count": 101,
         "date": "2021-02-19T20:01:16Z",
-        "notes": "First Shipment"
+        "notes": "First Shipment",
+        "id": 1
       }
     ]
 }
 ```
+
+
+## Update School Book Log (Admin or report creator only)
+Used to update a book log report for a given school
+
+`PUT` request to `/api/v1/protected/schools/:school_id/books/:book_id`
+
+```json
+{
+  "count": 100,
+  "date": "2021-02-19T20:01:16Z",
+  "notes" : "Book Log notes",
+  "id": 1
+}
+```
+Response: `200 OK`
