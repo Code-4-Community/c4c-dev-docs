@@ -339,9 +339,7 @@ Used to return a given report as a CSV
 
 OR
 
-`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id`
-
-depending on whether the school has a library or not
+`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id` depending on whether the school has a library or not
 
 Responses:
 
