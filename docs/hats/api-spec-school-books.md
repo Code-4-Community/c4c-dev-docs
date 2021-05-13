@@ -58,4 +58,25 @@ Used to update a book log report for a given school
   "id": 1
 }
 ```
-Response: `200 OK`
+Responses: 
+
+`200 OK` : Book log successfully updated
+
+`400 Does not exist` : School or Book Log does not exist
+
+`401 Unauthorized` : User not authenticated
+
+
+
+## Delete School Book Log (Admin or report creator only)
+Used to delete a book log report for a given school
+
+`DELETE` request to `/api/v1/protected/schools/:school_id/books/:book_id`
+
+Responses:
+
+`200 OK` : Book log successfully updated
+
+`400 Does not exist` : School or Book Log does not exist
+
+`401 Unauthorized` : User not authenticated
