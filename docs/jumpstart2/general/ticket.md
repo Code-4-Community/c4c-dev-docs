@@ -7,7 +7,7 @@ Hey there! If you're reading this, you're probably pretty new to C4C, or you're 
 on how to tickets. In either case, I'm glad you could stop by to read this document. Here,
 we're going to go through the basic process of doing work on a ticket. A lot of this will
 probably be common sense, but I still want to get it down so that there will be no confusion 
-in the future. For the purpose of this document, we'll be working through a ticket on 
+in the future. This document walks through completing a ticket on 
 the Backend Scaffold. If you have any questions, _especially_ on this, __please__ reach out
 and ask. Good luck on your tickets!
 
@@ -20,13 +20,13 @@ and ask. Good luck on your tickets!
     - What will we need to do?
 3. Making Changes
     - Modify the API specification
-    - Create a new notes DTO
-    - Create a notes processor interface
-    - Create a notes sub-router API and note endpoint
+    - Create a new DTO
+    - Create a processor interface
+    - Create a sub-router and API endpoint
     - Create a new database migration
-    - Create a new notes processor
+    - Implement our processor interface
 4. Testing!!!
-5. Making the Pull Request
+5. Making a Pull Request
 
 ## Reading Through Your Ticket
 
@@ -34,7 +34,7 @@ Okay. You've gotten your ticket, but now you need to figure out what to do. Whil
 is probably a good indication of the general purpose of the ticket, there are probably 
 nuances and fine-print details you won't discover until actually reading through the 
 description or implementing it. Therefore, the first step you'll want to take is to 
-start reading through your ticket. 
+start reading through your ticket.
 
 Make a note of any questions you may have, and reach
 out to your tech/project lead as soon as you can. Since they might have a day off or may 
@@ -100,58 +100,59 @@ Open up the Backend-Scaffold project and work through the exercises locally as y
 
 ### Project Structure
 
-- __api/__ is a directory handling routing information and data transfer objects (DTOs).
-- __common/__ is a directory contaning useful methods and classes for general use cases. This can include things
-  like authorization, passwords, logging, properties, ....
-- __persist/__ is a directory for handling and saving data.
-- __service/__ holds the main method for your project, so you'll start it up from there. It handles
+#### Modules
+
+- __api/__ is a directory for defining the API structure that our frontend will interact with.
+- __common/__ is a directory containing useful methods and classes for general use cases. This can include things
+  like authorization, passwords, logging, and properties files.
+- __persist/__ is a directory for defining and handling the data used in our application.
+- __service/__ holds the main method for the project,  and it handles
   connecting everything together and basically 'running' your project.
+
+#### Files in the Base Folder
+
 - __.gitattributes__ is a file with git configurations that are project-specific.
 - __.gitignore__ is a file containing regular expressions to describe files we don't want Git
   to keep track of when we make commits or push to GitHub.
   >A regular expression (regex) is a syntax used to define text matching the given pattern.
   >Check out [regexr](https://regexr.com/) and [regex101](https://regex101.com/) for some
   >common regexes, descriptions, and a playground to test some out.
-- __.travis.yml__ is a file for handling continuous integration and continuous deployment (CI/CD) setups 
-  for our projects.
 - __copy_properties.sh__ contains a shell script for copying properties during a CI/CD build.
 - __deploy.py__ is a Python script also assisting with deployment after a CI/CD build.
-- __Dockerfile__ is a file describing how to build an image of this program for containerization.
-- __pom.xml__ is a file with project build instructions, dependencies, and other project information.
-- __README.md__ is sort of like the introduction file. It's written in a format called
+- __Dockerfile__ is a file that defines how to build an image of this program for containerization through Docker.
+- __pom.xml__ is a maven file with project build instructions, dependencies, and other information.
+- __README.md__ is a file that introduces the project. It's written in a format called
   [Markdown](https://en.wikipedia.org/wiki/Markdown) (the .md filetype), which allows for
   simple and easy formatting. Usually this file has descriptions of the software, instructions
   for setting it up, and any other information the developer(s) would like to provide to the
   end user.
 
-You might not end up working with a lot of these files (mostly just the files in the four modules: api/, persist/, 
-and service/), but it's still super useful to know what they do. Now let's take a look at the structure 
+You might not end up working with a lot of these files, but it's still super useful to know what they do. Now let's take a look at the structure 
 of a basic module.
 
 ![Example of a package's structure](images/module_file_structure.jpg)
 
-Firstly, you should notice that there's another pom.xml here. There is a difference between the pom.xml in the 
-root of the project and the poms for each of the modules. The root pom defines project setup, dependency versions, and
-plugins, while the module poms actually include the dependencies needed. Pretty much everything else you will work
+Firstly, notice that modules have their own pom.xml file separate from the one in the base folder. The root pom defines project setup, dependency versions, and
+plugins. The module poms only include the dependencies needed for their module. Everything else you will work
 with lives inside the main/ and test/ directories in src/. Going even deeper, all the actual java files are in
-the com.codeforcommunity package. The resources/ directory (which isn't required), contains files that may be used
-by the application, like configuration files. 
+the com.codeforcommunity package. The resources/ directory (which isn't required), contains static data files that may be used
+by the application, like configuration files.
 
-Here's a more in-depth description of what the four modules actually do.
+Here's a more in-depth description of what the four modules actually do:
 
 ### Model, View, Controller (MVC)
 
-The api module is where all requests will enter through. It is the way that any external clients will interact with
+The __api__ module is where all requests will enter through. It is the way that any external clients will interact with
 and view the results of our application.
 
-The common module is what handles authentication, properties, session management, emails, and logging. It's kind of
+The __common__ module is what handles authentication, properties, session management, emails, and logging. It's kind of
 weird that we have an extra module for this, since all of this can probably just go in the service module, but we
 pulled it out since this code __rarely__ changes between projects, unlike all other modules. 
 
-The persist module is where all *persisting* information will live. It's the location of our jOOQ database
+The __persist__ module is where all *persisting* information will live. It's the location of our jOOQ database
 object relational management classes, so all interactions with the database take place in there.
 
-The service module is what unifies everything together. Since we want to avoid making the persist and api directories
+The __service__ module is what unifies everything together. Since we want to avoid making the persist and api directories
 dependent on each other, there will end up being a few interfaces that are made available and implemented in service.
 
 If you've heard about it in Object Oriented Design (OOD) before, this follows the Model, View, Controller (MVC) design
@@ -164,18 +165,21 @@ this basically just separates out functionality into three different main functi
 - View: deals with presenting data (whether visually, textually, or in any other way) in a way that an external entity
  (like you or another program) can understand what is happening and interact with your program
 - Controller: deals with linking up interactions between the model and view, and is the mastermind behind running your
- program and handling external entity interactions (like you clicking a button or something else sending requests)
+ program and handling external entity interactions (like you clicking a button, or a program sending an HTTP request)
 
 ### What will we need to do?
 
-Alright so, we know that we need to add a way to create a note, but what does that actually entail? There are two
-main things that are required: 1) creating a way for something to request the creation of a note, and 2) actually
-storing the note in the database. Our database up to this point doesn't really have much in it, so that means
-we'll have to create a database migration SQL script so that the database knows what to expect. We also don't have any
-concept of notes in our API, so we need to add the creation of a new API sub-router to our growing list of tasks. 
-And since we haven't handled notes in either the API or database before, there aren't any ways to handle the note
-once a request is received and pass it to the database, so we'll need to create a processor implementation. Let's list
-all of this out.
+Alright so, we know that we need to add a way to create a note, but what does that actually entail? This ticket comes
+down to 2 high level steps: 
+
+1) Creating an API route so someone can request to create a note
+2) Storing the note in the database
+   
+Our database doesn't have a table for notes yet, so that means we'll have to create a database migration 
+SQL script so that the database can store our note data. We also don't have any concept of notes in our API, 
+so we'll also need to create a new API sub-router. And, since we haven't handled notes in either the API or 
+database before, we'll need to create a processor implementation
+that can take our note data and store it in the database. Let's list all of our tasks out:
 
 1. Modify the API specification
 2. Create a new notes DTO
@@ -185,27 +189,28 @@ all of this out.
 6. Create a new notes processor
 
 That might seem like a lot to do, and it is relatively complex compared to writing a single method which gets a request
-and inserts the new note into the database, but this allows for a much cleaner code structure. You'll also get pretty
-used to doing this after a while, so you'll come to realize it's actually not that bad. Also, in most cases, you won't
+and inserts the new note into the database, but this process allows for a much cleaner code structure. This process is also very repeatable, 
+so you can use these same methods for future tickets. Additionally, in most cases, you won't
 need to create a new sub-router, processor, or database migration, so future tickets could be much simpler. In fact,
-if you decide to create the get note endpoint as a followup ticket, you'll be able to see that for yourself.
+if you decide to make a route to get a note's data as a followup ticket, you'll be able to see that for yourself.
 
 Let's see how to actually make these changes.
 
 ## Making Changes
 
-Before you even start making changes, you'll want to check out a new branch for your feature in git. You can
-do that by running `git checkout -b <branch_name>`, where branch_name is usually descriptive of what you're working
+Before you start making changes in any repository, you'll want to checkout a new branch for your feature in git. You can
+do that by running `git checkout -b <branch_name>`, where branch_name is descriptive of what you're working
 on. For example, we'd probably want to run `git checkout -b add-notes` for this branch. Some organizations
 also like it when you add your name or initials to the branch name, like `cn.add-notes`, `cn-add-notes`, 
-`CN-add-notes`, ..., so you can do that too if you prefer. You should ask your team lead for their preferred method
-of branch naming before you start working. __If you haven't used git before, be sure you [check out 
-the Jumpstart Git Workshop](https://learn.c4cneu.com/jumpstart/week-1.5-git/) before working on a ticket.__ 
+`CN-add-notes`, ..., so you can do that too if you prefer. You should ask your project lead for the team's standard
+for branch naming before you start working. 
+
+__If you haven't used git before, be sure you [check out the Jumpstart Git Workshop](https://learn.c4cneu.com/jumpstart/week-1.5-git/) before working on a ticket.__ 
 
 ### Modify the API Specification
 
 The very first step you'll want to take before diving into the development work of your ticket is to modify the
-API specification for your project. Usually you'll find one of those in the 
+API specification of your project. You'll find your project's API specification in the 
 [c4c dev docs repo](https://github.com/Code-4-Community/c4c-dev-docs) under the project's directory, but
 since the backend-scaffold doesn't have one, we'll just go through the process of doing that here. The general
 structure of an API spec looks like this:
@@ -245,16 +250,26 @@ When the note was successfully created.
 "The note was successfully created"
  ```
  
-`404 NOT FOUND`
+`400 BAD REQUEST`
 
-The note does not already exist.
+If the request body was malformed or either title or body was passed as an empty string
 
 ```
 
-Generally, when you're updating the API specification, you'll want to update the table of contents and add
-the note in at the spot where it fits best. More sections can be added, and sections that aren't used can
-be removed, so try to thoroughly document the API updates as you see fit. Path and query parameters may also
-show up in the spec, and you'll usually see those denoted by a colon (`:`) preceding the parameter name.
+The API specification for a single route includes the following sections:
+
+1. The method (POST, GET, ext...) and url of the route you're describing.
+2. A short description of what the route is for along with any constraints on the calling / use of the route.
+3. A list of all the path and query params used in the route, and a quick sentence describing what they represent.
+4. The form of the JSON request body.
+5. The possible responses to the request including the status code, a description of when it may be returned, and the form of the JOSN body if applicable.
+
+Generally, when you're updating the API specification, you'll also want to update the table of contents and add
+the specification in at the spot where it fits best. Sections that aren't used or aren't applicable can
+be removed, so try to thoroughly document the API updates as you see fit. 
+
+If a route has path parameters then they'll show up in the route's url and will be preceded by a colon (`:`). If query parameters
+are in the route they'll show up at the end of the url after a `?` and will have a name, a `=`, and then a type, (`keyName=BOOLEAN`)
 
 !!! note "Path parameters"
     The colon in front of a part of the path represents a variable that can be inserted. For example,
@@ -265,22 +280,24 @@ show up in the spec, and you'll usually see those denoted by a colon (`:`) prece
 !!! note "Query Parameters"
     A query parameter is information that can be appended to a request. It begins
     with a question mark (?), and multiple values are separated by ampersands (&). The above query param can
-    be done like this: `GET /api/v1/protected/notes/:note_id?raw=true`, where `raw=true` has the key/value pair
-    `raw` set to `true`.
+    be done like this: `GET /api/v1/protected/notes/:note_id?raw=BOOLEAN`, where `raw=BOOLEAN` says that the raw key can
+    be set to either true or false when the request is made.
 
 ### Create a new notes DTO
 
 You may have heard or seen the term "DTO" before. A DTO, or Data Transfer Object, is a class whose only
-purpose is to hold information and transfer the information between different places. They are exactly comparable
-to the JSON bodies available in the specification. Let's go through the process
-of creating a new Notes DTO.
+purpose is to hold information, so it can be passed along through different methods. We create DTOs to mirror
+the JSON bodies in our API specification, both for request bodies and response bodies.
 
-If you look in the api/ module's `com.codeforcommunity.dto` package, you can see some of the classes that have
-been created for DTOs. You'll notice a couple of packages within for groups of DTO types, as well as an `ApiDto` abstract
-class, which deals with defining DTO validation for incoming data. The DTO we're about to create, which will deal with
-handling incoming note JSON objects, will utilize `ApiDto` for ensuring some of the properties we guaranteed in
-our persist/ migrations. Since the other classes we see in the `dto` package house DTOs in packages referring to
-the data type's name, let's do the same for notes; let's create a note package. In there we'll create a
+Let's go through the process of creating a new Notes DTO.
+
+If you look in the `api/` module's `com.codeforcommunity.dto` package, you can see some of the existing DTOs. 
+You'll notice a couple of packages that group different DTO types, as well as an `ApiDto` abstract
+class, which handles DTO validation for incoming data. The DTO we're about to create, which will deal with
+handling incoming note JSON objects, will utilize `ApiDto` for ensuring the incoming data meets the specifications we set in
+our persist/ migrations. 
+
+Let's first create a note package to hold all of the DTOs we'll need when handling notes data. In there we'll create a
 `CreateNoteRequest` DTO. The following is what the `CreateNoteRequest` DTO will look like.
 
 ```java 
@@ -289,10 +306,9 @@ public class CreateNoteRequest extends ApiDto {
   private String body;
 
   /**
-   * An empty constructor for CreateNoteRequests.
+   * An empty constructor for CreateNoteRequests. Required by Jackson to decode our JSON into a Java class.
    */ 
-  public CreateNoteRequest() {
-  }
+  private CreateNoteRequest() { }
 
   /** A getter for the title. */
   public String getTitle() {
@@ -326,10 +342,10 @@ public class CreateNoteRequest extends ApiDto {
     String fieldName = fieldPrefix + "create_note_request.";
     List<String> invalidFields = new ArrayList<>();
 
-    if (this.title == null) {
+    if (this.title == null || this.title.length() == 0) {
       invalidFields.add(fieldName + "title");
     }
-    if (this.body == null) {
+    if (this.body == null || this.body.length() == 0) {
       invalidFields.add(fieldName + "body");
     }
 
@@ -338,16 +354,18 @@ public class CreateNoteRequest extends ApiDto {
 }
 ```
 
-As you can see, it basically just has getters and setters, as well as a `validateFields(String)` method, which
-you can use to define whether or not a given field is valid or not. If it's not valid, you can add the field name
-to a list which gets returned from the method, indicating the fields which have an invalid value.
+The DTO is basically just getters and setters, as well as a `validateFields(String)` method, which
+you can use to define what constitutes a valid field. If a particular field is not valid, you can add that field name
+to a list which gets returned from the method, indicating the fields that have an invalid value.
 
-If you saw in the list of questions we had for the tech lead earlier, you've probably noticed that there are a few 
+TODO: Move the following two to where we talk about the migration script
+
+If you saw in the list of questions we had for the tech lead earlier, you've probably noticed that there are a few
 fields missing
 from the DTO that we'll need for the database. Two of them, the `id` and `date` fields, will be handled for us
 by the database. The `SERIAL` value we added to modify the `id` field tells the database that it can
 automatically set the value using an auto increment, so each insert will have the `id` of the previous entry
-+ 1. Similarly, we manually set a `DEFAULT` on the `date` field to automatically enter the current timestamp 
++ 1. Similarly, we manually set a `DEFAULT` on the `date` field to automatically enter the current timestamp
 as a value for that field (unless explicitly specified, but we won't be doing that).
 
 The other field, `user_id`, can be retrieved from methods provided later on,
@@ -361,8 +379,20 @@ what it can do with notes.
 
 ### Create a notes processor interface
 
-Now we need to create what's called a processor for notes. In C4C, we use the term processor to define
-a class which deals with the interactions between an API and jOOQ type, both for incoming and outgoing data.
+Now we need to create a "processor" for notes. In C4C, we use the term processor to define
+a class that deals with interactions between our routing (that's typically handled by Vertx) and our database (that's typically handled by jOOQ).
+
+We first want to create a Java interface for our notes processor in the 'api' package of the api/ module.
+We can call this interface `INotesProcessor` and it will have a single method for each API route we define
+that relates to notes. Each method should receive all the information the user sends in the HTTP request and
+it should return the data the user gets back if the request is successful.
+
+Our route doesn't return a JSON body in the API specification, so our interface method will have a void return type.
+We've already defined our input DTO class, so we know we need so add that as an input parameter to our method as well.
+
+TODO: Add something talking about userId / JWTData
+
+TODO: Move the following paragraph somewhere else
 
 Each module in a project is compiled separately of each other. Because of this, if you want to include a
 module's classes in another module, you have to include it as a dependency on that project. If you take a look at the
@@ -370,37 +400,47 @@ pom.xml file in service/, you'll notice that the api/, persist/, and common/ mod
 in the dependencies list. Let's make an interface in api/ that will provide a method signature to the
 routers we've been working with created.
 
-We're able to create a new interface in api/, which will give the new `NotesRouter` class we created an idea
-of what can be done in the service/ module. This interface can then be implemented by our processor in service/,
-since service/ will have access to all public classes and interfaces available in api/. Let's create that interface
-now in the `api` package of api/. We'll want to include a method in there that knows what to do with
-`CreateNoteRequest` DTOs. The method we create will also want to take in some user information too,
-like a user's `id`. We'll just pass that in as a `String`. We don't really need any information back, so we
-can make that method's return value `void`.
-
 ```java
 public interface INotesProcessor {
   /**
    * Creates a new note in the database for the given user.
    */
-  public void createNote(CreateNoteRequest req, String userId);
+  void createNote(CreateNoteRequest req, String userId);
 }
 ```
 
-Super simple, right? Now we can create our notes sub-router and endpoint. You can do that in the
-`com.codeforcommunity.rest.subrouter` package. 
+We'll have to actually implement this interface later, but we'll set up our routing before we deal with that.
 
 ### Create a notes sub-router API and note endpoint
 
 Now that we have an idea of what we'll be able to do, we need to create a way for the backend to receive the information
-provided with the request, add it to the `CreateNoteRequest` class, and pas it into the `createNote` method defined
-in the previous section. If you want to read more about routing, you can check that out 
-[here](https://learn.c4cneu.com/guides/postrequest/). Let's jump into the code.
+provided with the request, add it to the `CreateNoteRequest` DTO, and pass that data into the `createNote` method of our interface
+from the previous section. If you want to read more about HTTP requests and routing, you can check that out 
+[here](https://learn.c4cneu.com/guides/postrequest/).
+
+We handle our routing using the [Vert.x Web](https://vertx.io/docs/vertx-web/java/#_using_vert_x_web) library.
+VertX lets us define routes, routers, and subrouters to match the URL of the route we're trying to implement.
+The route we're trying to implement is `POST /api/v1/protected/notes/create`.
+
+The ApiRouter class in the `com.codeforcommunity.rest` package has an `initializeRouter(Vertx vertx)` method
+where we can define all route URLs. The `/api/v1` prefix is common to all C4C API routes, and any routes we
+add in the `initalizeRouter` method, is assumed to start with that in their URL. The next part of our route that we
+need is `/protected`, this is a special keyword in our URL that tells the backend that this route can only be
+called by users that are fully signed in. ApiRouter also handles this for us and lets us define all protected
+routes in the `defineProtectedRoutes(Vertx vertx)` method.
+
+At this point we still need to add routers for the `/notes/create` part of our URL. Because this is the first route
+we're making that relates to notes, we'll create a subrouter class that can handle all routes that start with `/apiv1/protected/notes`.
+This way when we implement other notes API routes like `GET /api/v1/protected/notes` or `POST /api/v1/protected/notes/1/deadline`
+we will only have to edit our subrouter class instead of having to also change ApiRouter as well.
+
+Let's first create the subrouter, and then modify ApiRouter to register it.
 
 #### The Sub-Router
 
 Here's the code for a sub-router for handling notes. You'll want to create this in the api/ module, under the 
-`com.codeforcommunity.rest.subrouter` package.
+`com.codeforcommunity.rest.subrouter` package. Remember that every route we register here we are assuming has
+a URL that starts with `/api/v1/protected/notes`.
 
 ```java
 public class NotesRouter implements IRouter {
@@ -420,7 +460,17 @@ public class NotesRouter implements IRouter {
     return router;
   }
 
-  // A method that gets called when the "create note route" is called
+  /**
+   * A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
+   */
+  private void registerCreateNote(Router router) { 
+    Route createNoteRequest = router.post("/create");
+    createNoteRequest.handler(this::handleCreateNote);
+  }
+
+  /**
+   * A method that gets called when the "create note route" is called
+   */
   private void handleCreateNote(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     CreateNoteRequest noteRequest = RestFunctions.getJsonBodyAsClass(ctx, CreateNoteRequest.class);
@@ -428,12 +478,6 @@ public class NotesRouter implements IRouter {
     processor.createNote(noteRequest, userData.getUserId());
   
     end(ctx.response(), 200, "Note successfully created");
-  }
-  
-  // A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
-  private void registerCreateNote(Router router) {
-    Route createNoteRequest = router.post("/create");
-    createNoteRequest.handler(this::handleCreateNote);
   }
 }
 ```
@@ -443,7 +487,7 @@ initializing the router with a `Vertx` instance, and you can see that that `init
 below. We'll come back to that in a second to discuss exactly what it's doing. Next up, we have an
 instance of the `INotesProcessor` declared as a `private final` field, which is provided through the constructor.
 
-```java
+```java 
 @Override
 public Router initializeRouter(Vertx vertx) {
   Router router = Router.router(vertx);
@@ -454,10 +498,9 @@ public Router initializeRouter(Vertx vertx) {
 }
 ```
 
-Taking a look at the `initializeRouter` method, we can see that it takes in a `Vertx` instance. Using that `Vertx` 
-instance, it gets a new `Router` from `Router.router(vertx)`, and calls the `registerCreateNote` method below. Finally,
-it returns the set up router. Let's skip down to the `registerCreateNote` method at the bottom 
-of the class next.
+In the `initializeRouter` method replicated above, we take in a `Vertx` instance. Using that `Vertx` 
+instance, we get a new `Router` from `Router.router(vertx)`, and call the `registerCreateNote` method below. Finally,
+we return the set up router.
 
 ```java 
 // A Method that sets up the "create note route" and sets the handleCreateNote method as its handler
@@ -467,14 +510,15 @@ private void registerCreateNote(Router router) {
 }
 ```
 
-This `registerCreateNote` method, as we saw earlier, starts by taking in a `Router` instance. With that `Router` 
-instance it does two things: retrieve an individual post `Route` for the `/create` endpoint in this sub-router by 
-calling `router.post("/create")`, and set the handler for the returned `Route`. In cases where we want to perform
-another HTTP operation, we could call `router.get(<route>)` or `router.<method>(<route>)` instead. The `handler()` 
-method called on the `Route` takes in a 
-[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html), which is a type of 
-lambda available in Java. Method references tell route, and therefore the router, which method to call when the 
-route is accessed. In this case, we're having it access the `handleCreateNote` method. Let's wrap up the sub-router
+This `registerCreateNote` method, starts by taking in a `Router` instance. With that `Router` instance it does two things. 
+First, it creates an individual POST `Route` for the `/create` endpoint by calling `router.post("/create")`.
+Then, it sets a handler method that should be called for the returned `Route`. If we wanted to use a different 
+HTTP operation instead of POST, we could call `router.get(<route>)` or `router.<method>(<route>)` instead. 
+The `handler()`method called on the `Route` takes in a 
+[method reference](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html), which is just a
+way of referencing a method defined in this class. 
+Method references tell the createNoteRequest route, and therefore the router it was created from, which method to call when the 
+route is called. In this case, we're having using the `handleCreateNote` method. Let's wrap up the sub-router
 code by taking a look at that.
 
 ```java 
@@ -489,51 +533,57 @@ private void handleCreateNote(RoutingContext ctx) {
 }
 ```
 
-"Route handlers", or the specific types of method references that the handler method from before can take in, take in
-a `RoutingContext`, provided by the Vert.x package, and don't return anything. That `RoutingContext` object provides
-insight into request (like the body, path parameters, query parameters, ...), and allow you to respond to the request
-when you're done. We'll later be registering this sub-router under a protected path, so we'll also be adding information
-to it, like the `jwt_data` we get on the next line. The `JWTData` object contains secure information about the user, 
-such as their id, which we'll need for completing this ticket. 
+Route handlers methods take in
+a `RoutingContext`, defined by the Vert.x library, and don't return anything. The `RoutingContext` object gives
+acess to request properties (like the body, path parameters, query parameters, ...), and allows you to respond to the request
+when you're done. We can also add our own data to the request like the `JWTData` object that is added to every
+route that has the `/protected` keyword in its URL. The `JWTData` object contains secure information about the user, 
+like their id, which we'll need for completing this ticket. 
 
-On the following line, we use a custom method in
-`RestFunctions` to load the request body into the `CreateNoteRequest` class we created earlier. This 
+After we get the `JWTData`, we use a custom method in the
+`RestFunctions` class to load the request body into the `CreateNoteRequest` DTO we created earlier. The 
 `getJsonBodyAsClass` method turns JSON into a class, and calls the `validateFields()` method we defined
-under `ApiDto`. Now, we have all the information we need to hand the processing of this off to the `INotesProcessor`
-the constructor took in, so we can call `processor.createNote(noteRequest, userData.getUserId())`. Now that processing
-has been completed, we can end the request by calling the `end()` method (provided by the `ApiRouter` class), which will
-prepare a response from the data passed in.
+earlier. If any of the fields are not filled in correctly the API will return an error to the user, so we now
+know that our noteRequest object is fully filled in.
+
+We now have all the information we need to call the method we defined earlier in `INotesProcessor`, so we 
+can call `processor.createNote(noteRequest, userData.getUserId())`. Once that method returns our processing
+is complete, and we can end the request by calling the `end()` method (defined in the `ApiRouter` class), which will
+return a response to the user who called the API. In our case, we want to give the 200 status code and return
+a static string as the response JSON body, so we simply pass 200 and the response string as our second and third
+arguments to `end()`.
 
 !!! note
-    `RestFunctions.getJsonBodyAsClass` only takes in DTOs that subclass the `ApiDto`, so that it can call 
-    `validateFields` and make sure incoming data is as expected.
+    `RestFunctions.getJsonBodyAsClass` only takes in DTOs that extend the `ApiDto` abstract class. This is 
+    so that it can call `validateFields` and make sure incoming JSON data is what we expect.
 
 That wraps up all of the work we need to do to set up the sub-router, so let's take a look at how this is set up
 in the `ApiRouter` class.
 
 #### The ApiRouter
 
-Let's now register our new `NotesRouter` sub-router with the `ApiRouter` class so that the new route can be called.
-To that, we'll need to add a new `private final NotesRouter notesRouter` field, adjust the constructor, and
+Let's now register our new `NotesRouter` sub-router with the `ApiRouter` class in the `com.codeforcommunity.rest` package,
+so that the new route can be called.
+To do that, we'll need to add a new `private final NotesRouter notesRouter` field, adjust the constructor, and
 adjust the `defineProtectedRoutes` method. By the way, this class is already available in api/ under the
 `com.codeforcommunity.rest` package.
 
-```java 
+```java
 public class ApiRouter implements IRouter {
-  private final CommonRouter;
+  private final CommonRouter commonRouter;
   private final AuthRouter authRouter;
   private final ProtectedUserRouter protectedUserRouter;
-  private final NotesRouter notesRouter;
+  private final NotesRouter notesRouter; // Added our subrouter as a field
   
   public ApiRouter(
       IAuthProcessor authProcessor,
       IProtectedUserProcessor protectedUserProcessor,
       JWTAuthorizer jwtAuthorizer,
-      INotesProcessor notesProcessor) {
+      INotesProcessor notesProcessor) { // Taking in an implementation of our interface
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRotuer(authProcessor);
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
-    this.notesRouter = new NotesRouter(notesProcessor);
+    this.notesRouter = new NotesRouter(notesProcessor); // Creating our subrouter by passing along the processor
   }
   
   /** Initialize a router and register all route handlers on it. */
@@ -550,7 +600,7 @@ public class ApiRouter implements IRouter {
     Router router = Router.router(vertx);
     
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
-    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx));
+    router.mountSubRouter("/notes", notesRouter.initializeRouter(vertx)); // Defining our subrouter under the '/notes' url
 
     return router;
   }
@@ -562,16 +612,14 @@ public class ApiRouter implements IRouter {
 !!! info
     The lines we actually added stuff on are 5, 11, 15, and 24.
 
-In `defineProtctedRoutes`, we're doing something a bit interesting; we're initializing a new sub-router for the 
-`CommonRouter`, and registering the `notesRouter` and `protectedUserRouer` routers under it. Remember how earlier we 
-mentioned that the 
-`JWTData` object gets added to the `RoutingContext` automatically? Well, here's where it happens. Whenever a router
-registered under the `CommonRouter` is called, a method runs to validate and insert that data, turning away anyone
-who is not logged in. By calling `router.mountSubRouter`, we can chain these routers along, mounting them at a certain
-paths on the parent router. The main `ApiRouter` is mounted at `/api/v1/`, so all routers registered under it have their
-routes appended after the `/api/v1/` part. For the common router, that happens at `/api/v1/protected/`. For the
-new `notesRouter`, that happens at `/api/v1/protected/notes/`. Finally, our new create note path is mounted at
-`/api/v1/protected/notes/create`.
+The main `ApiRouter` is mounted at `/api/v1/`, so all routers registered under it have their
+routes appended after the `/api/v1/` part. We then call `router.mountSubRouter()` to chain these routers along, mounting
+them at certain paths on the parent router. For the authRouter, that happens at `/api/v1/user`. For the protectedUserRouter
+that happens at `/api/v1/protected/user`. For the new `notesRouter`, that happens at `/api/v1/protected/notes/`.
+
+Note how in the first line of `intializeRouter` we're starting with the commonRouter instead of calling `Router.router(vertx)`
+like in our other router methods. `CommonRouter` is where the `JWTData` object is added to routes with the `/protected` keyword
+in them as well as any other operation that needs to happen for many routes.
 
 ### The Database Migration
 
