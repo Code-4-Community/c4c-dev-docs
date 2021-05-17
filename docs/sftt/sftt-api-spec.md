@@ -871,6 +871,61 @@ The password does not match the calling user's current password.
 ##### `409 Conflict`
 The given `newEmail` is already in use.
 
+### Get User Data
+
+`GET api/v1/protected/user/data`
+
+Get the calling user's data.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "firstName": STRING,
+  "lastName": STRING,
+  "email": EMAIL,
+  "username": STRING
+}
+```
+
+##### `400 BAD REQUEST`
+If the calling user does not exist.
+
+### Get User Teams
+
+`GET api/v1/protected/user/teams`
+
+Get all the teams the calling user is part of.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "teams": [
+    {
+      "teamId": INT,
+      "teamName": STRING
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+If the calling user does not exist.
+
 ### Delete User
 
 `POST api/v1/protected/user/delete`
