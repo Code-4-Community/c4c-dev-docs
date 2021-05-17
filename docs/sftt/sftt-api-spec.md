@@ -875,7 +875,7 @@ The given `newEmail` is already in use.
 
 `GET api/v1/protected/user/data`
 
-Get the calling users data.
+Get the calling user's data.
 
 #### Request Body
 
