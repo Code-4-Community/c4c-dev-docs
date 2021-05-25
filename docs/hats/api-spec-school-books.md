@@ -62,7 +62,7 @@ Responses:
 
 `200 OK` : Book log successfully updated
 
-`400 Does not exist` : School or Book Log does not exist
+`404 Does not exist` : School or Book Log does not exist
 
 `401 Unauthorized` : User not authenticated
 
@@ -77,6 +77,6 @@ Responses:
 
 `200 OK` : Book log successfully updated
 
-`400 Does not exist` : School or Book Log does not exist
+`404 Does not exist` : School or Book Log does not exist
 
 `401 Unauthorized` : User not authenticated
