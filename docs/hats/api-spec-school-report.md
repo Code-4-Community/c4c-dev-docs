@@ -34,6 +34,19 @@ The field `readyTimeline` is represented by an enum that can have the following 
 - `"YEAR_AFTER_NEXT"`
 - `"MORE_THAN_TWO_YEARS"`
 
+The field `gradesAttended` is represented by an enum that can have the following values:
+- `KINDERGARTEN`
+- `FIRST_GRADE`
+- `SECOND_GRADE`
+- `THIRD_GRADE`
+- `FOURTH_GRADE`
+- `FIFTH_GRADE`
+- `SIXTH_GRADE`
+- `FORM_ONE`
+- `FORM_TWO`
+- `FORM_THREE`
+- `FORM_FOUR`
+- `FORM_FIVE`
 
 ## Protected Routes
 
