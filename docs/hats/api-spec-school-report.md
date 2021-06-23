@@ -66,7 +66,8 @@ Used to create a new report for a specified school that has a library.
   "parentSupport": "Parent Support Example",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
-  "successStories": "Some success story here"
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -99,7 +100,8 @@ Responses:
   "reasonNoStudentLibrarians": null,
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
-  "parentSupport": "Parent Support Example"
+  "parentSupport": "Parent Support Example",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
  
@@ -122,7 +124,8 @@ Used to create a new report for a specified school that des not have a library.
   "readyTimeline": "YEAR_AFTER_NEXT",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
-  "successStories": "Some success story here"
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -148,7 +151,8 @@ Responses:
   "hasSpace": false,
   "currentStatus": "Found a space",
   "reason": "Funding",
-  "readyTimeline": "YEAR_AFTER_NEXT"
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -302,7 +306,8 @@ Responses:
   "reasonNoStudentLibrarians": null,
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
-  "parentSupport": "Parent Support Example"
+  "parentSupport": "Parent Support Example",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -326,7 +331,8 @@ Responses:
   "hasSpace": false,
   "currentStatus": "Found a space",
   "reason": null,
-  "readyTimeline": "YEAR_AFTER_NEXT"
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -354,7 +360,8 @@ Used to update a new report for a specified school that has a library.
     "hasSufficientTraining": true,
     "teacherSupport": "Teacher Support Example",
     "parentSupport": "Parent Support Example",
-    "visitReason": "Visit Reason Example"
+    "visitReason": "Visit Reason Example",
+    "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -381,7 +388,8 @@ Used to update a new report for a specified school that des not have a library.
   "readyTimeline": "YEAR_AFTER_NEXT",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
-  "successStories": "Some success story here"
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
