@@ -34,6 +34,19 @@ The field `readyTimeline` is represented by an enum that can have the following 
 - `"YEAR_AFTER_NEXT"`
 - `"MORE_THAN_TWO_YEARS"`
 
+The field `gradesAttended` is represented by an enum that can have the following values:
+- `KINDERGARTEN`
+- `FIRST_GRADE`
+- `SECOND_GRADE`
+- `THIRD_GRADE`
+- `FOURTH_GRADE`
+- `FIFTH_GRADE`
+- `SIXTH_GRADE`
+- `FORM_ONE`
+- `FORM_TWO`
+- `FORM_THREE`
+- `FORM_FOUR`
+- `FORM_FIVE`
 
 ## Protected Routes
 
@@ -66,7 +79,8 @@ Used to create a new report for a specified school that has a library.
   "parentSupport": "Parent Support Example",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
-  "successStories": "Some success story here"
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -99,7 +113,8 @@ Responses:
   "reasonNoStudentLibrarians": null,
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
-  "parentSupport": "Parent Support Example"
+  "parentSupport": "Parent Support Example",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
  
@@ -122,7 +137,8 @@ Used to create a new report for a specified school that des not have a library.
   "readyTimeline": "YEAR_AFTER_NEXT",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
-  "successStories": "Some success story here"
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -148,7 +164,8 @@ Responses:
   "hasSpace": false,
   "currentStatus": "Found a space",
   "reason": "Funding",
-  "readyTimeline": "YEAR_AFTER_NEXT"
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -302,7 +319,8 @@ Responses:
   "reasonNoStudentLibrarians": null,
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
-  "parentSupport": "Parent Support Example"
+  "parentSupport": "Parent Support Example",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
@@ -326,11 +344,73 @@ Responses:
   "hasSpace": false,
   "currentStatus": "Found a space",
   "reason": null,
-  "readyTimeline": "YEAR_AFTER_NEXT"
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
 }
 ```
 
 `404 No Report Found`: Report not found for school with id
+
+## Update School Report With Library
+Used to update a new report for a specified school that has a library.
+
+`PUT` request to `/api/v1/protected/schools/:school_id/reports/with-library` with body:
+```json
+{
+    "numberOfChildren": 20,
+    "numberOfBooks": 10,
+    "mostRecentShipmentYear": 2019,
+    "isSharedSpace": false,
+    "hasInvitingSpace": false,
+    "assignedPersonRole": "FULL_TIME",
+    "assignedPersonTitle": "LIBRARIAN",
+    "apprenticeshipProgram": "OECS",
+    "trainsAndMentorsApprentices": true,
+    "hasCheckInTimetables": false,
+    "hasBookCheckoutSystem": true,
+    "numberOfStudentLibrarians": 2,
+    "reasonNoStudentLibrarians": null,
+    "hasSufficientTraining": true,
+    "teacherSupport": "Teacher Support Example",
+    "parentSupport": "Parent Support Example",
+    "visitReason": "Visit Reason Example",
+    "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+}
+```
+
+Responses:
+
+`200 OK`: If update was successful
+
+
+## Update School Report Without Library
+
+Used to update a new report for a specified school that des not have a library.
+
+`PUT` request to `/api/v1/protected/schools/:school_id/reports/without-library` with body:
+
+```json
+{
+  "numberOfChildren": 20,
+  "numberOfBooks": 10,
+  "mostRecentShipmentYear": 2019,
+  "reasonWhyNot": "Funding",
+  "wantsLibrary": true,
+  "hasSpace": false,
+  "currentStatus": "Found a space",
+  "readyTimeline": "YEAR_AFTER_NEXT",
+  "visitReason": "A Visit Reason Example",
+  "actionPlan": "A short action plan!",
+  "successStories": "Some success story here",
+  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+}
+```
+
+Responses:
+
+`200 OK`: If update was successful
+
+
 
 ## Get Report As CSV
 Used to return a given report as a CSV
