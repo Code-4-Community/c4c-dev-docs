@@ -171,8 +171,27 @@ Used to mark the specified school as no longer "hidden".
 
 Responses:
 
-`200 OK`: the school was successfully updated.
+`200 OK`: the school was successfully updated
 
-   
+## Get School IDs from User ID in Reports
+Used to get all the schools that a user has submitted a report for.
+
+`GET` request to `/api/v1/protected/schools/reports/users`
+
+Responses:
+
+`200 OK`
+```json
+{
+    "count": 1,
+    "schools": [
+        {
+            "id": 439,
+            "name": "Northeastern University",
+            "country": "UNITED_STATES"
+        }
+    ]
+}
+```
  
  
