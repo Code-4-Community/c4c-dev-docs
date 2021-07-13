@@ -12,6 +12,7 @@ The field `assignedPersonRole` is represented by an enum that can have the follo
 
 - `"PART_TIME"`
 - `"FULL_TIME"`
+- `"NONE"`
 
 The field `assignedPersonTitle` is represented by an enum that can have the following values:
 

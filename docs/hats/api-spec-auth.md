@@ -257,9 +257,11 @@ Used to get a user's data
 {
     "firstName": "Test",
     "lastName": "Test",
+    "id": 1,
     "email": "test@test.com",
     "country": "UNITED_STATES",
-    "privilegeLevel": null
+    "privilegeLevel": null,
+    "disabled": "false"
 }
 ```
 
@@ -277,23 +279,29 @@ Response: `200 OK`
             {
               "firstName": "firstName",
               "lastName": "lastName",
+              "id": 1,
               "email": "email@email.com",
               "country": "dominica",
-              "priviledgeLevel": "admin"
+              "priviledgeLevel": "admin",
+              "disabled": "false",
             },
             {
               "firstName": "firstName2",
               "lastName": "lastName2",
+              "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard"
+              "priviledgeLevel": "standard",
+              "disabled": "false",
             },
             {
               "firstName": "firstName3",
               "lastName": "lastName3",
+              "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard"
+              "priviledgeLevel": "standard",
+              "disabled": "false",
             }
            ]
 }
@@ -311,18 +319,29 @@ Response: `200 OK`
             {
               "firstName": "firstName2",
               "lastName": "lastName2",
+              "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard"
+              "priviledgeLevel": "standard",
+              "disabled": "false",
             },
             {
               "firstName": "firstName3",
               "lastName": "lastName3",
+              "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard"
+              "priviledgeLevel": "standard",
+              "disabled": "false",,
             }
            ]
 }
 ```
+### Disable a user account (Admin Only)
+Used to disable a user's account based on the passed user id
+
+`POST` request to `/api/v1/protected/user/disable/:user_id`
+Response: `200 OK` 
+
+
 
