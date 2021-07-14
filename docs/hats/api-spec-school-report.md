@@ -354,7 +354,7 @@ Responses:
 ## Update School Report With Library
 Used to update a new report for a specified school that has a library.
 
-`PUT` request to `/api/v1/protected/schools/:school_id/reports/with-library` with body:
+`PUT` request to `/api/v1/protected/schools/:school_id/reports/with-library/:report-id` with body:
 ```json
 {
     "numberOfChildren": 20,
@@ -387,7 +387,7 @@ Responses:
 
 Used to update a new report for a specified school that des not have a library.
 
-`PUT` request to `/api/v1/protected/schools/:school_id/reports/without-library` with body:
+`PUT` request to `/api/v1/protected/schools/:school_id/reports/without-library/:report-id` with body:
 
 ```json
 {
