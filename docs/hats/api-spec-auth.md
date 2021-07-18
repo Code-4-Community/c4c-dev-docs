@@ -246,9 +246,9 @@ Used to update a user's country or privilege level
 {
   "country": "UNITED_STATES",
   "privilegeLevel": "ADMIN",
-  "firstName": "Juan",
-  "lastName": "Tavera",
-  "email": "jtavera235@gmail.com"
+  "firstName": "Test",
+  "lastName": "Test",
+  "email": "test@gmail.com"
 }
 ```
 
