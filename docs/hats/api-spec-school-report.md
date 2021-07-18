@@ -36,6 +36,7 @@ The field `readyTimeline` is represented by an enum that can have the following 
 - `"MORE_THAN_TWO_YEARS"`
 
 The field `gradesAttended` is represented by an enum that can have the following values:
+
 - `KINDERGARTEN`
 - `FIRST_GRADE`
 - `SECOND_GRADE`
@@ -49,10 +50,40 @@ The field `gradesAttended` is represented by an enum that can have the following
 - `FORM_FOUR`
 - `FORM_FIVE`
 
+The field `timetable`:
+
+- May be `null`
+- When non-null, has two **required** fields: `year` and `month`
+- All other fields are **optional**
+- Any other field present must be the camel case representation of a grade (e.g. `kindergarten`, `firstGrade`)
+- All grade fields must be of the following format: `"GRADE": { "DAY_OF_MONTH": INT_COUNT }`
+- For example, consider the follow `timetable` field:
+
+```json
+{
+  "timetable": {
+    "year": 2021,
+    "month": 7,
+    "kindergarten": {
+      "2": 19
+    },
+    "firstGrade": {
+      "2": 13,
+      "4": 30
+    }
+  }
+}
+```
+
+This above `timetable` can be interpreted to mean that:
+
+- On July 2, 2021: there were 19 check-ins from the Kindergarten class
+- On July 2, 2021: there were 13 check-ins from the First Grade class
+- On July 4, 2021: there were 30 check-ins from the First Grade class
+
 ## Protected Routes
 
 All of these routes must be called by a user that is already authenticated.
-
 
 ## Add School Report With Library
 
@@ -81,13 +112,30 @@ Used to create a new report for a specified school that has a library.
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
   "successStories": "Some success story here",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ],
+  "timetable": {
+    "year": 2021,
+    "month": 7,
+    "kindergarten": {
+      "2": 19,
+      "16": 12,
+      "19": 10
+    },
+    "firstGrade": {
+      "1": 10,
+      "3": 30
+    }
+  }
 }
 ```
 
 Responses:
 
 `201 OK`: returns the report with library that was successfully created for the school.
+
 ```json
 {
   "id": 2,
@@ -115,10 +163,25 @@ Responses:
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
   "parentSupport": "Parent Support Example",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ],
+  "timetable": {
+    "year": 2021,
+    "month": 7,
+    "kindergarten": {
+      "2": 19,
+      "16": 12,
+      "19": 10
+    },
+    "firstGrade": {
+      "1": 10,
+      "3": 30
+    }
+  }
 }
 ```
- 
 
 ## Add School Report Without Library
 
@@ -139,7 +202,10 @@ Used to create a new report for a specified school that des not have a library.
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
   "successStories": "Some success story here",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ]
 }
 ```
 
@@ -166,7 +232,10 @@ Responses:
   "currentStatus": "Found a space",
   "reason": "Funding",
   "readyTimeline": "YEAR_AFTER_NEXT",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ]
 }
 ```
 
@@ -212,7 +281,8 @@ Responses:
       "reasonNoStudentLibrarians": null,
       "hasSufficientTraining": true,
       "teacherSupport": "Teacher Support Example",
-      "parentSupport": "Parent Support Example"
+      "parentSupport": "Parent Support Example",
+      "timetable": null
     },
     {
       "id": 1,
@@ -258,7 +328,8 @@ Responses:
       "reasonNoStudentLibrarians": null,
       "hasSufficientTraining": true,
       "teacherSupport": "Teacher Support Example",
-      "parentSupport": "Parent Support Example"
+      "parentSupport": "Parent Support Example",
+      "timetable": null
     },
     {
       "id": 2,
@@ -282,7 +353,6 @@ Responses:
   ]
 }
 ```
-
 
 ## Get Latest Report For One School
 
@@ -321,7 +391,22 @@ Responses:
   "hasSufficientTraining": true,
   "teacherSupport": "Teacher Support Example",
   "parentSupport": "Parent Support Example",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ],
+  "timetable": {
+    "year": 2021,
+    "month": 7,
+    "thirdGrade": {
+      "16": 12,
+      "19": 10
+    },
+    "formOne": {
+      "1": 10,
+      "3": 30
+    }
+  }
 }
 ```
 
@@ -346,43 +431,51 @@ Responses:
   "currentStatus": "Found a space",
   "reason": null,
   "readyTimeline": "YEAR_AFTER_NEXT",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ]
 }
 ```
 
 `404 No Report Found`: Report not found for school with id
 
 ## Update School Report With Library
+
 Used to update a new report for a specified school that has a library.
 
 `PUT` request to `/api/v1/protected/schools/:school_id/reports/with-library/:report-id` with body:
+
 ```json
 {
-    "numberOfChildren": 20,
-    "numberOfBooks": 10,
-    "mostRecentShipmentYear": 2019,
-    "isSharedSpace": false,
-    "hasInvitingSpace": false,
-    "assignedPersonRole": "FULL_TIME",
-    "assignedPersonTitle": "LIBRARIAN",
-    "apprenticeshipProgram": "OECS",
-    "trainsAndMentorsApprentices": true,
-    "hasCheckInTimetables": false,
-    "hasBookCheckoutSystem": true,
-    "numberOfStudentLibrarians": 2,
-    "reasonNoStudentLibrarians": null,
-    "hasSufficientTraining": true,
-    "teacherSupport": "Teacher Support Example",
-    "parentSupport": "Parent Support Example",
-    "visitReason": "Visit Reason Example",
-    "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "numberOfChildren": 20,
+  "numberOfBooks": 10,
+  "mostRecentShipmentYear": 2019,
+  "isSharedSpace": false,
+  "hasInvitingSpace": false,
+  "assignedPersonRole": "FULL_TIME",
+  "assignedPersonTitle": "LIBRARIAN",
+  "apprenticeshipProgram": "OECS",
+  "trainsAndMentorsApprentices": true,
+  "hasCheckInTimetables": false,
+  "hasBookCheckoutSystem": true,
+  "numberOfStudentLibrarians": 2,
+  "reasonNoStudentLibrarians": null,
+  "hasSufficientTraining": true,
+  "teacherSupport": "Teacher Support Example",
+  "parentSupport": "Parent Support Example",
+  "visitReason": "Visit Reason Example",
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ],
+  "timetable": null
 }
 ```
 
 Responses:
 
 `200 OK`: If update was successful
-
 
 ## Update School Report Without Library
 
@@ -403,7 +496,11 @@ Used to update a new report for a specified school that des not have a library.
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
   "successStories": "Some success story here",
-  "gradesAttended": ["KINDERGARTEN", "FIRST_GRADE"]
+  "gradesAttended": [
+    "KINDERGARTEN",
+    "FIRST_GRADE"
+  ],
+  "timetable": null
 }
 ```
 
@@ -411,26 +508,28 @@ Responses:
 
 `200 OK`: If update was successful
 
-
-
 ## Get Report As CSV
+
 Used to return a given report as a CSV
 
 `GET` request to `/api/v1/protected/schools/reports/with-library/:report_id`
 
 OR
 
-`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id` depending on whether the school has a library or not
+`GET` request to `/api/v1/protected/schools/reports/without-library/:report_id` depending on whether the school has a
+library or not
 
 Responses (data columns are in random order but the headers match the data):
 
 `200 OK`: returns the report as a CSV formatted as a String (with library)
+
 ```
 Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit Reason,Is Shared Space,Has Inviting Space,Assigned Person Role,Assigned Person Title,Apprenticeship Program,Trains Mentors and Apprentices,Has Checkin Timetables,Has Book Checkout System,Number of Student Librarians,Has Sufficient Training,Teacher Support,Parent Support
 1,Mon Mar 15 00:23:44 EDT 2021,Mon Mar 15 00:23:44 EDT 2021,1,1,1,1,1,EXISTS,Visit Reason Example,true,true,PART_TIME,LIBRARIAN,OTHER,true,true,true,0,true,Teacher Support Example,Parent Support Example
 ```
 
 `200 OK`: returns the report as a CSV formatted as a String (without library)
+
 ```
 Report ID,Created At,Updated At,School ID,User ID,Number of Children,Number of Books,Most Recent Shipment Year,Library Status,Visit ReasonWants Library,Has Space,Current Status,Reason,Ready Timeline
 1,Tue Mar 23 17:25:04 EDT 2021,Tue Mar 23 17:25:04 EDT 2021,1,1,1,1,1,DOES_NOT_EXIST,hi,true,true,hi,,UPCOMING_SCHOOL_YEAR
