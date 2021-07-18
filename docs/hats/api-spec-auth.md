@@ -244,8 +244,11 @@ Used to update a user's country or privilege level
 `PUT` request to `/api/v1/protected/user/:user_id`
 ```json
 {
-  "country": "united_states",
-  "priviledgeLevel": "standard"
+  "country": "UNITED_STATES",
+  "privilegeLevel": "ADMIN",
+  "firstName": "Juan",
+  "lastName": "Tavera",
+  "email": "jtavera235@gmail.com"
 }
 ```
 
