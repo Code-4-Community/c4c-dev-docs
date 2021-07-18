@@ -341,7 +341,99 @@ Response: `200 OK`
 Used to disable a user's account based on the passed user id
 
 `POST` request to `/api/v1/protected/user/disable/:user_id`
-Response: `200 OK` 
+
+Responses: 
+
+`200 OK` : Account successfully disabled
+
+`401 Unauthorized`: the user is not authenticated
+
+`400 User not found`: no user with the given id could be found
+
+### Re-enable a user account (Admin Only)
+Used to re-enable a disabled user's account based on the passed user id
+
+`POST` request to `/api/v1/protected/user/enable/:user_id`
+Responses: 
+
+`200 OK`: Account successfully enabled
+
+`401 Unauthorized`: the user is not authenticated
+
+`400 User not found`: no user with the given id could be found
+
+### Get list of disabled users
+Used to return the list of disabled users. Admin only route.
+
+`GET` request to `/api/v1/protected/user/disabled`
+
+Response: `200 OK`
+```json
+{
+  "users": [
+            {
+              "firstName": "firstName",
+              "lastName": "lastName",
+              "id": 1,
+              "email": "email@email.com",
+              "country": "dominica",
+              "priviledgeLevel": "admin",
+              "disabled": "true",
+            },
+            {
+              "firstName": "firstName2",
+              "lastName": "lastName2",
+              "id": 2,
+              "email": "email@email2.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard",
+              "disabled": "true",
+            },
+            {
+              "firstName": "firstName3",
+              "lastName": "lastName3",
+              "id": 3,
+              "email": "email@email3.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard",
+              "disabled": "true",
+            }
+           ]
+}
+```
+
+Also has the option to get a list of users by country
+`GET` request to `/api/v1/protected/user/?country=<country_name>`
+
+(Notice this request was made with the country_name being united_states)
+
+Response: `200 OK`
+```json
+{
+  "users": [
+            {
+              "firstName": "firstName2",
+              "lastName": "lastName2",
+              "id": 2,
+              "email": "email@email2.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard",
+              "disabled": "true",
+            },
+            {
+              "firstName": "firstName3",
+              "lastName": "lastName3",
+              "id": 3,
+              "email": "email@email3.com",
+              "country": "united_states",
+              "priviledgeLevel": "standard",
+              "disabled": "true",
+            }
+           ]
+}
+```
+
+
 
 
 
