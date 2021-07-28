@@ -13,15 +13,17 @@ Content-Type: application/json
 ```
 
 ### Access Token Composition
+ 
  - `userId`: the ID of the authenticated user
- - `privilegeLevel`: the user's privilege level 
-    - `STANDARD`: a general user
-    - `ADMIN`: an administrator
+ - `privilegeLevel`: the user's privilege level
+   - `ADMIN`
+   - `OFFICER`
+   - `VOLUNTEER`
 
 ```json
 {
   "userId": 1,
-  "privilegeLevel": "STANDARD"
+  "privilegeLevel": "ADMIN"
 }
 ```
 
@@ -98,11 +100,16 @@ Responses:
 Used for signing up a new user.
 
 `POST` request to `/api/v1/user/signup` with body:
+
  - `email`: the user's email
  - `password`: the user's password
     - Requires 8-20 characters with at least one lowercase, one uppercase, one number, one special character
  - `firstName`: the user's first name
  - `lastName`: the user's last name
+ - `privilegeLevel`: the user's privilege level
+    - `ADMIN`
+    - `OFFICER`
+    - `VOLUNTEER`
  - `country`: the user's country:
     - `UNITED_STATES`
     - `ANTIGUA_AND_BARBUDA`
@@ -117,7 +124,8 @@ Used for signing up a new user.
   "password" : "secure",
   "firstName" : "John",
   "lastName" : "Doe",
-  "country": "UNITED_STATES"
+  "country": "UNITED_STATES",
+  "privilegeLevel": "ADMIN"
 }
 ```
 
@@ -255,12 +263,12 @@ Used to get a user's data
 `GET` request to `/api/v1/protected/user/data`
 ```json
 {
+    "id": 1,
     "firstName": "Test",
     "lastName": "Test",
-    "id": 1,
     "email": "test@test.com",
     "country": "UNITED_STATES",
-    "privilegeLevel": null,
+    "privilegeLevel": "VOLUNTEER",
     "disabled": "false"
 }
 ```
@@ -282,8 +290,8 @@ Response: `200 OK`
               "id": 1,
               "email": "email@email.com",
               "country": "dominica",
-              "priviledgeLevel": "admin",
-              "disabled": "false",
+              "privilegeLevel": "ADMIN",
+              "disabled": "false"
             },
             {
               "firstName": "firstName2",
@@ -291,8 +299,8 @@ Response: `200 OK`
               "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "false",
+              "privilegeLevel": "OFFICER",
+              "disabled": "false"
             },
             {
               "firstName": "firstName3",
@@ -300,8 +308,8 @@ Response: `200 OK`
               "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "false",
+              "privilegeLevel": "VOLUNTEER",
+              "disabled": "false"
             }
            ]
 }
@@ -322,8 +330,8 @@ Response: `200 OK`
               "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "false",
+              "privilegeLevel": "OFFICER",
+              "disabled": "false"
             },
             {
               "firstName": "firstName3",
@@ -331,8 +339,8 @@ Response: `200 OK`
               "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "false",,
+              "privilegeLevel": "VOLUNTEER",
+              "disabled": "false"
             }
            ]
 }
@@ -377,8 +385,8 @@ Response: `200 OK`
               "id": 1,
               "email": "email@email.com",
               "country": "dominica",
-              "priviledgeLevel": "admin",
-              "disabled": "true",
+              "privilegeLevel": "ADMIN",
+              "disabled": "true"
             },
             {
               "firstName": "firstName2",
@@ -386,8 +394,8 @@ Response: `200 OK`
               "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "true",
+              "privilegeLevel": "OFFICER",
+              "disabled": "true"
             },
             {
               "firstName": "firstName3",
@@ -395,8 +403,8 @@ Response: `200 OK`
               "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "true",
+              "privilegeLevel": "VOLUNTEER",
+              "disabled": "true"
             }
            ]
 }
@@ -417,8 +425,8 @@ Response: `200 OK`
               "id": 2,
               "email": "email@email2.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "true",
+              "privilegeLevel": "OFFICER",
+              "disabled": "true"
             },
             {
               "firstName": "firstName3",
@@ -426,8 +434,8 @@ Response: `200 OK`
               "id": 3,
               "email": "email@email3.com",
               "country": "united_states",
-              "priviledgeLevel": "standard",
-              "disabled": "true",
+              "privilegeLevel": "VOLUNTEER",
+              "disabled": "true"
             }
            ]
 }
