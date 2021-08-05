@@ -116,6 +116,8 @@ Used to create a new report for a specified school that has a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": {
     "year": 2021,
     "month": 7,
@@ -167,6 +169,8 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": {
     "year": 2021,
     "month": 7,
@@ -205,7 +209,9 @@ Used to create a new report for a specified school that des not have a library.
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -235,7 +241,9 @@ Responses:
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -395,6 +403,8 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": {
     "year": 2021,
     "month": 7,
@@ -434,7 +444,9 @@ Responses:
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -469,6 +481,8 @@ Used to update a new report for a specified school that has a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": null
 }
 ```
@@ -500,6 +514,8 @@ Used to update a new report for a specified school that des not have a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": null
 }
 ```
