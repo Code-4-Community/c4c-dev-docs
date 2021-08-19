@@ -220,10 +220,12 @@ Used to create a new report for a specified school that des not have a library.
   "numberOfChildren": 20,
   "numberOfBooks": 10,
   "mostRecentShipmentYear": 2019,
-  "reasonWhyNot": "Funding",
+  "reason": "Funding",
   "wantsLibrary": true,
   "hasSpace": false,
-  "currentStatus": "Found a space",
+  "currentStatus": [
+    "Found a space"
+  ],
   "readyTimeline": "YEAR_AFTER_NEXT",
   "visitReason": "A Visit Reason Example",
   "actionPlan": "A short action plan!",
@@ -231,7 +233,9 @@ Used to create a new report for a specified school that des not have a library.
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -261,7 +265,9 @@ Responses:
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -474,7 +480,9 @@ Responses:
   "gradesAttended": [
     "KINDERGARTEN",
     "FIRST_GRADE"
-  ]
+  ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -565,6 +573,8 @@ Used to update a new report for a specified school that des not have a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
+  "userName": "John Doe",
+  "schoolName": "Example School Name",
   "timetable": null
 }
 ```
