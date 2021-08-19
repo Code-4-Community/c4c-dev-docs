@@ -50,18 +50,18 @@ The field `gradesAttended` is represented by an enum that can have the following
 - `FORM_FOUR`
 - `FORM_FIVE`
 
-The field `timetable`:
+The field `checkInTimetable` and `checkOutTimetable`:
 
 - May be `null`
 - When non-null, has two **required** fields: `year` and `month`
 - All other fields are **optional**
 - Any other field present must be the camel case representation of a grade (e.g. `kindergarten`, `firstGrade`)
 - All grade fields must be of the following format: `"GRADE": { "DAY_OF_MONTH": INT_COUNT }`
-- For example, consider the follow `timetable` field:
+- For example, consider the follow `checkInTimetable` field:
 
 ```json
 {
-  "timetable": {
+  "checkInTimetable": {
     "year": 2021,
     "month": 7,
     "kindergarten": {
@@ -75,7 +75,7 @@ The field `timetable`:
 }
 ```
 
-This above `timetable` can be interpreted to mean that:
+This above `checkInTimetable` can be interpreted to mean that:
 
 - On July 2, 2021: there were 19 check-ins from the Kindergarten class
 - On July 2, 2021: there were 13 check-ins from the First Grade class
@@ -116,10 +116,21 @@ Used to create a new report for a specified school that has a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name",
-  "timetable": {
+  "checkInTimetable": {
     "year": 2021,
+    "month": 7,
+    "kindergarten": {
+      "2": 19,
+      "16": 12,
+      "19": 10
+    },
+    "firstGrade": {
+      "1": 10,
+      "3": 30
+    }
+  },
+  "checkOutTimetable": {
+    "year": 2022,
     "month": 7,
     "kindergarten": {
       "2": 19,
@@ -169,10 +180,21 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name",
-  "timetable": {
+  "checkInTimetable": {
     "year": 2021,
+    "month": 7,
+    "kindergarten": {
+      "2": 19,
+      "16": 12,
+      "19": 10
+    },
+    "firstGrade": {
+      "1": 10,
+      "3": 30
+    }
+  },
+  "checkOutTimetable": {
+    "year": 2022,
     "month": 7,
     "kindergarten": {
       "2": 19,
@@ -405,16 +427,28 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name",
-  "timetable": {
+  "checkInTimetable": {
     "year": 2021,
     "month": 7,
-    "thirdGrade": {
+    "kindergarten": {
+      "2": 19,
       "16": 12,
       "19": 10
     },
-    "formOne": {
+    "firstGrade": {
+      "1": 10,
+      "3": 30
+    }
+  },
+  "checkOutTimetable": {
+    "year": 2022,
+    "month": 7,
+    "kindergarten": {
+      "2": 19,
+      "16": 12,
+      "19": 10
+    },
+    "firstGrade": {
       "1": 10,
       "3": 30
     }
@@ -483,9 +517,32 @@ Used to update a new report for a specified school that has a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name",
-  "timetable": null
+    "checkInTimetable": {
+      "year": 2021,
+      "month": 7,
+      "kindergarten": {
+        "2": 19,
+        "16": 12,
+        "19": 10
+      },
+      "firstGrade": {
+        "1": 10,
+        "3": 30
+      }
+    },
+    "checkOutTimetable": {
+      "year": 2022,
+      "month": 7,
+      "kindergarten": {
+        "2": 19,
+        "16": 12,
+        "19": 10
+      },
+      "firstGrade": {
+        "1": 10,
+        "3": 30
+      }
+    }
 }
 ```
 
