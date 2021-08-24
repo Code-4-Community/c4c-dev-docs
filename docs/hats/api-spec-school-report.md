@@ -130,7 +130,9 @@ Used to create a new report for a specified school that has a library.
       "1": 10,
       "3": 30
     }
-  }
+  },
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -183,7 +185,9 @@ Responses:
       "1": 10,
       "3": 30
     }
-  }
+  },
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -290,7 +294,9 @@ Responses:
       "hasSufficientTraining": true,
       "teacherSupport": "Teacher Support Example",
       "parentSupport": "Parent Support Example",
-      "timetable": null
+      "timetable": null,
+      "userName": "John Doe",
+      "schoolName": "Example School Name"
     },
     {
       "id": 1,
@@ -309,7 +315,9 @@ Responses:
       "hasSpace": false,
       "currentStatus": "Found a space",
       "reason": null,
-      "readyTimeline": "YEAR_AFTER_NEXT"
+      "readyTimeline": "YEAR_AFTER_NEXT",
+      "userName": "John Doe",
+      "schoolName": "Example School Name"
     },
     {
       "id": 2,
@@ -337,7 +345,9 @@ Responses:
       "hasSufficientTraining": true,
       "teacherSupport": "Teacher Support Example",
       "parentSupport": "Parent Support Example",
-      "timetable": null
+      "timetable": null,
+      "userName": "John Doe",
+      "schoolName": "Example School Name"
     },
     {
       "id": 2,
@@ -356,7 +366,9 @@ Responses:
       "hasSpace": false,
       "currentStatus": "Found a space",
       "reason": null,
-      "readyTimeline": "YEAR_AFTER_NEXT"
+      "readyTimeline": "YEAR_AFTER_NEXT",
+      "userName": "John Doe",
+      "schoolName": "Example School Name"
     }
   ]
 }
@@ -483,7 +495,9 @@ Used to update a new report for a specified school that has a library.
   ],
   "userName": "John Doe",
   "schoolName": "Example School Name",
-  "timetable": null
+  "timetable": null,
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
@@ -516,7 +530,9 @@ Used to update a new report for a specified school that des not have a library.
   ],
   "userName": "John Doe",
   "schoolName": "Example School Name",
-  "timetable": null
+  "timetable": null,
+  "userName": "John Doe",
+  "schoolName": "Example School Name"
 }
 ```
 
