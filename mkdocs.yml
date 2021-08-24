@@ -54,6 +54,8 @@ nav:
       - School Contacts API Specification: hats/api-spec-school-contact.md
       - Reports API Specification: hats/api-spec-school-report.md
       - Books API Specification: hats/api-spec-school-books.md
+  - JPAL:
+      - Home: jpal/index.md
   - C4C Website:
       - Add Yourself to People page: c4cwebsite/people.md
   - Amazon Web Services:

@@ -1,4 +1,4 @@
-# C4C Dev Docs
+# C4C Documentation
 
 Welcome to Code4Community's documentation site. The goal of this site is to be a common resource for all product team members that describes different workflows and application architectures. 
 
