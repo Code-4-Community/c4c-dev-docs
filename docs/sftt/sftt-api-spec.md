@@ -1755,7 +1755,7 @@ No request body.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified is invalid.
+If the `site_id` specified is invalid.
 
 ### Update a Site
 
@@ -1840,7 +1840,7 @@ Site successfully deleted.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified is invalid.
+If the `site_id` specified is invalid.
 
 ##### `401 UNAUTHORIZED`
 
@@ -1866,7 +1866,7 @@ Site successfully marked for QA.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified is invalid.
+If the `site_id` specified is invalid.
 
 ##### `401 UNAUTHORIZED`
 
@@ -1890,7 +1890,7 @@ Site successfully marked as adopted.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist or is already adopted.
+If the `site_id` specified does not exist or is already adopted.
 
 ### Remove Site as Adopted
 
@@ -1910,7 +1910,7 @@ Successfully removed site as adopted.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist.
+If the `site_id` specified does not exist.
 
 ##### `400 BAD REQUEST`
 
@@ -1969,7 +1969,7 @@ Activity successfully recorded.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist.
+If the `site_id` specified does not exist.
 
 ##### `400 BAD REQUEST`
 
@@ -2032,4 +2032,4 @@ No request body.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist.
+If the `site_id` specified does not exist.
