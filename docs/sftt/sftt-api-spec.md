@@ -69,10 +69,24 @@ Must be called on an open (not marked reserved, completed or QA) block. Will cre
 #### Responses
 
 ##### `200 OK`
+
 This block was reserved successfully.
 
 ##### `400 BAD REQUEST`
-If there is not a block associated with the given block_id OR there is not a team associated with the given team_id OR the user is not a member of the given team OR the block does not have status 'open'.
+
+If there is not a block associated with the given `block_id`.
+
+##### `400 BAD REQUEST`
+ 
+If there is not a team associated with the given `team_id`.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'open'.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a member of the given team.
 
 ### Complete a Reservation
 
@@ -95,7 +109,20 @@ Must be called on a block reserved by the user or by a team they're on. `team_id
 This reservation was completed successfully.
 
 ##### `400 BAD REQUEST`
-If the `block_id` specified is not associated with an existing block OR the `team_id` specified is not associatd with an existing team OR the user is not a member of the given team OR the block does not have status 'reserved'.
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associatd with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'reserved'.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a member of the given team.
 
 ### Release a Reservation
 
@@ -119,7 +146,11 @@ This reservation was cancelled successfully.
 
 ##### `400 BAD REQUEST`
 
-If the `block_id` specified is not associated with an existing block OR the block does not have status 'reserved'.
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'reserved'.
 
 ### Uncomplete a Reservation (Admin Only)
 
@@ -143,7 +174,11 @@ This reservation was marked as incomplete successfully.
 
 ##### `400 BAD REQUEST`
 
-If the `block_id` specified is not associated with an existing block OR the block does not have status 'complete'.
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'complete'.
 
 ### Mark for QA (Admin Only)
 
@@ -170,6 +205,7 @@ This block has been selected for QA.
 If the `block_id` specified is not associated with an existing block.
 
 ##### `401 UNAUTHORIZED`
+
 If the calling user is not an admin.
 
 ### Pass QA (Admin Only)
@@ -327,7 +363,15 @@ Team leader only. Adds a goal to this team's list of goals.
 
 ##### `400 BAD REQUEST`
 
-If the goal is negative or the `complete_by` date is before the `start_at` date OR the `team_id` specified is not associated with an existing team.
+If the goal is negative.
+
+##### `400 BAD REQUEST`
+
+If the `complete_by` date is before the `start_at` date.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
 
 ##### `401 UNAUTHORIZED`
 
@@ -345,7 +389,11 @@ No request body.
 
 ##### `400 BAD REQUEST`
 
-the `goal_id` specified is not associated with an existing goal OR the `team_id` specified is not associated with an existing team.
+If the `goal_id` specified is not associated with an existing goal.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
 
 ##### `401 UNAUTHORIZED`
 
@@ -357,7 +405,7 @@ If the calling user is not team leader.
 
 Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
 
-!!! Still in progress, emails are currently not sent.
+!!! Still in progress, emails for this route are not implemented.
 
 #### Request Body
 
@@ -391,7 +439,7 @@ If the calling user is not team leader.
 
 `GET api/v1/protected/teams/:team_id/applicants`
 
-Get the userIds for anyone that has requested to join this team as a map from userId the "PENDING" team status
+Get the userIds for anyone that has requested to join this team as a map from userId to the "PENDING" team status
 
 #### Request Body
 
@@ -433,7 +481,11 @@ Applied successfully.
 
 ##### `400 BAD REQUEST`
 
-If the `team_id` specified is not associated with an existing team OR if the user is already on the team"
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the user is already on the team or the user's status on this team is "PENDING".
 
 ### Approve a User
 
@@ -453,7 +505,15 @@ This member has joined the team.
 
 ##### `400 BAD REQUEST`
 
-If the `team_id` specified is not associated with an existing team OR if the `user_id` specified is not associated with a user with status "PENDING" on this team OR the user that created the request no longer exists.
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the `user_id` specified is not associated with a user with status "PENDING" on this team.
+
+##### `400 BAD REQUEST` 
+
+If the user that created the request no longer exists.
 
 ##### `401 Unauthorized`
 
@@ -477,7 +537,15 @@ This applicant has been removed from the applicant's list.
 
 ##### `400 BAD REQUEST`
 
-If the `team_id` specified is not associated with an existing team OR if the `user_id` specified is not associated with a user with status "PENDING" on this team OR the user that had created the request no longer exists.
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the `user_id` specified is not associated with a user with status "PENDING" on this team.
+
+##### `400 BAD REQUEST` 
+
+If the user that created the request no longer exists.
 
 ##### `401 Unauthorized`
 
@@ -499,9 +567,13 @@ No request body.
 
 Successfully kicked user.
 
+##### `400 BAD REQUEST` 
+
+If the `team_id` specified is not associated with an existing team.
+
 ##### `400 BAD REQUEST`
 
-If the user is no longer on the team OR the `team_id` specified is not associated with an existing team.
+If the user is no longer on the team.
 
 ##### `401 Unauthorized`
 
@@ -525,7 +597,15 @@ Successfully left team.
 
 ##### `400 BAD REQUEST`
 
-If the user is not on the team OR the `team_id` specified is not associated with an existing team OR if the user is the leader of the team. 
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the user is not on the team.
+
+##### `400 BAD REQUEST`
+
+If the user is the leader of the team.
 
 ### Disband a Team
 
@@ -573,7 +653,11 @@ Success.
 
 ##### `400 BAD REQUEST`
 
-if the `user_id` specified is not associated with a user OR if the given user is not on the team.
+If the `user_id` specified is not associated with a user.
+
+##### `400 BAD REQUEST`
+
+If the given user is not on the team.
 
 ##### `401 UNAUTHORIZED`
 
@@ -972,7 +1056,7 @@ Successfully deleted this user.
 
 ##### `400 BAD REQUEST`
 
-If he `user_id` is not associated with a user.
+If the `user_id` is not associated with a user.
 
 ##### `401 Unauthorized`
 
@@ -997,22 +1081,31 @@ Allows admins to create more admins or demote other admins.
 #### Responses
 
 ##### `200 OK`
+
 The privilege level change was successful.
 
 ##### `400 Bad Request`
+
 The requested user already has the given privilege level.
 
 ##### `400 Bad Request`
+
 There is no user associated with the given email.
 
 ##### `400 BAD REQUEST`
+
 If the request was malformed.
 
 ##### `401 Unauthorized`
+
 The password does not match the calling user's current password.
 
 ##### `401 Unauthorized`
+
 The user does not have a high enough privilege level to change the given users privilege level.
+
+- An 'ADMIN' user tries to change the privilege level of a 'SUPER_ADMIN'
+- An 'ADMIN' user tries to give another user 'SUPER_ADMIN' privilege
 
 ## Map Router
 
