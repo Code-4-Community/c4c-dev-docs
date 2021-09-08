@@ -1816,7 +1816,11 @@ Site successfully updated.
 
 ##### `400 BAD REQUEST`
 
-If the request body is malformed OR if the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+If the request body is malformed.
+
+##### `400 BAD REQUEST`
+
+If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Delete Site (Admin Only)
 
@@ -1906,7 +1910,11 @@ Successfully removed site as adopted.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist OR if the site is not adopted by the user.
+If the site id specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If the site is not adopted by the user.
 
 ### Get Adopted Sites
 
@@ -1961,7 +1969,11 @@ Activity successfully recorded.
 
 ##### `400 BAD REQUEST`
 
-If the site id specified does not exist OR if all activities are `False`.
+If the site id specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If all activities are `False`.
 
 ### Delete Stewardship Activity (Admin and Author Only)
 
