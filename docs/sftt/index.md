@@ -6,6 +6,6 @@ In this section you will find all the developer documentation related to our Spe
 
 The full API specification for our backend. This page lists every backend route and describes what it does, the request body and the possible responses. 
 
-## [ArcGIS Map Documentation](./arcgis-architecture.md)
+## [(DEPRICATED) ArcGIS Map Documentation](./arcgis-architecture.md)
 
 A thorough description of our legacy ArcGIS map technology. This has since been replaced by the Google Maps API.
