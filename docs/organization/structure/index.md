@@ -5,6 +5,14 @@ This section describes the different roles that exist within C4C and the respons
 
     **Responsibilities**
 
+    Maybe divide up into long-term vs short-term
+
+    - A list of thing 1
+    - and 2
+    - and 3
+
+    **Qualifications**
+
     - A list of thing 1
     - and 2
     - and 3
@@ -37,4 +45,10 @@ This section describes the different roles that exist within C4C and the respons
     How exciting
 
 ??? info "Tech Lead"
+    How exciting
+
+??? info "Designer"
+    How exciting
+
+??? info "Developer"
     How exciting
