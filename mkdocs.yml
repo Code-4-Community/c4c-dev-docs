@@ -25,6 +25,8 @@ nav:
     - Home: index.md
     - The Organization:
         - Home: organization/index.md
+        - Structure: 
+            - Roles: organization/structure/index.md
     - Getting Started:
         - Home: getting-started/index.md
         - Product Workflow: getting-started/product-workflow.md
