@@ -4,7 +4,7 @@ This section describes the different roles that exist within C4C and the respons
     Short description
 
     **Responsibilities**
-    
+
     - A list of thing 1
     - and 2
     - and 3
@@ -31,4 +31,10 @@ This section describes the different roles that exist within C4C and the respons
     How exciting
 
 ??? info "Director of Finance"
+    How exciting
+
+??? info "Product Manager"
+    How exciting
+
+??? info "Tech Lead"
     How exciting
