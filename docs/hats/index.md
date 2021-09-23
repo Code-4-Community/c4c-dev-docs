@@ -1,4 +1,4 @@
-# Hands Across the Sea (HATS)
+# Hands Across the Sea
 
 ## [Auth API Specification](./api-spec-auth.md)
 
