@@ -26,6 +26,7 @@ nav:
     - The Organization:
         - Home: organization/index.md
         - Constitution: organization/constitution.md
+        - Social Contract: organization/social_contract.md
         - Structure: 
             - Roles: organization/structure/index.md
     - Getting Started:
