@@ -21,37 +21,91 @@ This section describes the different roles that exist within C4C and the respons
     - Strong and thoughtful communicator 
 
 ??? info "Director of Engineering"
-    How exciting
+    The director of engineering is responsible for managing the technical side of C4C. They should have a say in or be aware of all major technical decisions made by any of the teams and should always keep the long term viability of the club in mind. 
+
+    **Responsibilities**
+
+    - Support individual teams with high level technical decisions and more complicated code
+
+    **Qualifications**
+
+    - Experience designing web applications, from ideation to a fully-deployed application
+    - Occupied a leadership position within C4C for at least 1 semester
+    - (Preferred) Experience with leading a team of developers
 
 ??? info "Director of Product"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of Design"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of Recruitment & Community Engagement"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of Marketing"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of Branding"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of PR & Communications"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Director of Finance"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Product Manager"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Tech Lead"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Designer"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
 
 ??? info "Developer"
-    How exciting
+    Short description
+
+    **Responsibilities**
+
+    **Qualifications**
