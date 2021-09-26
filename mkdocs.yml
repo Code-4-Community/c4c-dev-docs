@@ -25,6 +25,7 @@ nav:
     - Home: index.md
     - The Organization:
         - Home: organization/index.md
+        - Constitution: organization/constitution.md
         - Structure: 
             - Roles: organization/structure/index.md
     - Getting Started:
