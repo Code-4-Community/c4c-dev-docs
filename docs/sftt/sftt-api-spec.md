@@ -1822,6 +1822,40 @@ If the request body is malformed.
 
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
+### Edit a Site (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/edit`
+
+Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Every field can be `NULL`.
+
+#### Request Body
+
+```json
+{
+  "blockId": INT | NULL,
+  "address": STRING | NULL,
+  "city": STRING | NULL,
+  "zip": INT | NULL,
+  "lat": DOUBLE | NULL,
+  "lng": DOUBLE | NULL,
+  "neighborhoodId": INT | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Features of site successfully edited.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
 ### Delete Site (Admin Only)
 
 `POST api/v1/protected/sites/:site_id/delete`
