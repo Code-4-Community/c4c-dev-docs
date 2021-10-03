@@ -76,11 +76,18 @@ This section describes the different roles that exist within C4C and the respons
     **Qualifications**
 
 ??? info "Director of Finance"
-    Short description
+    The director of finance, also known by the name of treasurer, is responsible for managing the clubs finances. This includes making sure we're in compliance with regulations set out by Northeastern and Khoury, authorizing all club expenditures and keeping track of our balance throughout the year. 
 
     **Responsibilities**
+    - Creating a budget at the start of the year
+    - Authorizing all purchases
+    - Refunding team members using club accounts
+    - Ensuring we are compliant with Northeastern and Khoury policy by submitting required documents on time
+    - 
 
     **Qualifications**
+    - Good organizational skills
+    - (Preferred) Previous experience as a treasurer
 
 ??? info "Product Manager"
     Short description
