@@ -42,6 +42,7 @@ nav:
         - Jumpstart Fullstack Course: https://learn.c4cneu.com
         - Frontend Data Architecture with Redux: guides/frontend-redux.md
         - Scaffold Repositories: guides/scaffold-repos.md
+        - How To Build Your Own Website: guides/website-tutorial.md
     - Dev Ops:
         - Amazon Web Services:
             - Home: dev-ops/aws/index.md
