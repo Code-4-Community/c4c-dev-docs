@@ -1826,7 +1826,7 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 `POST api/v1/protected/sites/:site_id/edit`
 
-Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Only the `blockId` field is not required.
+Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Only the `block_id` field is not required.
 
 #### Request Body
 
