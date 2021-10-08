@@ -1826,19 +1826,19 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 `POST api/v1/protected/sites/:site_id/edit`
 
-Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Every field can be `NULL`.
+Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Only the `blockId` field is not required.
 
 #### Request Body
 
 ```json
 {
   "blockId": INT | NULL,
-  "address": STRING | NULL,
-  "city": STRING | NULL,
-  "zip": INT | NULL,
-  "lat": DOUBLE | NULL,
-  "lng": DOUBLE | NULL,
-  "neighborhoodId": INT | NULL
+  "address": STRING,
+  "city": STRING,
+  "zip": STRING,
+  "lat": DOUBLE,
+  "lng": DOUBLE,
+  "neighborhoodId": INT
 }
 ```
 
@@ -1850,7 +1850,7 @@ Features of site successfully edited.
 
 ##### `400 BAD REQUEST`
 
-If the `site_id` specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+If any of the specified `site_id`, `block_id`, or `neighborhood_id` are invalid. An invalid id is a non-existent id or the id of a deleted site, block, or neighborhood.
 
 ##### `401 UNAUTHORIZED`
 
