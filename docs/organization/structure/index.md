@@ -122,11 +122,22 @@ This section describes the different roles that exist within C4C and the respons
     - (Preferred) Previous experience as a treasurer
 
 ??? info "Product Manager"
-    Short description
+    Product Managers are responsible for communicating with partners and leading product teams to create and deliver products that meet the partner's needs.
 
     **Responsibilities**
+    
+    - Communicate closely with partners to keep them updated on development and to remain aware of their needs
+    - Detail product specifications and create actionable tickets for developers
+    - Prioritize development and ensure the project is on track
+    - Lead weekly development meetings
+    - Ensure team members have the resources they need to grow and deliver high-quality work
 
     **Qualifications**
+
+    - Strong communication and organizational skills
+    - Knowledge of Agile
+    - Ability to predict challenges and plan short-term and long-term development
+    
 
 ??? info "Tech Lead"
     Short description
