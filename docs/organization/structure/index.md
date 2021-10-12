@@ -34,11 +34,19 @@ This section describes the different roles that exist within C4C and the respons
     - (Preferred) Experience with leading a team of developers
 
 ??? info "Director of Product"
-    Short description
+    The Director of Product is responsible for creating new efficiencies for the product lifecycle and working with the other Product Managers to facilitate a smooth process from start to finish.
 
     **Responsibilities**
-
+    - Find new areas for the product development process can improve
+    - Support the PMs and work on onboarding new ones through challenges in the development process.
+    - Read and edit documentation created by the PMs to ensure clarity.
+    - Support other team members including the President and Director of Engineering
+    
     **Qualifications**
+    - Experience working as a product manager in a club or on co-op
+    - Occupied a leadership position within C4C for at least 1 semester
+    - Knowledge of Agile
+    - Strong communicator and organized
 
 ??? info "Director of Design"
     Short description
@@ -62,18 +70,35 @@ This section describes the different roles that exist within C4C and the respons
     **Qualifications**
 
 ??? info "Director of Branding"
-    Short description
+    The director of branding is responsible for helping shape Code4Community’s brand, both visually and by voice. They create the club’s outreach assets, including social platforms and promotional material.
 
     **Responsibilities**
-
+    - Create assets for social media platforms such as Instagram and LinkedIn, as well as email newsletters
+    - Design promotional materials for outreach/tabling events 
+    - Shape branding guidelines for C4C
+    
     **Qualifications**
+    - Eye for design
+    - Strong organizational and communication skills
+    - Sense of brand voice and direction
+    - (Preferred) Experience with Figma
 
 ??? info "Director of PR & Communications"
-    Short description
+    The Director of PR & Communications is responsible for being a bridge between the organization and the Khoury College, as well as other Northeastern student organizations, and companies in the technology or design industry. They are also in charge of the club's events schedule planning. This includes, but isn't limited to, reaching out to companies & student organizations, planning workshops and events, maintaining current external relationships, and assigning tasks to C4C officers to ensure all events go smoothly and are beneficial to C4C members and audience. They should work closely with the President, the Director of Marketing, the Director of Design, and the Director of Recruitment and Community Engagement to guarantee event planning, advertisement, and attendance.
 
     **Responsibilities**
-
+    - Create semesterly schedule of events with action items for each event
+    - Reach out to student organizations and companies to set up collaboration events
+    - Communicate closely with the President to create a diverse event series for C4C members
+    - Work alongside of the Marketing Director and the Director of Design to engage members and reach more students
+    - Support the Director of Recruitment and Community Engagement in creating an inclusive and friendly environment for everyone at C4C
+    
     **Qualifications**
+    - Strong planning and organization skills
+    - Great communicator, both verbal and written
+    - Good understanding of Code4Community's mission and culture, as well as its audience (i.e. students interested in the club)
+    - (Preferred) Experience with event planning and organization as well as managing a large group of people
+    - (Preferred) Occupied a position at C4C for at least a semester
 
 ??? info "Director of Finance"
     The director of finance, also known by the name of treasurer, is responsible for managing the clubs finances. This includes making sure we're in compliance with regulations set out by Northeastern and Khoury, authorizing all club expenditures and keeping track of our balance throughout the year. 
@@ -104,11 +129,17 @@ This section describes the different roles that exist within C4C and the respons
     **Qualifications**
 
 ??? info "Designer"
-    Short description
+    At Code4Community, we are on a mission to create free, beautiful, and easy to use software for non-profits in the Boston area. C4C is searching for an experienced product designer looking to a design impactful software for these non-profits.
 
     **Responsibilities**
-
+    - Lead and design the flows and experience for the client’s needs and bring those to life as a useful product alongside a team of developers and project managers
+    - Communicate ideas effectively to the team and continue to evolve and iterate on your designs as well as past designs
+    
     **Qualifications**
+    - 1+ year of experience on designing and scaling digital products
+    - Experience with Figma, sketch, or other design tools. We use Figma here :slightly_smiling_face:
+    - A beautiful portfolio with previous product design work
+    - A passion for helping non-profit organizations
 
 ??? info "Developer"
     Short description
