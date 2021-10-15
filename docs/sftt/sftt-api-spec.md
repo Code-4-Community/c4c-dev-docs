@@ -2067,3 +2067,109 @@ No request body.
 ##### `400 BAD REQUEST`
 
 If the `site_id` specified does not exist.
+
+## Report Router
+
+The report router is used to get reports on the status of trees and adoptions.
+
+### Get Community Stats
+
+`GET api/v1/report/stats`
+
+Get statistics on trees and adoptions available to the public.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns the number of current adopters, trees currently adopted, and all stewardship activities ever performed.
+
+```json
+{
+  "community_stats": {
+    "adopter_count": INT,
+    "trees_adopted": INT,
+    "stewardship_activities": INT
+  }
+}
+```
+
+### Get Adoption Report
+
+`GET api/v1/protected/report/adoption`
+
+Get information about adopted sites.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and stewardship activities for each currently adopted site.
+
+```json
+{
+  "adoption_report": [
+    {
+      "site_id": INT,
+      "address": STRING,
+      "name": STRING,
+      "email": STRING,
+      "date_adopted": TIMESTAMP,
+      "activity_count": INT,
+      "neighborhood": STRING
+    },
+    ... 
+  ]
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin.
+
+### Get Stewardship Report
+
+`GET api/v1/protected/report/stewardship`
+
+Get information about all stewardship activities.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and the actions performed for each stewardship activity ever performed.
+
+```json
+{
+  "stewardship_report": [
+    {
+      "site_id": INT,
+      "address": STRING,
+      "name": STRING,
+      "email": STRING,
+      "date_performed": TIMESTAMP,
+      "watered": BOOLEAN,
+      "mulched": BOOLEAN,
+      "cleaned": BOOLEAN,
+      "weeded": BOOLEAN
+    },
+    ...
+  ]
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin.
