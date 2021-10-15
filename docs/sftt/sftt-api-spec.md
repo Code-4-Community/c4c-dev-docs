@@ -1426,6 +1426,7 @@ Used to import sites into the database. See below for a description of each ambi
       "city": STRING,
       "zip": STRING,
       "address": STRING,
+      "neighborhood_id": INT,
       "deleted_at": TIMESTAMP,
       "site_id": INT,
       "user_id": INT,
@@ -1585,6 +1586,7 @@ Used to create a new site. Will create two entries in the database. One in the `
     "city": STRING,
     "zip": STRING,
     "address": STRING,
+    "neighborhood_id": INT,
     "tree_present": BOOLEAN | NULL,
     "status": STRING | NULL,
     "genus": STRING | NULL,
@@ -1660,6 +1662,7 @@ Creates a potential site, which is a place where the city could potentially plac
   "city": STRING,
   "zip": STRING,
   "address": STRING,
+  "neighborhood_id": INT,
   "deleted_at": TIMESTAMP,
   "light_pole": BOOLEAN,
   "drive_way": BOOLEAN,
@@ -1703,6 +1706,7 @@ No request body.
   "city": STRING,
   "zip": STRING,
   "address": STRING,
+  "neighborhood_id": INT,
   "entries": [
     {
       "id": INT,
