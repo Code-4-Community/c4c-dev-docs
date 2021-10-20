@@ -2112,7 +2112,7 @@ No request body.
 
 ##### `200 OK`
 
-Returns a list of information about adopters and stewardship activities for each currently adopted site.
+Returns a list of information about adopters and stewardship activities for each currently adopted site, grouped by user and in alphabetical order.
 
 ```json
 {
@@ -2149,7 +2149,7 @@ No request body.
 
 ##### `200 OK`
 
-Returns a list of information about adopters and the actions performed for each stewardship activity ever performed.
+Returns a list of information about adopters and the actions performed for each stewardship activity ever performed, grouped by `site_id` and in reverse chronological order (most recent first).
 
 ```json
 {
