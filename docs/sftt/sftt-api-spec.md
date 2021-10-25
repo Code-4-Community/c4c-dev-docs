@@ -2135,6 +2135,36 @@ Returns a list of information about adopters and stewardship activities for each
 
 If the user is not an admin.
 
+### Get Adoption Report as CSV
+
+`GET api/v1/protected/report/csv/adoption?previousDays=INT`
+
+Get information about adopted sites as a CSV.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past that the report covers. The report only includes information about 
+sites adopted in the past `previousDays`. This value should be specified, by default it is set to 
+include all adopted sites.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and stewardship activities for each currently adopted site, 
+grouped by user and in alphabetical order, as a CSV formatted as a string.
+
+```
+Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
+1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, 1, East Boston
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin. 
+
 ### Get Stewardship Report
 
 `GET api/v1/protected/report/stewardship`
@@ -2173,3 +2203,34 @@ Returns a list of information about adopters and the actions performed for each 
 ##### `401 UNAUTHORIZED`
 
 If the user is not an admin.
+
+### Get Stewardship Report as CSV
+
+`GET api/v1/protected/report/csv/stewardship?previousDays=INT`
+
+Get information about stewardship activities as a CSV.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past that the report covers. The report only includes information about 
+stewardship activities performed in the past `previousDays`. This value should be specified, by default it is set to 
+include all stewardship activities.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and the actions performed for each stewardship activity 
+ever performed, grouped by `site_id` and in reverse chronological order (most recent first), 
+as a CSV formatted as a string.
+
+```
+Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded
+1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, TRUE, FALSE, FALSE, FALSE
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin. 
