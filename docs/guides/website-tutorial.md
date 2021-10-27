@@ -10,9 +10,8 @@ For people unfamiliar with mkdocs and it's powers, [this](https://squidfunk.gith
 ### Clone 
 You can clone a repository by going to the repo's page;
 
-```
-What's a repository? It's a directory or a storage space where your projects can live. Every time you create a Git project, there will be a `./git` folder which keeps track of all your changes and builds your work history over time. If you delete the `./git` folder, your project's history will also be deleted.
-```
+> What's a repository? It's a directory or a storage space where your projects can live. Every time you create a Git project, there will be a `./git` folder which keeps track of all your changes and builds your work history over time. If you delete the `./git` folder, your project's history will also be deleted.
+
 There, you will see different buttons, including a green button labeled "Code." If you click on it, you are able to access the repository's link and can copy it by clicking on the button right next to the link, or selecting and copying the link manually. 
 
 ![clone Picture](..\img\clonepic.png)
