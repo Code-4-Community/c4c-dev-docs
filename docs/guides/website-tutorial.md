@@ -21,13 +21,33 @@ Once you are at your dev environment (for today we're using Visual Studio Code),
 ![Terminal Clone](..\img\terminalclone.png)
 
 ### Pull Requests
-A pull request is a an event in Git where a contributor will ask the maintainer of a Git repository to review code that they want to merge into a project. Pull requests show differences between the content; the changes, additions, and subtractions are shown in green and red. Once a pull request is opened, you can discuss and review potential changes. If a pull request is approved, it will merge your changes directly into the main repository.
+
+At it's core, a pull request answers the question: "What did you change?".
+
+A pull request is an event where you submit code contributions in order to merge them into an ongoing project. Pull requests allow you to request feedback on your changes, contribute to source code that you don't own, and make it clear what you changed. Pull requests create a formal process of reviewing code before we submit to prevent any breakage. 
+
+Before creating a pull request, the first thing you have to do is create a `branch`. A branch is a copy of the original source code that you can change completely without affecting the `master`. The default branch name in Git is master. You can create a new branch by typing:
+
+`git checkout -b nameofbranch`
+
+This will switch you off of the master branch and also create a new branch named "nameofbranch". After, there will be a message confirming that you have switched out. Now you can start making edits on the new branch that you have created.
+
+Once you have finished making changes, you create a pull request to ask for reviewers (you can review your own changes if working independently!) to look at the changes to request them or approve them. Pull requests allow us to look at the source code side-by-side from what it was to what it is proposed to be, so we can understand the implications of what we are trying to change. If a pull request is approved, the branch you created is merged into the master and your changes become part of the new source code.
 
 ### Commiting Changes
 -sadaf
 
 ### Pushing Changes
-- bayden
+
+After we have commited the files that you have staged in your local repository, we want to specify the remote repository URL where your local repository will be pushed. We can type:
+
+`git remote add origin "url"`
+
+Now we can push the code in your local repository to GitHub using:
+
+`git push -u origin master`
+
+You will be asked to enter your username and password. After, you can go to GitHub to view the files in your repository that you successfully pushed!
 
 ### Setting Up Your Profile
 And I'll do this section - Floris
