@@ -4,9 +4,6 @@ For people unfamiliar with mkdocs and it's powers, [this](https://squidfunk.gith
 
 ## Git Overview
 
-### GitHub Pages
--are you doing this too @Floris
-
 ### Clone 
 You can clone a repository by going to the repo's page;
 
@@ -49,14 +46,32 @@ Now we can push the code in your local repository to GitHub using:
 
 You will be asked to enter your username and password. After, you can go to GitHub to view the files in your repository that you successfully pushed!
 
+### GitHub Pages
+
+[GitHub Pages](https://pages.github.com/) is the easiest way to host your website! There's 2 ways to host your website.
+
+1. Name your _public_ repository your username. This will automatically host your website on [username].github.io.
+2. Go to the settings page of your repository and enable GitHub pages. This will host your website on [repo_name].github.io.
+
+Changing the URL requires you to purchase a domain name. There are many vendors out there, and a quick Google search will give you many options. Once you've purchased a domain name, there's 2 steps to changing the URL.
+
+1. Add CNAME record to your repository. It will look something like [this](https://github.com/florisdobber/florisdobber/blob/master/CNAME).
+2. Change your DNS settings by adding custom records. This works differently depending on who hosts your domain. See below for an example of the settings for GitHub. The only thing you have to change is the host names.
+
+![DNS Settings](..\img\dns_settings.png)
+
+
 ### Setting Up Your Profile
-And I'll do this section - Floris
+
+The repository [username] is a special repository. As described above, it has GitHub pages automatically enabled, but it also does something else. The `README.md` file will appear on your public profile! This is a great way for you to easily customize your GitHub profile and connect with people that are checking out your code (recruiters). ([Here](https://github.com/florisdobber) is an example of what it looks like) It's literally as simple as creating a repository with the name set to your GitHub username and then editing the `README.md.`.
 
 ## HTML + CSS
 
 ### TODO for RYAN - include how you can double click on an html file to open it on the browser
 
 ## Setting Up the Dev Environment
+
+My personal preference for front-end web development is [Visual Studio Code](https://code.visualstudio.com/). Once you open that up, navigate to the GitHub folder on your local machine and open it. Now you should be able to open and edit all your files. Viewing your website locally should be as easy as navigating to the folder containing your `index.html` file and opening the file in your preferred browser. Saving your code should refresh the page automatically, but you might need to manually refresh the page in the browser.
 
 ## Additional Resources
 
