@@ -46,6 +46,8 @@ Try to keep commits small and simple enough to describe with one short commit me
 
 `git commit -m "write your commit message here, right after the -m flag"`
 
+Now that your changes have been saved locally, the next step is pushing changes to the remote repository. 
+
 ### Pushing Changes
 
 After we have commited the files that you have staged in your local repository, we want to specify the remote repository URL where your local repository will be pushed. We can type:
