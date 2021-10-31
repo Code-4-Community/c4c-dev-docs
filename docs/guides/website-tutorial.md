@@ -32,7 +32,21 @@ This will switch you off of the master branch and also create a new branch named
 Once you have finished making changes, you create a pull request to ask for reviewers (you can review your own changes if working independently!) to look at the changes to request them or approve them. Pull requests allow us to look at the source code side-by-side from what it was to what it is proposed to be, so we can understand the implications of what we are trying to change. If a pull request is approved, the branch you created is merged into the master and your changes become part of the new source code.
 
 ### Commiting Changes
--sadaf
+
+To locally save changes that you've made, the changes have to be added and committed. 
+Adding “stages” changes, i.e. it stores your changes in a temporary location that will be included in your commit.
+Add each file you've changed one by one with
+
+`git add nameOfFile.js`
+
+You can use `git status` to see a list of files that have been "staged" or "unstaged", be sure to add each file that you want to include in the commit.
+Once you've added all your files, you're ready to commit. Committing is how you save changes that have been added. 
+One of the most important parts of a commit is the commit message, a short note that gives a broad summary of the changes you've made so that your future self and other contributers can easily understand it. 
+Try to keep commits small and simple enough to describe with one short commit message. To commit with a message, run
+
+`git commit -m "write your commit message here, right after the -m flag"`
+
+Now that your changes have been saved locally, the next step is pushing changes to the remote repository. 
 
 ### Pushing Changes
 
