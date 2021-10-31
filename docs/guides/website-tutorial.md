@@ -11,11 +11,12 @@ You can clone a repository by going to the repo's page;
 
 There, you will see different buttons, including a green button labeled "Code." If you click on it, you are able to access the repository's link and can copy it by clicking on the button right next to the link, or selecting and copying the link manually. 
 
-![clone Picture](..\img\clonepic.png)
+![clone Picture](../img/clonepic.png)
 
 Once you are at your dev environment (for today we're using Visual Studio Code), we can open a terminal (from the top menu) and type in `git clone [repo address]` like the picture below and hit enter.
 
-![Terminal Clone](..\img\terminalclone.png)
+![Terminal Clone](../img/terminalclone.png)
+<img src="..\img\terminalclone.png" alt="Test"></img>
 
 ### Pull Requests
 
@@ -72,7 +73,7 @@ Changing the URL requires you to purchase a domain name. There are many vendors 
 1. Add CNAME record to your repository. It will look something like [this](https://github.com/florisdobber/florisdobber/blob/master/CNAME).
 2. Change your DNS settings by adding custom records. This works differently depending on who hosts your domain. See below for an example of the settings for GitHub. The only thing you have to change is the host names.
 
-![DNS Settings](..\img\dns_settings.png)
+![DNS Settings](../img/dns_settings.png)
 
 
 ### Setting Up Your Profile
