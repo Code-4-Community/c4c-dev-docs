@@ -81,8 +81,6 @@ The repository [username] is a special repository. As described above, it has Gi
 
 ## HTML + CSS
 
-### TODO for RYAN - include how you can double click on an html file to open it on the browser
-
 ## Setting Up the Dev Environment
 
 My personal preference for front-end web development is [Visual Studio Code](https://code.visualstudio.com/). Once you open that up, navigate to the GitHub folder on your local machine and open it. Now you should be able to open and edit all your files. Viewing your website locally should be as easy as navigating to the folder containing your `index.html` file and opening the file in your preferred browser. Saving your code should refresh the page automatically, but you might need to manually refresh the page in the browser.
