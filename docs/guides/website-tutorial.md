@@ -16,7 +16,6 @@ There, you will see different buttons, including a green button labeled "Code." 
 Once you are at your dev environment (for today we're using Visual Studio Code), we can open a terminal (from the top menu) and type in `git clone [repo address]` like the picture below and hit enter.
 
 ![Terminal Clone](../img/terminalclone.png)
-<img src="..\img\terminalclone.png" alt="Test"></img>
 
 ### Pull Requests
 
