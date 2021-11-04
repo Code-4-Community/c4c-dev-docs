@@ -2071,3 +2071,170 @@ No request body.
 ##### `400 BAD REQUEST`
 
 If the `site_id` specified does not exist.
+
+## Report Router
+
+The report router is used to get reports on the status of trees and adoptions.
+
+### Get Community Stats
+
+`GET api/v1/report/stats`
+
+Get statistics on trees and adoptions available to the public.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns the number of current adopters, trees currently adopted, and all stewardship activities ever performed.
+
+```json
+{
+  "community_stats": {
+    "adopter_count": INT,
+    "trees_adopted": INT,
+    "stewardship_activities": INT
+  }
+}
+```
+
+### Get Adoption Report
+
+`GET api/v1/protected/report/adoption`
+
+Get information about adopted sites.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and stewardship activities for each currently adopted site, grouped by user and in alphabetical order.
+
+```json
+{
+  "adoption_report": [
+    {
+      "site_id": INT,
+      "address": STRING,
+      "name": STRING,
+      "email": STRING,
+      "date_adopted": TIMESTAMP,
+      "activity_count": INT,
+      "neighborhood": STRING
+    },
+    ... 
+  ]
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin.
+
+### Get Adoption Report as CSV
+
+`GET api/v1/protected/report/csv/adoption?previousDays=INT`
+
+Get information about adopted sites as a CSV.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past that the report covers. The report only includes information about 
+sites adopted in the past `previousDays`. This value should be specified, by default it is set to 
+include all adopted sites.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and stewardship activities for each currently adopted site, 
+grouped by user and in alphabetical order, as a CSV formatted as a string.
+
+```
+Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
+1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, 1, East Boston
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin. 
+
+### Get Stewardship Report
+
+`GET api/v1/protected/report/stewardship`
+
+Get information about all stewardship activities.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and the actions performed for each stewardship activity ever performed, grouped by `site_id` and in reverse chronological order (most recent first).
+
+```json
+{
+  "stewardship_report": [
+    {
+      "site_id": INT,
+      "address": STRING,
+      "name": STRING,
+      "email": STRING,
+      "date_performed": TIMESTAMP,
+      "watered": BOOLEAN,
+      "mulched": BOOLEAN,
+      "cleaned": BOOLEAN,
+      "weeded": BOOLEAN
+    },
+    ...
+  ]
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin.
+
+### Get Stewardship Report as CSV
+
+`GET api/v1/protected/report/csv/stewardship?previousDays=INT`
+
+Get information about stewardship activities as a CSV.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past that the report covers. The report only includes information about 
+stewardship activities performed in the past `previousDays`. This value should be specified, by default it is set to 
+include all stewardship activities.
+
+#### Responses
+
+##### `200 OK`
+
+Returns a list of information about adopters and the actions performed for each stewardship activity 
+ever performed, grouped by `site_id` and in reverse chronological order (most recent first), 
+as a CSV formatted as a string.
+
+```
+Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded
+1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, TRUE, FALSE, FALSE, FALSE
+```
+
+##### `401 UNAUTHORIZED`
+
+If the user is not an admin. 
