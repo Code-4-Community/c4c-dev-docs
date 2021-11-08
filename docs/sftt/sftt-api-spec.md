@@ -1566,6 +1566,38 @@ The number of days in the past the leaderboard is representing. Only blocks comp
 
 If the request was malformed.
 
+## Neighborhoods Router
+
+The neighborhoods router is used to handle all the neighborhoods.
+
+### Edit Canopy Coverage (Admin Only)
+
+`POST api/v1/protected/neighborhoods/:neighborhood_id/edit_canopy`
+
+Used to edit the specified neighborhood's `canopy_coverage`.
+
+#### Request Body
+
+```json
+{
+  "canopyCoverage": DOUBLE
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Neighborhood's `canopy_coverage` successfully edited to `canopyCoverage`.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed or if the given `canopyCoverage` is negative or greater than one.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
 ## Sites Router
 
 The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
