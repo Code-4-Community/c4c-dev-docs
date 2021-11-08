@@ -1269,7 +1269,7 @@ The `geometry` field represents the polygon, multi-polygon or other geometric sh
 ]
 ```
 
-### Import Blocks
+### Import Blocks (Super Admin Only)
 
 `POST api/v1/protected/import/blocks`
 
@@ -1306,7 +1306,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Neighborhoods
+### Import Neighborhoods (Super Admin Only)
 
 `POST api/v1/protected/import/neighborhoods`
 
@@ -1344,7 +1344,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Reservations
+### Import Reservations (Super Admin Only)
 
 `POST api/v1/protected/import/reservations`
 
@@ -1381,7 +1381,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Sites
+### Import Sites (Super Admin Only)
 
 `POST api/v1/protected/import/sites`
 
@@ -2134,7 +2134,7 @@ Returns the number of current adopters, trees currently adopted, and all steward
 }
 ```
 
-### Get Adoption Report
+### Get Adoption Report (Admin Only)
 
 `GET api/v1/protected/report/adoption`
 
@@ -2171,7 +2171,7 @@ Returns a list of information about adopters and stewardship activities for each
 
 If the user is not an admin.
 
-### Get Adoption Report as CSV
+### Get Adoption Report as CSV (Admin Only)
 
 `GET api/v1/protected/report/csv/adoption?previousDays=INT`
 
@@ -2201,7 +2201,7 @@ Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
 
 If the user is not an admin. 
 
-### Get Stewardship Report
+### Get Stewardship Report (Admin Only)
 
 `GET api/v1/protected/report/stewardship`
 
@@ -2240,7 +2240,7 @@ Returns a list of information about adopters and the actions performed for each 
 
 If the user is not an admin.
 
-### Get Stewardship Report as CSV
+### Get Stewardship Report as CSV (Admin Only)
 
 `GET api/v1/protected/report/csv/stewardship?previousDays=INT`
 
