@@ -51,25 +51,55 @@ This section describes the different roles that exist within C4C and the respons
     - Strong communicator and organized
 
 ??? info "Director of Design"
-    Short description
+    At Code4Community, we are on a mission to create free, beautiful, and easy to use software for non-profits in the Boston area. C4C is searching for an experienced Designer looking to oversee the design work for the club as a whole and to manage the product designers for the non-profits we aim to help.
 
     **Responsibilities**
 
+    - Lead the product designers for each team and make sure everything is on the right track
+    - Work with the Brand Designer and and Director of Marketing to create beautiful graphics for the club
+
     **Qualifications**
+    
+    - 2+ year of experience on designing and scaling digital products
+    - Experience with Figma, sketch, or other design tools. We use Figma here :slightly_smiling_face:
+    - A keen eye for graphic and typographic design
+    - A beautiful portfolio
+    - A passion for helping non-profit organizations
 
 ??? info "Director of Recruitment & Community Engagement"
-    Short description
+    The director of recruitment is primarily responsible for overseeing the recruitment process. Besides that, they should focus on membership retention by helping out at events and making people feel welcome. 
 
     **Responsibilities**
 
+    - The recruitment cycle (advertising, applications, interviews, accepting & rejecting applicants)
+    - Overall recruitment philosophy
+    - Organizing the Slack workspace
+    - Attend all recruiting events
+    - Internally distribute marketing materials 
+    - Work with the director of marketing to organize events
+
     **Qualifications**
+
+    - Experience with Slack and Mailchimp
+    - Open minded and a good communicator
+    - Comfortable talking to people
+    - Friendly and engaging
 
 ??? info "Director of Marketing"
-    Short description
+    The director of marketing is responsible for our social media channels, organizing events and our branding. Working together with the director of design, the director of branding and the director of recruitment they should ensure a positive and cohesive outward image of C4C.
 
     **Responsibilities**
 
+    - Ensure there is frequent activity on all our social media channels
+    - Organize events with companies and other clubs
+    - Assist others with outward facing communication
+
     **Qualifications**
+
+    - Experience with Slack and Mailchimp
+    - Committed and hard working
+    - Strong leadership skills
+    - Interest in marketing
 
 ??? info "Director of Branding"
     The director of branding is responsible for helping shape Code4Community’s brand, both visually and by voice. They create the club’s outreach assets, including social platforms and promotional material.
