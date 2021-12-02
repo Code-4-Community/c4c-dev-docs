@@ -1607,23 +1607,28 @@ The sites router is used to handle all the sites and create new ones. A site can
 `POST api/v1/protected/sites/create`
 
 Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+`NULL` `BOOLEAN`s will be treated as `false`.
+
+All measurements should be given in inches.
+Note that while some measurements are accepted as strings to work with existing data, new 
+measurements should be given as numbers and assumed to be in inches.
 
 #### Request Body
 
 ```json
 {
-    "block_id": INT,
+    "blockId": INT,
     "lat": LONG,
     "lng": LONG,
     "city": STRING,
     "zip": STRING,
     "address": STRING,
-    "neighborhood_id": INT,
-    "tree_present": BOOLEAN | NULL,
+    "neighborhoodId": INT,
+    "treePresent": BOOLEAN | NULL,
     "status": STRING | NULL,
     "genus": STRING | NULL,
     "species": STRING | NULL,
-    "common_name": STRING | NULL,
+    "commonName": STRING | NULL,
     "confidence": STRING | NULL,
     "diameter": DOUBLE | NULL,
     "circumference": DOUBLE | NULL,
@@ -1633,30 +1638,30 @@ Used to create a new site. Will create two entries in the database. One in the `
     "condition": STRING | NULL,
     "discoloring": BOOLEAN | NULL,
     "leaning": BOOLEAN | NULL,
-    "constricting_grate": BOOLEAN | NULL,
+    "constrictingGrate": BOOLEAN | NULL,
     "wounds": BOOLEAN | NULL,
     "pooling": BOOLEAN | NULL,
-    "stakes_with_wires": BOOLEAN | NULL,
-    "stakes_without_wires": BOOLEAN | NULL,
+    "stakesWithWires": BOOLEAN | NULL,
+    "stakesWithoutWires": BOOLEAN | NULL,
     "light": BOOLEAN | NULL,
     "bicycle": BOOLEAN | NULL,
-    "bag_empty": BOOLEAN | NULL,
-    "bag_filled": BOOLEAN | NULL,
+    "bagEmpty": BOOLEAN | NULL,
+    "bagFilled": BOOLEAN | NULL,
     "tape": BOOLEAN | NULL,
-    "sucker_growth": BOOLEAN | NULL,
-    "site_type": STRING | NULL,
-    "sidewalk_width": STRING | NULL,
-    "site_width": STRING | NULL,
-    "site_length": STRING | NULL,
+    "suckerGrowth": BOOLEAN | NULL,
+    "siteType": STRING | NULL,
+    "sidewalkWidth": STRING | NULL,
+    "siteWidth": DOUBLE | NULL,
+    "siteLength": DOUBLE | NULL,
     "material": STRING | NULL,
-    "raised_bed": BOOLEAN | NULL,
-    "fence": STRING | NULL,
-    "trash": STRING | NULL,
-    "wires": STRING | NULL,
-    "grate": STRING | NULL,
-    "stump": STRING | NULL,
-    "tree_notes": STRING | NULL,
-    "site_notes": STRING | NULL
+    "raisedBed": BOOLEAN | NULL,
+    "fence": BOOLEAN | NULL,
+    "trash": BOOLEAN | NULL,
+    "wires": BOOLEAN | NULL,
+    "grate": BOOLEAN | NULL,
+    "stump": BOOLEAN | NULL,
+    "treeNotes": STRING | NULL,
+    "siteNotes": STRING | NULL
 }
 ```
 
@@ -1720,6 +1725,7 @@ If the request body is malformed.
 `GET api/v1/sites/:site_id`
 
 Returns all the info about a specific site. This includes all the entries linked to the site, in reverse chronological order (most recent first).
+Measurements are given in inches.
 
 #### Request Body
 
@@ -1744,11 +1750,11 @@ No request body.
       "id": INT,
       "username": USERNAME,
       "updated_at": TIMESTAMP,
-      "tree_present": BOOLEAN | NULL,
+      "treePresent": BOOLEAN | NULL,
       "status": STRING | NULL,
       "genus": STRING | NULL,
       "species": STRING | NULL,
-      "common_name": STRING | NULL,
+      "commonName": STRING | NULL,
       "confidence": STRING | NULL,
       "diameter": DOUBLE | NULL,
       "circumference": DOUBLE | NULL,
@@ -1758,30 +1764,30 @@ No request body.
       "condition": STRING | NULL,
       "discoloring": BOOLEAN | NULL,
       "leaning": BOOLEAN | NULL,
-      "constricting_grate": BOOLEAN | NULL,
+      "constrictingGrate": BOOLEAN | NULL,
       "wounds": BOOLEAN | NULL,
       "pooling": BOOLEAN | NULL,
-      "stakes_with_wires": BOOLEAN | NULL,
-      "stakes_without_wires": BOOLEAN | NULL,
+      "stakesWithWires": BOOLEAN | NULL,
+      "stakesWithoutWires": BOOLEAN | NULL,
       "light": BOOLEAN | NULL,
       "bicycle": BOOLEAN | NULL,
-      "bag_empty": BOOLEAN | NULL,
-      "bag_filled": BOOLEAN | NULL,
+      "bagEmpty": BOOLEAN | NULL,
+      "bagFilled": BOOLEAN | NULL,
       "tape": BOOLEAN | NULL,
-      "sucker_growth": BOOLEAN | NULL,
-      "site_type": STRING | NULL,
-      "sidewalk_width": STRING | NULL,
-      "site_width": STRING | NULL,
-      "site_length": STRING | NULL,
+      "suckerGrowth": BOOLEAN | NULL,
+      "siteType": STRING | NULL,
+      "sidewalkWidth": STRING | NULL,
+      "siteWidth": DOUBLE | NULL,
+      "siteLength": DOUBLE | NULL,
       "material": STRING | NULL,
-      "raised_bed": STRING | NULL,
-      "fence": STRING | NULL,
-      "trash": STRING | NULL,
-      "wires": STRING | NULL,
-      "grate": STRING | NULL,
-      "stump": STRING | NULL,
-      "tree_notes": STRING | NULL,
-      "site_notes": STRING | NULL,
+      "raisedBed": BOOLEAN | NULL,
+      "fence": BOOLEAN | NULL,
+      "trash": BOOLEAN | NULL,
+      "wires": BOOLEAN | NULL,
+      "grate": BOOLEAN | NULL,
+      "stump": BOOLEAN | NULL,
+      "treeNotes": STRING | NULL,
+      "siteNotes": STRING | NULL,
       "adopter": USERNAME | NULL,
     },
     ...
@@ -1797,17 +1803,23 @@ If the `site_id` specified is invalid.
 
 `POST api/v1/protected/sites/:site_id/update`
 
-Used to update the state of a site. A new entry will be made in the `site_entries` table that will record the latest state of the site and so update the state of that site. Every field can be `NULL`.
+Used to update the state of a site. A new entry will be made in the `site_entries` table that will 
+record the latest state of the site and so update the state of that site. Every field can be `NULL`. 
+`NULL` `BOOLEAN`s will be treated as `false`. 
+
+All measurements should be given in inches.
+Note that while some measurements are accepted as strings to work with existing data, new 
+measurements should be given as numbers and assumed to be in inches.
 
 #### Request Body
 
 ```json
 {
-  "tree_present": BOOLEAN | NULL,
+  "treePresent": BOOLEAN | NULL,
   "status": STRING | NULL,
   "genus": STRING | NULL,
   "species": STRING | NULL,
-  "common_name": STRING | NULL,
+  "commonName": STRING | NULL,
   "confidence": STRING | NULL,
   "diameter": DOUBLE | NULL,
   "circumference": DOUBLE | NULL,
@@ -1817,30 +1829,30 @@ Used to update the state of a site. A new entry will be made in the `site_entrie
   "condition": STRING | NULL,
   "discoloring": BOOLEAN | NULL,
   "leaning": BOOLEAN | NULL,
-  "constricting_grate": BOOLEAN | NULL,
+  "constrictingGrate": BOOLEAN | NULL,
   "wounds": BOOLEAN | NULL,
   "pooling": BOOLEAN | NULL,
-  "stakes_with_wires": BOOLEAN | NULL,
-  "stakes_without_wires": BOOLEAN | NULL,
+  "stakesWithWires": BOOLEAN | NULL,
+  "stakesWithoutWires": BOOLEAN | NULL,
   "light": BOOLEAN | NULL,
   "bicycle": BOOLEAN | NULL,
-  "bag_empty": BOOLEAN | NULL,
-  "bag_filled": BOOLEAN | NULL,
+  "bagEmpty": BOOLEAN | NULL,
+  "bagFilled": BOOLEAN | NULL,
   "tape": BOOLEAN | NULL,
-  "sucker_growth": BOOLEAN | NULL,
-  "site_type": STRING | NULL,
-  "sidewalk_width": STRING | NULL,
-  "site_width": STRING | NULL,
-  "site_length": STRING | NULL,
+  "suckerGrowth": BOOLEAN | NULL,
+  "siteType": STRING | NULL,
+  "sidewalkWidth": STRING | NULL,
+  "siteWidth": DOUBLE | NULL,
+  "siteLength": DOUBLE | NULL,
   "material": STRING | NULL,
-  "raised_bed": BOOLEAN | NULL,
-  "fence": STRING | NULL,
-  "trash": STRING | NULL,
-  "wires": STRING | NULL,
-  "grate": STRING | NULL,
-  "stump": STRING | NULL,
-  "tree_notes": STRING | NULL,
-  "site_notes": STRING | NULL
+  "raisedBed": BOOLEAN | NULL,
+  "fence": BOOLEAN | NULL,
+  "trash": BOOLEAN | NULL,
+  "wires": BOOLEAN | NULL,
+  "grate": BOOLEAN | NULL,
+  "stump": BOOLEAN | NULL,
+  "treeNotes": STRING | NULL,
+  "siteNotes": STRING | NULL
 }
 ```
 
