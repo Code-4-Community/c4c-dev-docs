@@ -1269,7 +1269,7 @@ The `geometry` field represents the polygon, multi-polygon or other geometric sh
 ]
 ```
 
-### Import Blocks
+### Import Blocks (Super Admin Only)
 
 `POST api/v1/protected/import/blocks`
 
@@ -1306,7 +1306,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Neighborhoods
+### Import Neighborhoods (Super Admin Only)
 
 `POST api/v1/protected/import/neighborhoods`
 
@@ -1344,7 +1344,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Reservations
+### Import Reservations (Super Admin Only)
 
 `POST api/v1/protected/import/reservations`
 
@@ -1381,7 +1381,7 @@ If the request was malformed.
 
 If the user is not a super admin.
 
-### Import Sites
+### Import Sites (Super Admin Only)
 
 `POST api/v1/protected/import/sites`
 
@@ -1565,6 +1565,38 @@ The number of days in the past the leaderboard is representing. Only blocks comp
 ##### `400 BAD REQUEST`
 
 If the request was malformed.
+
+## Neighborhoods Router
+
+The neighborhoods router is used to handle all the neighborhoods.
+
+### Edit Canopy Coverage (Admin Only)
+
+`POST api/v1/protected/neighborhoods/:neighborhood_id/edit_canopy`
+
+Used to edit the specified neighborhood's `canopy_coverage`.
+
+#### Request Body
+
+```json
+{
+  "canopyCoverage": DOUBLE
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Neighborhood's `canopy_coverage` successfully edited to `canopyCoverage`.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed or if the given `canopyCoverage` is negative or greater than one.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
 
 ## Sites Router
 
@@ -2102,7 +2134,7 @@ Returns the number of current adopters, trees currently adopted, and all steward
 }
 ```
 
-### Get Adoption Report
+### Get Adoption Report (Admin Only)
 
 `GET api/v1/protected/report/adoption`
 
@@ -2139,7 +2171,7 @@ Returns a list of information about adopters and stewardship activities for each
 
 If the user is not an admin.
 
-### Get Adoption Report as CSV
+### Get Adoption Report as CSV (Admin Only)
 
 `GET api/v1/protected/report/csv/adoption?previousDays=INT`
 
@@ -2169,7 +2201,7 @@ Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
 
 If the user is not an admin. 
 
-### Get Stewardship Report
+### Get Stewardship Report (Admin Only)
 
 `GET api/v1/protected/report/stewardship`
 
@@ -2208,7 +2240,7 @@ Returns a list of information about adopters and the actions performed for each 
 
 If the user is not an admin.
 
-### Get Stewardship Report as CSV
+### Get Stewardship Report as CSV (Admin Only)
 
 `GET api/v1/protected/report/csv/stewardship?previousDays=INT`
 
