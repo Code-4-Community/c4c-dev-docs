@@ -2153,14 +2153,14 @@ Returns a list of information about adopters and stewardship activities for each
 
 ```json
 {
-  "adoption_report": [
+  "adoptionReport": [
     {
-      "site_id": INT,
+      "siteId": INT,
       "address": STRING,
       "name": STRING,
       "email": STRING,
-      "date_adopted": TIMESTAMP,
-      "activity_count": INT,
+      "dateAdopted": TIMESTAMP,
+      "activityCount": INT,
       "neighborhood": STRING
     },
     ... 
@@ -2220,13 +2220,13 @@ Returns a list of information about adopters and the actions performed for each 
 
 ```json
 {
-  "stewardship_report": [
+  "stewardshipReport": [
     {
-      "site_id": INT,
+      "siteId": INT,
       "address": STRING,
       "name": STRING,
       "email": STRING,
-      "date_performed": TIMESTAMP,
+      "datePerformed": TIMESTAMP,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
