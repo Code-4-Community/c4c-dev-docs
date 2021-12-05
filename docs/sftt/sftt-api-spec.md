@@ -2230,7 +2230,8 @@ Returns a list of information about adopters and the actions performed for each 
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
-      "weeded": BOOLEAN
+      "weeded": BOOLEAN,
+      "neighborhood": STRING
     },
     ...
   ]
