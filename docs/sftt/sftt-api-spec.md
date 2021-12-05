@@ -1324,6 +1324,7 @@ Used to import neighborhoods into the database. Must be called before importing 
       "lat": LONG,
       "lng": LONG,
       "geometry": STRING,
+      "canopy_coverage": DOUBLE,
     },
     ...
   ]
