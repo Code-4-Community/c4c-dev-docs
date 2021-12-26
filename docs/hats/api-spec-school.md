@@ -50,6 +50,34 @@ Responses:
 `401 Unauthorized`: the user is not authenticated
 
 
+### Get All Schools By Country
+Used to return a list of all schools within the given country.
+
+`GET` request to `/api/v1/protected/schools/:country`
+
+Responses:
+
+`200 OK`: returns a list of schools and the count of schools returned:
+```json
+{
+    "count": 2,
+    "schools": [
+        {
+            "id": 1,
+            "name": "Northeastern University",
+            "country": "UNITED_STATES"
+        },
+        {
+            "id": 4,
+            "name": "School DEF",
+            "country": "UNITED_STATES"
+        }
+    ]
+}
+```
+
+`401 Unauthorized`: the user is not authenticated
+
 ### Get One School
 Used to return information about a single school.
 
@@ -193,5 +221,4 @@ Responses:
     ]
 }
 ```
- 
  
