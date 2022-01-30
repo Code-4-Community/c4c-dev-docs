@@ -2198,6 +2198,10 @@ Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
 1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, 1, East Boston
 ```
 
+##### `400 BAD REQUEST`
+
+If the `previousDays` parameter is not an integer, such as a decimal or a non-numeric value.
+
 ##### `401 UNAUTHORIZED`
 
 If the user is not an admin. 
@@ -2268,6 +2272,10 @@ as a CSV formatted as a string.
 Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded
 1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, TRUE, FALSE, FALSE, FALSE
 ```
+
+##### `400 BAD REQUEST`
+
+If the `previousDays` parameter is not an integer, such as a decimal or a non-numeric value.
 
 ##### `401 UNAUTHORIZED`
 
