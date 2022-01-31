@@ -1,6 +1,6 @@
-This section describes the different roles that exist within C4C and the responsibilities that each role has. Click on a heading to learn more about each one!
+This section describes the different positions on the e-board. Click on a heading to learn more about each one!
 
-??? info "President"
+??? info "Co-President, Director of Operations"
     The president of Code4Community is responsible for managing the club in both the short term and the long term. In the short term they should manage or at least be aware of all major initiatives within the club to ensure everything is running smoothly. In the long term they are responsible for making sure all high-level leadership roles are filled by qualified candidates, ensuring that C4C continues to be a welcoming community and that the product development is sustainable and valuable both to the partners and the developers.
 
     **Responsibilities**
@@ -20,7 +20,7 @@ This section describes the different roles that exist within C4C and the respons
     - Committed to the club and able to put in significant amounts of time every week
     - Strong and thoughtful communicator 
 
-??? info "Director of Engineering"
+??? info "Co-President, Director of Engineering"
     The director of engineering is responsible for managing the technical side of C4C. They should have a say in or be aware of all major technical decisions made by any of the teams and should always keep the long term viability of the club in mind. 
 
     **Responsibilities**
@@ -101,22 +101,6 @@ This section describes the different roles that exist within C4C and the respons
     - Strong leadership skills
     - Interest in marketing
 
-??? info "Director of Branding"
-    The director of branding is responsible for helping shape Code4Community’s brand, both visually and by voice. They create the club’s outreach assets, including social platforms and promotional material.
-
-    **Responsibilities**
-
-    - Create assets for social media platforms such as Instagram and LinkedIn, as well as email newsletters
-    - Design promotional materials for outreach/tabling events 
-    - Shape branding guidelines for C4C
-    
-    **Qualifications**
-
-    - Eye for design
-    - Strong organizational and communication skills
-    - Sense of brand voice and direction
-    - (Preferred) Experience with Figma
-
 ??? info "Director of PR & Communications"
     The Director of PR & Communications is responsible for being a bridge between the organization and the Khoury College, as well as other Northeastern student organizations, and companies in the technology or design industry. They are also in charge of the club's events schedule planning. This includes, but isn't limited to, reaching out to companies & student organizations, planning workshops and events, maintaining current external relationships, and assigning tasks to C4C officers to ensure all events go smoothly and are beneficial to C4C members and audience. They should work closely with the President, the Director of Marketing, the Director of Design, and the Director of Recruitment and Community Engagement to guarantee event planning, advertisement, and attendance.
 
@@ -150,39 +134,3 @@ This section describes the different roles that exist within C4C and the respons
 
     - Good organizational skills
     - (Preferred) Previous experience as a treasurer
-
-??? info "Product Manager"
-    Short description
-
-    **Responsibilities**
-
-    **Qualifications**
-
-??? info "Tech Lead"
-    Short description
-
-    **Responsibilities**
-
-    **Qualifications**
-
-??? info "Designer"
-    At Code4Community, we are on a mission to create free, beautiful, and easy to use software for non-profits in the Boston area. C4C is searching for an experienced product designer looking to a design impactful software for these non-profits.
-
-    **Responsibilities**
-
-    - Lead and design the flows and experience for the client’s needs and bring those to life as a useful product alongside a team of developers and project managers
-    - Communicate ideas effectively to the team and continue to evolve and iterate on your designs as well as past designs
-    
-    **Qualifications**
-    
-    - 1+ year of experience on designing and scaling digital products
-    - Experience with Figma, sketch, or other design tools. We use Figma here :slightly_smiling_face:
-    - A beautiful portfolio with previous product design work
-    - A passion for helping non-profit organizations
-
-??? info "Developer"
-    Short description
-
-    **Responsibilities**
-
-    **Qualifications**

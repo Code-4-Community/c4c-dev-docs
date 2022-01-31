@@ -1,3 +1,9 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
 # C4C Documentation
 
 Welcome to Code4Community's documentation site! This site serves as the centre of all C4C knowledge, documenting our code as well as our organization knowledge. 
