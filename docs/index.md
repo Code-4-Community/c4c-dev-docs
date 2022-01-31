@@ -4,11 +4,11 @@ hide:
   - toc
 ---
 
-# C4C Documentation
+# Welcome!
 
-Welcome to Code4Community's documentation site! This site serves as the centre of all C4C knowledge, documenting our code as well as our organization knowledge. 
+Welcome to Code4Community's documentation site! This site serves as the centre of all C4C knowledge, documenting our code as well as our organizational knowledge. 
 
-If you're new around here, you'll want to start with the [Getting Started](./getting-started/index.md) section, which describes how to run and develop our applications on your local machine, in addition to some higher-level product development workflow guides. 
+If you're new around here, you'll want to head to the [Getting Started](./getting-started/index.md) section, which describes how to run and develop our applications on your local machine, in addition to some higher-level product development workflow guides. 
 
 Each project additionally has its own documentation page. This includes things like application architecture, API route specifications, and even more! 
 

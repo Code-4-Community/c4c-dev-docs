@@ -5,6 +5,7 @@ edit_uri: ""
 
 theme:
     name: material
+    custom_dir: docs/overrides
     favicon: img/favicon.ico
     features:
         - tabs
@@ -58,9 +59,8 @@ nav:
         - Scaffold Repositories: guides/scaffold-repos.md
         - How To Build Your Own Website: guides/website-tutorial.md
     - Dev Ops:
-        - Amazon Web Services:
-            - Home: dev-ops/aws/index.md
-            - Backend Deployment: dev-ops/aws/backend-deployment.md
+        - Home: dev-ops/index.md
+        - Backend Deployment: dev-ops/aws/backend-deployment.md
     - LLB:
         - Home: llb/index.md
         - Feature API Specification: llb/llb-api-spec.md
