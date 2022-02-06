@@ -2167,10 +2167,10 @@ Returns the number of current adopters, trees currently adopted, and all steward
 
 ```json
 {
-  "community_stats": {
-    "adopter_count": INT,
-    "trees_adopted": INT,
-    "stewardship_activities": INT
+  "communityStats": {
+    "adopterCount": INT,
+    "treesAdopted": INT,
+    "stewardshipActivities": INT
   }
 }
 ```
