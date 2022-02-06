@@ -2117,6 +2117,34 @@ No request body.
 
 If the `site_id` specified does not exist.
 
+### Name Site Entry
+
+`POST api/v1/protected/sites/:site_id/name_entry`
+
+Names the latest site entry of the given site. If the entry is already named, renames it.
+
+#### Request Body
+
+```json
+{
+  "name": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site entry successfully named.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not the site's adopter.
+
 ## Report Router
 
 The report router is used to get reports on the status of trees and adoptions.
