@@ -30,49 +30,18 @@
 
 *Section 2:* All officers must be full-time undergraduate students at Northeastern University.
 
-*Section 3:* The officers of C4C and their roles shall be:
+*Section 3:* The officers of C4C shall be:
 
-<u>President:</u>
+- Co-President, Director of Operations
+- Co-President, Director of Engineering
+- Director of Product
+- Director of Design
+- Director of Recruitment
+- Director of Marketing
+- Director of Events
+- Director of Finance
 
-- Represents and speaks on behalf of the organization when presenting the organization to Northeastern University or any companies.
-- Oversees all officers. 
-- Schedules, plans, oversees, and facilitates the club board meetings.
-- Directs the focuses of C4C and realigns programs to better accomplish the club’s missions.
-
-<u>Director of Engineering (Vice President): </u>
-
-- Oversees all product team developers to ensure a high quality in all software solutions.
-- Runs the organization’s activities in the absence of the President.
-- Leads development and maintenance of all software architecture and infrastructure used in C4C projects.
-
-<u>Director of Design: </u>
-
-- Oversees all product team designers to ensure a high quality in all design materials.
-- Maintains and iterates upon the brand of C4C so all design work stays consistent across C4C’s projects.
-
-<u>Administrative Director: </u>
-
-- Manages external communication by networking and maintaining contact with companies and organizations. 
-- Maintains relations with other student organizations, and seeks opportunities for collaboration if they support the organization’s mission.
-- Connects experienced members of the club with inexperienced members to allow for mentoring.
-- In charge of updating all social media platforms and websites to stay up to date and contain information about upcoming events.
-- Alongside the School Liaison, is in charge of the creation and maintenance of all internal applications.
-- Works with the President to maintain relations with Khoury College of Computer Science and Center for Student Involvement by providing monthly emails and attending all events related to club advisory and networking.
-
-<u>School Liaison (Treasurer): </u>
-
-- Manages finances and fundraising, and attends all Student Activities Business Office required meetings
-- Makes financial transactions on behalf of the organization.
-- Maintains a financial record that entails detailed information of all receipts and reimbursements.
-- Prepares budget requests and spending reports.
-- Alongside the Outreach officer, is in charge of the creation and maintenance of all internal applications. In a dispute, the Outreach officer holds the final decision.
-- Works alongside the President to work with businesses that have a cloud infrastructure to receive cloud credits for existing and new software solutions.
-
-<u>Marketing Director: </u>
-
-<u>Recruitment & Community Engagement Director: </u>
-
-<u>Project Lead: </u>
+*Section 4:* The roles and responsibilities of all officers will be defined within C4C.
 
 ---
 
@@ -80,9 +49,11 @@
 
 *Section 1:* The advisor to the club must be a full-time faculty or staff member at Northeastern.  The advisor will be an ex-officio, non-voting member on all committees of the organization.
 
-*Section 2:* The advisor will be responsible for financial oversight by signing all financial forms for the Student Activities Business Office.
+*Section 2:* The advisor will be responsible for financial oversight by signing all financial forms from the Student Activities Business Office.
 
-*Section 3:* The advisor can meet with officers as needed, and is encouraged to attend all officer meetings.
+*Section 3:* The advisor should be available to meet with the president(s) on a regular basis.
+
+*Section 4:* The advisor can meet with officers as needed.
 
 ---
 
@@ -90,9 +61,18 @@
 		
 *Section 1:* Elections shall be sufficiently publicized to all members at least two weeks in advance.  
 
-*Section 2.1:* Elections will be held for the President and Director level positions (Director of Engineering, Director of Design, and Director of Project Management).
+*Section 2.1:* Elections will be held for the all director level positions.
 
-*Section 2.2:* The elections will be held in the following order: first President, followed by Director of Engineering, followed by Director of Design, followed finally by Director of Project Management.
+*Section 2.2:* The elections will be held in the following order: 
+
+1. Co-President, Director of Operations
+2. Co-President, Director of Engineering
+3. Director of Product
+4. Director of Design
+5. Director of Events
+6. Director of Marketing
+7. Director of Recruitment
+8. Director of Finance
 
 *Section 3.1:* Qualified candidates can be nominated for a position beginning two weeks before the election and continuously until the time of voting.
 
@@ -100,39 +80,35 @@
 
 *Section 3.3:* A member may only be nominated for a single position at a time, but if they lose an election they are allowed to immediately nominate themselves for any election that is still waiting to happen.
 
-*Section 4.1:* A qualified presidential nominee is any member with at least 2 semesters of experience in a qualified position, where a qualified position is defined as an E-Board position or product team member.
+*Section 4.1:* A qualified nominee is any member with at least 2 semesters of membership with C4C.
 
-*Section 4.2:* All current E-Board members and all current product team members are eligible to vote for the president from all nominated candidates.
+*Section 4.2:* A nominee must receive at least 50% of all possible votes. In the case that no nominee receives the necessary votes, the two candidates with the highest number of votes will participate in a runoff.
 
-*Section 4.3:* A presidential nominee must receive at least 50% of all possible votes. In the case that no nominee receives the necessary votes, the two candidates with the highest number of votes will participate in a runoff.
+*Section 4.3:* In case of a tie in a runoff election, the current sitting Director of Operations will be the tie-breaking vote.
 
-*Section 5.1:* A qualified team lead is any member holding a qualified position for at least 2 semesters as defined in section 4.1.
+*Section 5.1:* If no qualified member is nominated for an election, the Director of Recruitment is responsible for finding a suitable candidate.
 
-*Section 5.2:* Team leads will be selected by the current team lead and must be confirmed by a vote of the team’s current product team members. A nominee must receive at least ⅔ of possible votes to be confirmed.
+*Section 5.2:* Any candidate can be deemed qualified by a vote of the current sitting E-Board. A nominee must receive at least ⅔ of possible votes to be deemed qualified.
 
-*Section 5.3:* If a nominee does not receive the necessary confirmation votes then the team lead will be responsible for nominating a new candidate with sufficient time for a new confirmation vote.
+*Section 6.1:* A qualified team lead is any member with at least 1 semester of membership with C4C.
 
-*Section 5.4:* If a current team lead is not available to nominate a successor, the obligation of nomination will be passed to the current acting president.
+*Section 6.2:* Team leads will be selected by the current team lead(s) and must be confirmed by a vote of the team’s current product team members. A nominee must receive at least ⅔ of possible votes to be confirmed.
 
-*Section 6.1:* A qualified supplementary position is any product team or general member of C4C that has attended at least 75% of their qualified events over the previous academic year. A qualified event for general members is any event that is offered to the C4C community while a qualified event for a product team member is defined by their team lead.
+*Section 6.3:* If a nominee does not receive the necessary confirmation votes, the team lead(s) will be responsible for nominating a new candidate with sufficient time for a new confirmation vote.
 
-*Section 6.2:* Nominated supplementary positions will be voted on by a majority vote of current E-Board members.
+*Section 6.4:* If a current team lead is not available to nominate a successor, the obligation of nomination will be passed to the current acting Director of Operations.
 
-*Section 7:* The term of office shall be one academic year. Voting will be done at the end of the Spring semester. New officials will enter their roles in Summer 1 and maintain them through Spring of the following year.
-
-*Section 8:* If an officer role is vacated for any reason, then an emergency election shall be held to fill the role for the remainder of the previous officer’s term. Voting will take place for the position as outlined in Sections 4-6.
-
-*Section 9:* If an e-board member has to leave the Boston area during their term of office, they have the option to nominate qualified replacement as defined in sections 4 - 6 to be co-officer for their role until they can return. The nominated member will take over the role if the holding member is no longer able to perform their duties. If no member is nominated and the e-board member is no longer able to perform their duties, then section 8 will take place.
+*Section 7:* If an officer role is vacated for any reason, then an emergency election shall be held to fill the role for the remainder of the previous officer’s term. Voting will take place for the position as outlined in Sections 4-6.
 
 ---
 
 ### Article 7: Term of Office
 
-*Section 1:* The term of office shall be one academic year. Voting will be done at the end of the Spring semester. New officials will enter their roles at the beginning of the Summer 1 semester and maintain them through Spring of the following year.
+*Section 1:* The term of office shall be one academic year. Elections will be held at the end of the Spring semester. New officials will enter their roles at the beginning of the Summer 1 semester and maintain them through Spring of the following year.
 
-*Section 2:* If the President or a Director level role is vacated for any reason, then an emergency election shall be held to fill the role for the remainder of the previous officer’s term. The nomination process will be shortened to a single week.
+*Section 2:* If an officer wants to extend their term beyond one academic year, they must run for re-election. This election must be open to the entire club.
 
-*Section 3:* If an e-board member has to leave the Boston area during their term of office, they have the option to nominate a qualified replacement as defined in Article 6 Section 4 to act as a co-officer for their role until they can return. If the absent member is no longer able to perform their duties, the nominated member will take over the role for the remainder of the term. If no member is nominated and the e-board member is no longer able to perform their duties, then section 2 will go into effect.
+*Section 3:* If an E-Board member has to leave the Boston area during their term of office, they have the option to nominate a qualified replacement as defined in Article 6 Section 4 to act as a co-officer for their role until they can return. If the absent member is no longer able to perform their duties, the nominated member will take over the role for the remainder of the term. If no member is nominated and the E-Board member is no longer able to perform their duties, then Article 6 section 8 will go into effect.
 
 ---
 
@@ -146,7 +122,7 @@
 
 ### Article 9: Amendments
 
-*Section 1:* The by-laws and constitution may be amended by a 2/3 majority vote of present members.
+*Section 1:* The by-laws and constitution may be amended by a ⅔ majority vote of present members.
 
 *Section 2:* Notice of the amendment must be presented in writing at least one meeting prior to the vote.
 
