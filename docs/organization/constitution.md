@@ -92,7 +92,7 @@
 
 *Section 6.1:* A qualified team lead is any member with at least 1 semester of membership with C4C.
 
-*Section 6.2:* Team leads will be selected by the current team lead(s) and must be confirmed by a vote of the team’s current product team members. A nominee must receive at least ⅔ of possible votes to be confirmed.
+*Section 6.2:* Team leads will be selected by the current team lead(s) and must be confirmed by a vote of the team’s current product team members. A nominee must receive at least 50% of possible votes to be confirmed.
 
 *Section 6.3:* If a nominee does not receive the necessary confirmation votes, the team lead(s) will be responsible for nominating a new candidate with sufficient time for a new confirmation vote.
 
