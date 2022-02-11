@@ -1599,6 +1599,39 @@ If the request body is malformed or if the given `canopyCoverage` is negative or
 
 If the calling user is not an admin.
 
+### Send Email (Admin Only)
+
+`POST api/v1/protected/neighborhoods/send_email`
+
+Sends an email with the given message to users in certain neighborhoods. If `neighborhoods` is an empty list, send the email to everyone.
+
+#### Request Body
+```json
+{
+  "neighborhoods": [
+    {
+      "neighborhoodID": INT,
+    },
+    ...
+  ],
+  "emailBody": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Email successfully sent to users in the specified neighborhoods.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
 ## Sites Router
 
 The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
