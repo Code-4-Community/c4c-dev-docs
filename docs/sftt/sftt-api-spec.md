@@ -1609,9 +1609,8 @@ Sends an email with the given message to users in certain neighborhoods. If `nei
 ```json
 {
   "neighborhoods": [
-    {
-      "neighborhoodID": INT,
-    },
+    INT,
+    INT,
     ...
   ],
   "emailBody": STRING
