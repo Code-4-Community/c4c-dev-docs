@@ -2031,6 +2031,30 @@ If the `site_id` specified does not exist.
 
 If the site is not adopted by the user.
 
+### Force Remove Site as Adopted (Admin only)
+
+`POST api/v1/protected/sites/:site_id/force_unadopt`
+
+Remove this site as adopted for whoever currently adopts it. Can only be called by a user of a higher privilege level than the adopter. Removes the record from the adopted sites table.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully removed site as adopted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist.
+
+##### `401 UNAUTHORIZED`
+
+If the user calling is not of the proper privilege level.
+
 ### Get Adopted Sites
 
 `GET api/v1/protected/sites/adopted_sites`
