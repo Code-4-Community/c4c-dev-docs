@@ -27,7 +27,7 @@ nav:
         - Home: organization/index.md
         - Constitution: organization/constitution.md
         - Social Contract: organization/social_contract.md
-        - Structure: 
+        - Structure:
             - Roles: organization/structure/index.md
     - Getting Started:
         - Home: getting-started/index.md
@@ -58,6 +58,8 @@ nav:
         - Home: sftt/index.md
         - API Specification: sftt/sftt-api-spec.md
         - ArcGIS Architecture: sftt/arcgis-architecture.md
+        - Frontend Guides:
+            - Routing: sftt/frontend-guides/sftt-routing.md
     - Hands Across the Sea (HATS):
         - Home: hats/index.md
         - Auth API Specification: hats/api-spec-auth.md
