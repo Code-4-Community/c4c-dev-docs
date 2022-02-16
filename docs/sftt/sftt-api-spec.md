@@ -1107,6 +1107,47 @@ The user does not have a high enough privilege level to change the given users p
 - An 'ADMIN' user tries to change the privilege level of a 'SUPER_ADMIN'
 - An 'ADMIN' user tries to give another user 'SUPER_ADMIN' privilege
 
+### Create Child Account (Admin Only)
+
+`POST api/v1/protected/user/create_child`
+
+Allows admins to create a child user linked to the admin's account through the parent_accounts table.
+
+#### Request Body
+
+```json
+{
+  "childUsername" : STRING,
+  "childEmail" : EMAIL,
+  "childPassword" : STRING,
+  "childFirstName" : STRING,
+  "childLastName" : STRING
+}
+```
+
+#### Responses
+
+##### `201 Created`
+The username and email are still available, and a child user has been successfully created.
+ 
+##### `400 Bad Request`
+Malformed request body.
+
+##### `401 Unauthorized`
+
+The user does not have a high enough privilege level to create a child user.
+
+##### `409 Conflict`
+The given email or username is already in use.
+
+```json
+"Error creating new child user, given email %s already used"
+```
+
+```json
+"Error creating new child user, given username %s already used"
+```
+
 ## Map Router
 
 
