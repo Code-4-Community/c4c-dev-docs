@@ -1,14 +1,28 @@
 site_name: Code4Community Documentation
 repo_url: https://github.com/Code-4-Community/c4c-dev-docs
 repo_name: c4c-dev-docs
+edit_uri: ""
 
 theme:
     name: material
+    custom_dir: docs/overrides
     favicon: img/favicon.ico
     features:
         - tabs
+        - navigation.tabs
     palette:
-        primary: deep purple
+        - scheme: default
+          toggle:
+            icon: material/lightbulb-outline
+            name: Switch to dark mode
+          primary: indigo
+          accent: pink
+        - scheme: slate
+          toggle:
+            icon: material/lightbulb
+            name: Switch to light mode
+          primary: indigo
+          accent: pink
 
 markdown_extensions:
     - admonition
@@ -27,8 +41,7 @@ nav:
         - Home: organization/index.md
         - Constitution: organization/constitution.md
         - Social Contract: organization/social_contract.md
-        - Structure:
-            - Roles: organization/structure/index.md
+            - Product Teams: organization/structure/product-teams.md
     - Getting Started:
         - Home: getting-started/index.md
         - Product Workflow: getting-started/product-workflow.md
@@ -44,23 +57,22 @@ nav:
         - Scaffold Repositories: guides/scaffold-repos.md
         - How To Build Your Own Website: guides/website-tutorial.md
     - Dev Ops:
-        - Amazon Web Services:
-            - Home: dev-ops/aws/index.md
-            - Backend Deployment: dev-ops/aws/backend-deployment.md
-    - Lucy's Love Bus (LLB):
+        - Home: dev-ops/index.md
+        - Backend Deployment: dev-ops/aws/backend-deployment.md
+    - LLB:
         - Home: llb/index.md
         - Feature API Specification: llb/llb-api-spec.md
         - Auth API Specification: llb/llb-auth-api.md
         - Local Image Upload Guide: llb/llb-local-image-upload.md
         - Testing Specification: llb/llb-test-spec.md
         - How to style AntD components with styled-components: llb/antd-styled-components.md
-    - Speak for the Trees (SFTT):
+    - SFTT:
         - Home: sftt/index.md
         - API Specification: sftt/sftt-api-spec.md
         - ArcGIS Architecture: sftt/arcgis-architecture.md
         - Frontend Guides:
             - Routing: sftt/frontend-guides/sftt-routing.md
-    - Hands Across the Sea (HATS):
+    - HATS:
         - Home: hats/index.md
         - Auth API Specification: hats/api-spec-auth.md
         - Countries API Specification: hats/api-spec-country.md
@@ -70,3 +82,5 @@ nav:
         - Books API Specification: hats/api-spec-school-books.md
     - JPAL:
         - Home: jpal/index.md
+    - LBFE:
+        - Home: lbfe/index.md

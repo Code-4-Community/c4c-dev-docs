@@ -1107,6 +1107,47 @@ The user does not have a high enough privilege level to change the given users p
 - An 'ADMIN' user tries to change the privilege level of a 'SUPER_ADMIN'
 - An 'ADMIN' user tries to give another user 'SUPER_ADMIN' privilege
 
+### Create Child Account (Admin Only)
+
+`POST api/v1/protected/user/create_child`
+
+Allows admins to create a child user linked to the admin's account through the parent_accounts table.
+
+#### Request Body
+
+```json
+{
+  "childUsername" : STRING,
+  "childEmail" : EMAIL,
+  "childPassword" : STRING,
+  "childFirstName" : STRING,
+  "childLastName" : STRING
+}
+```
+
+#### Responses
+
+##### `201 Created`
+The username and email are still available, and a child user has been successfully created.
+ 
+##### `400 Bad Request`
+Malformed request body.
+
+##### `401 Unauthorized`
+
+The user does not have a high enough privilege level to create a child user.
+
+##### `409 Conflict`
+The given email or username is already in use.
+
+```json
+"Error creating new child user, given email %s already used"
+```
+
+```json
+"Error creating new child user, given username %s already used"
+```
+
 ## Map Router
 
 
@@ -1324,6 +1365,7 @@ Used to import neighborhoods into the database. Must be called before importing 
       "lat": LONG,
       "lng": LONG,
       "geometry": STRING,
+      "canopy_coverage": DOUBLE,
     },
     ...
   ]
@@ -1593,6 +1635,38 @@ Neighborhood's `canopy_coverage` successfully edited to `canopyCoverage`.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed or if the given `canopyCoverage` is negative or greater than one.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Send Email (Admin Only)
+
+`POST api/v1/protected/neighborhoods/send_email`
+
+Sends an email with the given message to users in certain neighborhoods. If `neighborhoods` is an empty list, send the email to everyone.
+
+#### Request Body
+```json
+{
+  "neighborhoodIDs": [
+    INT,
+    INT,
+    ...
+  ],
+  "emailBody": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Email successfully sent to users in the specified neighborhoods.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
 
 ##### `401 UNAUTHORIZED`
 
@@ -1998,6 +2072,30 @@ If the `site_id` specified does not exist.
 
 If the site is not adopted by the user.
 
+### Force Remove Site as Adopted (Admin only)
+
+`POST api/v1/protected/sites/:site_id/force_unadopt`
+
+Remove this site as adopted for whoever currently adopts it. Can only be called by a user of a higher privilege level than the adopter. Removes the record from the adopted sites table.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully removed site as adopted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist.
+
+##### `401 UNAUTHORIZED`
+
+If the user calling is not of the proper privilege level.
+
 ### Get Adopted Sites
 
 `GET api/v1/protected/sites/adopted_sites`
@@ -2166,10 +2264,10 @@ Returns the number of current adopters, trees currently adopted, and all steward
 
 ```json
 {
-  "community_stats": {
-    "adopter_count": INT,
-    "trees_adopted": INT,
-    "stewardship_activities": INT
+  "communityStats": {
+    "adopterCount": INT,
+    "treesAdopted": INT,
+    "stewardshipActivities": INT
   }
 }
 ```
@@ -2192,14 +2290,14 @@ Returns a list of information about adopters and stewardship activities for each
 
 ```json
 {
-  "adoption_report": [
+  "adoptionReport": [
     {
-      "site_id": INT,
+      "siteId": INT,
       "address": STRING,
       "name": STRING,
       "email": STRING,
-      "date_adopted": TIMESTAMP,
-      "activity_count": INT,
+      "dateAdopted": TIMESTAMP,
+      "activityCount": INT,
       "neighborhood": STRING
     },
     ... 
@@ -2237,6 +2335,10 @@ Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood
 1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, 1, East Boston
 ```
 
+##### `400 BAD REQUEST`
+
+If the `previousDays` parameter is not an integer, such as a decimal or a non-numeric value.
+
 ##### `401 UNAUTHORIZED`
 
 If the user is not an admin. 
@@ -2259,17 +2361,18 @@ Returns a list of information about adopters and the actions performed for each 
 
 ```json
 {
-  "stewardship_report": [
+  "stewardshipReport": [
     {
-      "site_id": INT,
+      "siteId": INT,
       "address": STRING,
       "name": STRING,
       "email": STRING,
-      "date_performed": TIMESTAMP,
+      "datePerformed": TIMESTAMP,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
-      "weeded": BOOLEAN
+      "weeded": BOOLEAN,
+      "neighborhood": STRING
     },
     ...
   ]
@@ -2306,6 +2409,10 @@ as a CSV formatted as a string.
 Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded
 1, 123 Real St, Jane Doe, janedoe@email.com, 2021-01-31, TRUE, FALSE, FALSE, FALSE
 ```
+
+##### `400 BAD REQUEST`
+
+If the `previousDays` parameter is not an integer, such as a decimal or a non-numeric value.
 
 ##### `401 UNAUTHORIZED`
 

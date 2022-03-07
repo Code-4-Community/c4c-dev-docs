@@ -22,7 +22,7 @@ This is a comprehensive overview of the steps required and everything needed to 
 3. Use these properties: 
 ![Database Properties](../img/dbconnectionproperties.png)
 3. Open a query console ("QL" button in Database menu)
-3. Create a database named exactly `speak-for-the-trees` or `lucys-love-bus` by running `CREATE DATABASE 'lucys-love-bus';` 
+3. Create a database named exactly `speak-for-the-trees` or `lucys-love-bus` by running `CREATE DATABASE "lucys-love-bus";` 
 
 ### Update the Secret Files
 1. Open the downloaded repo in IntelliJ
