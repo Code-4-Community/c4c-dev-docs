@@ -41,7 +41,13 @@ nav:
         - Home: organization/index.md
         - Constitution: organization/constitution.md
         - Social Contract: organization/social_contract.md
+        - Structure:
+            - E-Board: organization/structure/e-board.md
             - Product Teams: organization/structure/product-teams.md
+            - Recruitment:
+                - Philosophy: organization/recruitment/philosophy.md
+                - Onboarding: organization/recruitment/onboarding.md
+                - Offboarding: organization/recruitment/offboarding.md
     - Getting Started:
         - Home: getting-started/index.md
         - Product Workflow: getting-started/product-workflow.md
