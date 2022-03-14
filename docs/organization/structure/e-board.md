@@ -66,7 +66,7 @@ This section describes the different positions on the e-board. Click on a headin
     - A beautiful portfolio
     - A passion for helping non-profit organizations
 
-??? info "Director of Recruitment & Community Engagement"
+??? info "Director of Recruitment"
     The director of recruitment is primarily responsible for overseeing the recruitment process. Besides that, they should focus on membership retention by helping out at events and making people feel welcome. 
 
     **Responsibilities**
@@ -101,7 +101,7 @@ This section describes the different positions on the e-board. Click on a headin
     - Strong leadership skills
     - Interest in marketing
 
-??? info "Director of PR & Communications"
+??? info "Director of Events"
     The Director of PR & Communications is responsible for being a bridge between the organization and the Khoury College, as well as other Northeastern student organizations, and companies in the technology or design industry. They are also in charge of the club's events schedule planning. This includes, but isn't limited to, reaching out to companies & student organizations, planning workshops and events, maintaining current external relationships, and assigning tasks to C4C officers to ensure all events go smoothly and are beneficial to C4C members and audience. They should work closely with the President, the Director of Marketing, the Director of Design, and the Director of Recruitment and Community Engagement to guarantee event planning, advertisement, and attendance.
 
     **Responsibilities**
