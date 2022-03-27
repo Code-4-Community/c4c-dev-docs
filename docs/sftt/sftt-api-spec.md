@@ -1896,17 +1896,8 @@ Site successfully updated.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
-
-##### `400 BAD REQUEST`
-
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
-
-##### `400 BAD REQUEST`
-
 If the image url specified is non-null and invalid.
-
-##### `400 BAD REQUEST`
-
 If an unauthorized user tries to perform this action.
 
 ### Update a Site
@@ -1975,9 +1966,6 @@ Site successfully updated.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
-
-##### `400 BAD REQUEST`
-
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Edit a Site (Admin Only)
