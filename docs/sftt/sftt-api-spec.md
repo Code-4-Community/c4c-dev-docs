@@ -1878,13 +1878,13 @@ If the `site_id` specified is invalid.
 `POST api/v1/protected/sites/:site_id/upload_image`
 
 Used to update the image of a site. The `image` field of the specified entry in the `site_entries` table will 
-be updates. Only users who are owners of the specified site, Admins, or Super Admins can perform this action.
+be updates. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
 
 #### Request Body
 
 ```json
 {
-  "image": STRING
+  "image": STRING | NULL
 }
 ```
 
@@ -1904,7 +1904,7 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 ##### `400 BAD REQUEST`
 
-If the image url specified is invalid.
+If the image url specified is non-null and invalid.
 
 ##### `400 BAD REQUEST`
 
