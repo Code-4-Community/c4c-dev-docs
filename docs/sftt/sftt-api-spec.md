@@ -1117,11 +1117,11 @@ Allows admins to create a child user linked to the admin's account through the p
 
 ```json
 {
-  "childUsername" : STRING,
-  "childEmail" : EMAIL,
-  "childPassword" : STRING,
-  "childFirstName" : STRING,
-  "childLastName" : STRING
+  "username" : STRING,
+  "email" : EMAIL,
+  "password" : STRING,
+  "firstName" : STRING,
+  "lastName" : STRING
 }
 ```
 
