@@ -1114,7 +1114,7 @@ The user does not have a high enough privilege level to change the given users p
 Allows admins to create a child user linked to the admin's account through the parent_accounts table.
 
 #### Request Body
-
+(Request fields are for the child account)
 ```json
 {
   "username" : STRING,
