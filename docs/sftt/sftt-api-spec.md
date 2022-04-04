@@ -1678,7 +1678,7 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 ### Add a Site
 
-`POST api/v1/protected/sites/create`
+`POST api/v1/protected/sites/add`
 
 Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
 `NULL` `BOOLEAN`s will be treated as `false`.
