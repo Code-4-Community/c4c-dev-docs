@@ -1863,6 +1863,7 @@ No request body.
       "treeNotes": STRING | NULL,
       "siteNotes": STRING | NULL,
       "adopter": USERNAME | NULL,
+      "image": STRING | NULL
     },
     ...
   ]
