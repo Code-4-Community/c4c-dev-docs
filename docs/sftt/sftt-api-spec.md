@@ -1874,6 +1874,33 @@ No request body.
 
 If the `site_id` specified is invalid.
 
+### Upload Site Image
+
+`POST api/v1/protected/sites/:site_id/upload_image`
+
+Used to update the image of a site. The `image` field of the most recent entry in the `site_entries` table associated with the specified site will be updated. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
+
+#### Request Body
+
+```json
+{
+  "image": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully updated.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+If the image url specified is non-null and invalid.
+If an unauthorized user tries to perform this action.
+
 ### Update a Site
 
 `POST api/v1/protected/sites/:site_id/update`
@@ -1940,9 +1967,6 @@ Site successfully updated.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
-
-##### `400 BAD REQUEST`
-
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Edit a Site (Admin Only)
