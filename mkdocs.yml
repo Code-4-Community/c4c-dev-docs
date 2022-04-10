@@ -32,6 +32,9 @@ markdown_extensions:
             linenums: true
     - pymdownx.inlinehilite
     - pymdownx.keys
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
     - toc:
             toc_depth: 3
 
@@ -41,7 +44,7 @@ nav:
         - Home: organization/index.md
         - Constitution: organization/constitution.md
         - Social Contract: organization/social_contract.md
-        - Structure: 
+        - Structure:
             - E-Board: organization/structure/e-board.md
             - Product Teams: organization/structure/product-teams.md
         - Recruitment:
@@ -76,6 +79,8 @@ nav:
         - Home: sftt/index.md
         - API Specification: sftt/sftt-api-spec.md
         - ArcGIS Architecture: sftt/arcgis-architecture.md
+        - Frontend Guides:
+            - Walkthrough: sftt/frontend-guides/sftt-frontend-walkthrough.md
     - HATS:
         - Home: hats/index.md
         - Auth API Specification: hats/api-spec-auth.md
