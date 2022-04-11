@@ -80,8 +80,8 @@ nav:
         - API Specification: sftt/sftt-api-spec.md
         - ArcGIS Architecture: sftt/arcgis-architecture.md
         - Frontend Guides:
-            - Routing: sftt/frontend-guides/sftt-routing.md
             - Walkthrough: sftt/frontend-guides/sftt-frontend-walkthrough.md
+            - Routing: sftt/frontend-guides/sftt-routing.md
     - HATS:
         - Home: hats/index.md
         - Auth API Specification: hats/api-spec-auth.md
