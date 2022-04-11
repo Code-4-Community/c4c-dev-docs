@@ -1678,7 +1678,7 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 ### Add a Site
 
-`POST api/v1/protected/sites/create`
+`POST api/v1/protected/sites/add`
 
 Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
 `NULL` `BOOLEAN`s will be treated as `false`.
@@ -1863,6 +1863,7 @@ No request body.
       "treeNotes": STRING | NULL,
       "siteNotes": STRING | NULL,
       "adopter": USERNAME | NULL,
+      "image": STRING | NULL
     },
     ...
   ]
@@ -1872,6 +1873,33 @@ No request body.
 ##### `400 BAD REQUEST`
 
 If the `site_id` specified is invalid.
+
+### Upload Site Image
+
+`POST api/v1/protected/sites/:site_id/upload_image`
+
+Used to update the image of a site. The `image` field of the most recent entry in the `site_entries` table associated with the specified site will be updated. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
+
+#### Request Body
+
+```json
+{
+  "image": STRING | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully updated.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+If the image url specified is non-null and invalid.
+If an unauthorized user tries to perform this action.
 
 ### Update a Site
 
@@ -1939,9 +1967,6 @@ Site successfully updated.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
-
-##### `400 BAD REQUEST`
-
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Edit a Site (Admin Only)
