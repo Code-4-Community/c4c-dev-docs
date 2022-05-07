@@ -2249,7 +2249,7 @@ Names the latest site entry of the given site. If the entry is already named, re
 
 ```json
 {
-  "name": STRING | NULL
+  "name": STRING
 }
 ```
 
@@ -2261,7 +2261,7 @@ Site entry successfully named.
 
 ##### `400 BAD REQUEST`
 
-If the `site_id` specified does not exist.
+If the `site_id` specified does not exist or if `name` is more than 60 characters long.
 
 ##### `401 UNAUTHORIZED`
 
