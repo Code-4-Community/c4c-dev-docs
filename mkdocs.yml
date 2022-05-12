@@ -82,6 +82,7 @@ nav:
         - Frontend Guides:
             - Walkthrough: sftt/frontend-guides/sftt-frontend-walkthrough.md
             - Routing: sftt/frontend-guides/sftt-routing.md
+            - Responsive Styling in React: sftt/frontend-guides/sftt-responsive-styling.md
     - HATS:
         - Home: hats/index.md
         - Auth API Specification: hats/api-spec-auth.md
