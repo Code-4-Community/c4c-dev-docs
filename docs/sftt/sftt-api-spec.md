@@ -2096,6 +2096,33 @@ If the `site_id` specified does not exist.
 
 If the user calling is not of the proper privilege level.
 
+### Parent Adopt a Site for Child
+
+`POST api/v1/protected/sites/:site_id/parent_adopt`
+
+Adopt the given site on behalf of a specified child account. Creates a record in the adopted sites table linking the child user and the site.
+
+#### Request Body
+
+```json
+{
+  "childUserId" : INT
+}
+
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked as adopted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist or is already adopted. 
+
+Also occurs if the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
+
 ### Get Adopted Sites
 
 `GET api/v1/protected/sites/adopted_sites`
