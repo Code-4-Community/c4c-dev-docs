@@ -2048,6 +2048,34 @@ Site successfully marked as adopted.
 
 If the `site_id` specified does not exist or is already adopted.
 
+### Parent Adopt a Site for Child
+
+`POST api/v1/protected/sites/:site_id/parent_adopt`
+
+Adopt the given site on behalf of a specified child account. Creates a record in the adopted sites table linking the child user and the site.
+
+#### Request Body
+
+```json
+{
+  "childUserId": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked as adopted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist or is already adopted. 
+
+##### `400 BAD REQUEST`
+
+If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
+
 ### Remove Site as Adopted
 
 `POST api/v1/protected/sites/:site_id/unadopt`
@@ -2095,33 +2123,6 @@ If the `site_id` specified does not exist.
 ##### `401 UNAUTHORIZED`
 
 If the user calling is not of the proper privilege level.
-
-### Parent Adopt a Site for Child
-
-`POST api/v1/protected/sites/:site_id/parent_adopt`
-
-Adopt the given site on behalf of a specified child account. Creates a record in the adopted sites table linking the child user and the site.
-
-#### Request Body
-
-```json
-{
-  "childUserId" : INT
-}
-
-```
-
-#### Responses
-
-##### `200 OK`
-
-Site successfully marked as adopted.
-
-##### `400 BAD REQUEST`
-
-If the `site_id` specified does not exist or is already adopted. 
-
-Also occurs if the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
 
 ### Get Adopted Sites
 
@@ -2177,6 +2178,43 @@ Activity successfully recorded.
 ##### `400 BAD REQUEST`
 
 If the `site_id` specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If all activities are `False`.
+
+### Parent Record Stewardship Activity for Child
+
+`POST api/v1/protected/sites/:site_id/parent_record_stewardship`
+
+Records a stewardship activity on behalf of the specified child account. Date is the day on which the activity was performed, which can be in the past if the parent is adding a past activity for the child. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
+
+#### Request Body
+
+```json
+{
+  "childUserId": INT,
+  "date": DATE,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully recorded.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
 
 ##### `400 BAD REQUEST`
 
