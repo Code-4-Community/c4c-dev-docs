@@ -1735,7 +1735,8 @@ measurements should be given as numbers and assumed to be in inches.
     "grate": BOOLEAN | NULL,
     "stump": BOOLEAN | NULL,
     "treeNotes": STRING | NULL,
-    "siteNotes": STRING | NULL
+    "siteNotes": STRING | NULL,
+    "plantingDate": DATE | NULL
 }
 ```
 
