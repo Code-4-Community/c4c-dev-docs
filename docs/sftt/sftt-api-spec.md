@@ -2204,6 +2204,42 @@ If the `activity_id` specified is not associated with an existing activity.
 
 If the calling user is not an admin or the user listed on the activity.
 
+### Edit Stewardship Activity (Admin and Author Only)
+
+`POST api/v1/protected/sites/edit_stewardship/:activity_id`
+
+Edits an existing stewardship activity. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
+
+#### Request Body
+
+```json
+{
+  "date": DATE,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity information successfully edited.
+
+##### `400 BAD REQUEST`
+
+If the `activity_id` specified is not associated with an existing activity.
+
+##### `400 BAD REQUEST`
+
+If all activities are `False`.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin or the user listed on the activity.
+
 ### Get Stewardship Activities By Site
 
 `GET api/v1/protected/sites/:site_id/stewardship_activities`
