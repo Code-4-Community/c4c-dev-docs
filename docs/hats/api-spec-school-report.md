@@ -234,8 +234,7 @@ Used to create a new report for a specified school that des not have a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name"
+  "reasonNoLibrarySpace": "Example"
 }
 ```
 
@@ -266,8 +265,7 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name"
+  "reasonNoLibrarySpace": "Example"
 }
 ```
 
@@ -481,8 +479,7 @@ Responses:
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name"
+  "reasonNoLibrarySpace": "Example"
 }
 ```
 
@@ -573,9 +570,7 @@ Used to update a new report for a specified school that des not have a library.
     "KINDERGARTEN",
     "FIRST_GRADE"
   ],
-  "userName": "John Doe",
-  "schoolName": "Example School Name",
-  "timetable": null
+  "reasonNoLibrarySpace": "Example"
 }
 ```
 
