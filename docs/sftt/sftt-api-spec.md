@@ -2208,7 +2208,7 @@ If the calling user is not an admin or the user listed on the activity.
 
 `POST api/v1/protected/sites/edit_stewardship/:activity_id`
 
-Edits an existing stewardship activity. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`. `date` is the date the activity was performed on, which can be in the past if the activity was performed in the past.
+Edits an existing stewardship activity. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`. `date` is the day on which the activity was performed, which can be in the past if the activity was performed in the past.
 
 #### Request Body
 
