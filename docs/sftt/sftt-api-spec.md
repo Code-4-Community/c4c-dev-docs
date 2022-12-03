@@ -2073,34 +2073,6 @@ Site successfully marked as adopted.
 
 If the `site_id` specified does not exist or is already adopted.
 
-### Parent Adopt a Site for Child
-
-`POST api/v1/protected/sites/:site_id/parent_adopt`
-
-Adopt the given site on behalf of a specified child account. Creates a record in the adopted sites table linking the child user and the site.
-
-#### Request Body
-
-```json
-{
-  "childUserId": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Site successfully marked as adopted.
-
-##### `400 BAD REQUEST`
-
-If the `site_id` specified does not exist or is already adopted. 
-
-##### `400 BAD REQUEST`
-
-If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
-
 ### Remove Site as Adopted
 
 `POST api/v1/protected/sites/:site_id/unadopt`
@@ -2208,43 +2180,6 @@ If the `site_id` specified does not exist.
 
 If all activities are `False`.
 
-### Parent Record Stewardship Activity for Child
-
-`POST api/v1/protected/sites/:site_id/parent_record_stewardship`
-
-Records a stewardship activity on behalf of the specified child account. Date is the day on which the activity was performed, which can be in the past if the parent is adding a past activity for the child. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
-
-#### Request Body
-
-```json
-{
-  "childUserId": INT,
-  "date": DATE,
-  "watered": BOOLEAN,
-  "mulched": BOOLEAN,
-  "cleaned": BOOLEAN,
-  "weeded": BOOLEAN
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Activity successfully recorded.
-
-##### `400 BAD REQUEST`
-
-If the `site_id` specified does not exist.
-
-##### `400 BAD REQUEST`
-
-If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
-
-##### `400 BAD REQUEST`
-
-If all activities are `False`.
-
 ### Delete Stewardship Activity (Admin and Author Only)
 
 `POST api/v1/protected/sites/delete_stewardship/:activity_id`
@@ -2264,6 +2199,42 @@ Activity successfully removed.
 ##### `400 BAD REQUEST`
 
 If the `activity_id` specified is not associated with an existing activity.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin or the user listed on the activity.
+
+### Edit Stewardship Activity (Admin and Author Only)
+
+`POST api/v1/protected/sites/edit_stewardship/:activity_id`
+
+Edits an existing stewardship activity. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`. `date` is the day on which the activity was performed, which can be in the past if the activity was performed in the past.
+
+#### Request Body
+
+```json
+{
+  "date": DATE,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity information successfully edited.
+
+##### `400 BAD REQUEST`
+
+If the `activity_id` specified is not associated with an existing activity.
+
+##### `400 BAD REQUEST`
+
+If all activities are `False`.
 
 ##### `401 UNAUTHORIZED`
 
