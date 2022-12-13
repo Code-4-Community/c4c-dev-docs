@@ -1749,6 +1749,36 @@ Site successfully added.
 
 If the request body is malformed.
 
+### Add Sites (Admin Only)
+
+`POST api/v1/protected/sites/add_sites`
+
+Used to add multiple new sites. Every column besides `blockId`, `lat`, `lng`, `city`, `zip`, `address`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order.
+
+For more information, refer to the documentation on adding a site (https://docs.c4cneu.com/sftt/sftt-api-spec/#add-a-site).
+
+#### Request Body
+
+```
+blockId, lat, lng, city, zip, address, neighborhoodId, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
+INT, LONG, LONG, STRING, STRING, STRING, INT, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
+...
+```
+
+#### Responses
+
+##### `200 OK`
+
+All sites successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
 ### Add a Potential Site
 
 !!! missing "This route still needs to be implemented"
