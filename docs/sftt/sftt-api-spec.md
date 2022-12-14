@@ -1680,7 +1680,7 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 `POST api/v1/protected/sites/add`
 
-Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
 `NULL` `BOOLEAN`s will be treated as `false`.
 
 All measurements should be given in inches.
@@ -1691,7 +1691,7 @@ measurements should be given as numbers and assumed to be in inches.
 
 ```json
 {
-    "blockId": INT,
+    "blockId": INT | NULL,
     "lat": LONG,
     "lng": LONG,
     "city": STRING,
@@ -1753,7 +1753,7 @@ If the request body is malformed.
 
 `POST api/v1/protected/sites/add_sites`
 
-Used to add multiple new sites. Every column besides `blockId`, `lat`, `lng`, `city`, `zip`, `address`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order.
+Used to add multiple new sites. Every column besides `lat`, `lng`, `city`, `zip`, `address`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order.
 
 For more information, refer to the documentation on adding a site (https://docs.c4cneu.com/sftt/sftt-api-spec/#add-a-site).
 
@@ -1761,7 +1761,7 @@ For more information, refer to the documentation on adding a site (https://docs.
 
 ```
 blockId, lat, lng, city, zip, address, neighborhoodId, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
-INT, LONG, LONG, STRING, STRING, STRING, INT, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
+INT | NULL, LONG, LONG, STRING, STRING, STRING, INT, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
 ...
 ```
 
