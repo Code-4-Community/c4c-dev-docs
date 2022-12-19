@@ -2279,13 +2279,13 @@ If the `site_id` specified does not exist.
 
 `POST api/v1/protected/sites/:site_id/name_entry`
 
-Names the latest site entry of the given site. If the entry is already named, renames it.
+Names the latest site entry of the given site. If the entry is already named, renames it. If passed an empty string, resets the name.
 
 #### Request Body
 
 ```json
 {
-  "name": STRING | NULL
+  "name": STRING
 }
 ```
 
@@ -2297,7 +2297,7 @@ Site entry successfully named.
 
 ##### `400 BAD REQUEST`
 
-If the `site_id` specified does not exist.
+If the `site_id` specified does not exist or if `name` is more than 60 characters long or `name` is `NULL`.
 
 ##### `401 UNAUTHORIZED`
 
