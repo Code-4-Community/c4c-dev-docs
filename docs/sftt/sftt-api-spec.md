@@ -7,6 +7,14 @@ This is the official API specification for the SFTT back end. The back end is im
 
 ## Enums
 
+### Privilege Level
+
+The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
+
+- `STANDARD` - A regular member of the platform and usually a volunteer for Speak for the Trees.
+- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neighborhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
+- `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
+
 ### Team Role
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
@@ -18,14 +26,6 @@ The team role enum is all the possible states a use can be in in relation to a t
 
 A user is said to be on a team if their role is `MEMBER` or `LEADER`. 
 
-### Privilege Level
-
-The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
-
-- `STANDARD` - A regular member of the platform and usually a volunteer for Speak for the Trees.
-- `ADMIN` - A more senior SFTT volunteer, might be in charge of a neighborhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
-- `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
-
 ### Reservation Action
 
 The reservation action enum is all the possible action types a reservation can have. This is how blocks are marked as open, complete, reserved, etc. It is stored in the reservation tables as the action_type field. The possible options are:
@@ -36,632 +36,6 @@ The reservation action enum is all the possible action types a reservation can h
 - `UNCOMPLETE` - Marks a block as uncomplete, meaning an admin opened the block back up from its previous state. Anyone can reserve it again now.
 - `QA` - Indicates a block needs QA. It will remain in this state until an admin either approves or denies the completion. If approved, the block will be marked `COMPLETE`. If denied, the block will be marked `UNCOMPLETE`.
 
-
-## Reservations Router
-This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table every time an action is performed on a block. These possible actions are:
-
-- `reserve` - Reserve the given block for the given user.
-- `complete` - Complete the given block. 
-- `release`- Release the given block, meaning to cancel the reservation.
-- `uncomplete` - Admin only. Used to invalidate a completed reservation for any reason (not actually completed, want to inventory the block again, etc.)
-- `QA` - Admin only. Mark this block for QA, meaning that SFTT wants to go through the trees counted here and make sure everything looks okay.
-
-If the user specifies doesn't specify a team at the time of reservation the user is solely responsible for the block. If they do specify a team, then their team can also complete this block for them. This leads to two options when completing a block.
-
-1. The user who reserved the block completes the block, and can choose which, if any, team to credit it to. Credit goes to the reserving user and the team of their choosing.
-2. A teammate completes the block. The teammate cannot specify the team, since it was reserved by another user. Credit goes to the user who completes the block, not the reserving user, and their shared team.
-
-### Make a Reservation
-
-`POST api/v1/protected/reservations/reserve`
-
-Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`. The purpose of specifying a team at the time of reservation is that it allows other team members to complete this block.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT,
-  "team_id": INT | NULL
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This block was reserved successfully.
-
-##### `400 BAD REQUEST`
-
-If there is not a block associated with the given `block_id`.
-
-##### `400 BAD REQUEST`
- 
-If there is not a team associated with the given `team_id`.
-
-##### `400 BAD REQUEST`
-
-If the block does not have status 'open'.
-
-##### `401 UNAUTHORIZED`
-
-If the user is not a member of the given team.
-
-### Complete a Reservation
-
-`POST api/v1/protected/reservations/complete`
-
-Must be called on a block reserved by the user or by a team they're on. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT,
-  "team_id": INT | NULL
-}
-```
-
-#### Responses
-
-##### `200 OK`
-This reservation was completed successfully.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associatd with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the block does not have status 'reserved'.
-
-##### `401 UNAUTHORIZED`
-
-If the user is not a member of the given team.
-
-### Release a Reservation
-
-`POST api/v1/protected/reservations/release`
-
-Must be called on a reservation belonging to the user or a team they're the leader of. 
-
-#### Request Body
-
-```json
-{
-  "block_id": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This reservation was cancelled successfully.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `400 BAD REQUEST`
-
-If the block does not have status 'reserved'.
-
-### Uncomplete a Reservation (Admin Only)
-
-`POST api/v1/protected/reservations/uncomplete`
-
-Can only by called by admins. Will invalidate the last completion for the given block and opens the block back up for inventory.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This reservation was marked as incomplete successfully.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `400 BAD REQUEST`
-
-If the block does not have status 'complete'.
-
-### Mark for QA (Admin Only)
-
-`POST api/v1/protected/reservations/qa`
-
-Can only by called by admins on completed blocks. Will indicate that this block needs QA.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This block has been selected for QA.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin.
-
-### Pass QA (Admin Only)
-
-`POST api/v1/protected/reservations/pass_qa`
-
-Can only by called by admins on blocks with a QA status. Will duplicate the completion entry from before it was marked for QA and add it as a new entry for the block completion. This preserves the QA as part of the blocks record and returns the block back to its previous state from before it was marked for QA.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This block has passed QA.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin.
-
-### Fail QA (Admin Only)
-
-`POST api/v1/protected/reservations/fail_qa`
-
-Can only by called by admins on blocks with a QA status. Will mark the block as open by using the `UNCOMPLETE` action.
-
-#### Request Body
-
-```json
-{
-  "block_id": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-This block has failed QA.
-
-##### `400 BAD REQUEST`
-
-If the `block_id` specified is not associated with an existing block.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin.
-
-## Teams Router
-
-This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `NONE` team role, meaning they have left the team or have been rejected.
-
-### Create a Team
-
-`POST api/v1/protected/teams/create`
-
-Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
-
-#### Request Body
-
-```json
-{
-  "name": STRING,
-  "bio": STRING,
-  "inviteEmails": [
-    EMAIL,
-    ...
-  ]
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Returns the same response as the "Get a Team" route for the newly created team.
-
-##### `400 BAD REQUEST`
-
-If the team name is taken or if any of the email addresses is invalid.
-
-### Get a Team
-
-Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
-
-`GET api/v1/protected/teams/:team_id`
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-```json
-{
-  "id": INT,
-  "name": STRING,
-  "bio": STRING,
-  "finished": BOOLEAN,
-  "createdAt": TIMESTAMP,
-  "deletedAt": TIMESTAMP | NULL,
-  "members": [ // To add
-    {
-      "user_id": INT,
-      "username": STRING,
-      "team_role": TEAM_ROLE,
-    },
-    ...
-  ],
-  "goals": [
-    {
-      "id": INT,
-      "goal": INT,
-      "progress": INT, // To add
-      "start_date": TIMESTAMP,
-      "complete_by": TIMESTAMP,
-      "completion_date": TIMESTAMP | NULL
-    },
-    ...
-  ]
-}
-```
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-### Add a Goal
-
-`POST api/v1/protected/teams/:team_id/add_goal`
-
-Team leader only. Adds a goal to this team's list of goals.
-
-#### Request Body
-
-```json
-{
-  "goal": INT,
-  "start_at": TIMESTAMP,
-  "complete_by": TIMESTAMP
-}
-```
-
-##### `400 BAD REQUEST`
-
-If the goal is negative.
-
-##### `400 BAD REQUEST`
-
-If the `complete_by` date is before the `start_at` date.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not team leader.
-
-### Delete a Goal
-
-Team leader only. Deletes a goal from this team's list of goals. Simply removes the record from the table.
-
-`POST api/v1/protected/teams/:team_id/delete_goal/:goal_id`
-
-#### Request Body
-
-No request body.
-
-##### `400 BAD REQUEST`
-
-If the `goal_id` specified is not associated with an existing goal.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not team leader.
-
-### Invite a User
-
-`POST api/v1/protected/teams/:team_id/invite`
-
-Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
-
-!!! Still in progress, emails for this route are not implemented.
-
-#### Request Body
-
-```json
-{
-  "invites": [
-    {
-      "name": STRING,
-      "email" STRING
-    },
-    ...
-  ]
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Users invited.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not team leader.
-
-### Get Applicants
-
-`GET api/v1/protected/teams/:team_id/applicants`
-
-Get the userIds for anyone that has requested to join this team as a map from userId to the "PENDING" team status
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-```json
-{
-  "users": {
-    STRING: "PENDING",
-    STRING: "PENDING",
-    ...
-  },
-}
-```
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-### Apply to a Team
-
-`POST api/v1/protected/teams/:team_id/apply`
-
-Apply to join this team. Any member can apply to join a team that they are not currently on. They will have to be approved by the team leader before becoming an actual member of the team.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Applied successfully.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the user is already on the team or the user's status on this team is "PENDING".
-
-### Approve a User
-
-`POST api/v1/protected/teams/:team_id/applicants/:user_id/approve`
-
-Team Leader only. Approve this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-This member has joined the team.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the `user_id` specified is not associated with a user with status "PENDING" on this team.
-
-##### `400 BAD REQUEST` 
-
-If the user that created the request no longer exists.
-
-##### `401 Unauthorized`
-
-If the user is not a team leader.
-
-### Reject a User
-
-`POST api/v1/protected/teams/:team_id/applicants/:user_id/reject`
-
-Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call. Their team role will be set to `NONE`.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-This applicant has been removed from the applicant's list.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the `user_id` specified is not associated with a user with status "PENDING" on this team.
-
-##### `400 BAD REQUEST` 
-
-If the user that created the request no longer exists.
-
-##### `401 Unauthorized`
-
-If the user is not a team leader.
-
-### Kick a User
-
-`POST api/v1/protected/teams/:team_id/members/:member_id/kick`
-
-Leader only. Kicks a member off this team. Sets their team role to `NONE`.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Successfully kicked user.
-
-##### `400 BAD REQUEST` 
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the user is no longer on the team.
-
-##### `401 Unauthorized`
-
-If the user is not a team leader.
-
-### Leave a Team
-
-`POST api/v1/protected/teams/:team_id/leave`
-
-Leave this team that you are a part of. Cannot be called by the leader of the team. Will set team role to `NONE`.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Successfully left team.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `400 BAD REQUEST`
-
-If the user is not on the team.
-
-##### `400 BAD REQUEST`
-
-If the user is the leader of the team.
-
-### Disband a Team
-
-`POST api/v1/protected/teams/:team_id/disband`
-
-Leader only. Disband this team. The `deleted_at` field will be set to the current timestamp.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Successfully deleted team.
-
-##### `400 BAD REQUEST`
-
-If the `team_id` specified is not associated with an existing team.
-
-##### `401 UNAUTHORIZED`
-
-If the user is not the team leader.
-
-### Transfer Team Ownership
-
-`POST api/v1/protected/teams/:team_id/transfer_ownership`
-
-Leader only. Makes the current team leader a regular team member and the specified user the team leader.
-
-#### Request Body
-
-```json
-{
-    "newLeaderId": INT
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Success.
-
-##### `400 BAD REQUEST`
-
-If the `user_id` specified is not associated with a user.
-
-##### `400 BAD REQUEST`
-
-If the given user is not on the team.
-
-##### `401 UNAUTHORIZED`
-
-If the requesting user is not the team leader.
 
 ## Auth Router
 
@@ -1535,78 +909,6 @@ If the request was malformed.
 ##### `401 UNAUTHORIZED`
 
 If the user is not a super admin.
-
-## Leaderboard Router
-
-The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public so that a future release can include a public leaderboard page. Since none of the information here is strictly private, the consequences of making it public are minimal.
-
-A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field. The tie breaker for users or teams with the same number of completed blocks is whatever order the database returns the values in.
-
-### Get Users Leaderboard
-
-`GET api/v1/leaderboard/users?previousDays=INT`
-
-Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded.
-
-#### Query Params
-
-##### previousDays: INT
-
-The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
-
-#### Responses
-
-##### `200 OK`
-
-```json
-{
-  "users": [
-    {
-      "id": INT,
-      "name": STRING,
-      "blocksCounted": INT
-    },
-    ...
-  ]
-}
-```
-
-##### `400 BAD REQUEST`
-
-If the request was malformed.
-
-### Get Teams Leaderboard
-
-`GET api/v1/leaderboard/teams?previousDays=INT`
-
-Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown.
-
-#### Query Params
-
-##### previousDays: INT
-
-The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
-
-#### Responses
-
-##### `200 OK`
-
-```json
-{
-  "teams": [
-    {
-      "id": INT,
-      "name": STRING,
-      "blocksCounted": INT
-    },
-    ...
-  ]
-}
-```
-
-##### `400 BAD REQUEST`
-
-If the request was malformed.
 
 ## Neighborhoods Router
 
@@ -2573,3 +1875,704 @@ If the `previousDays` parameter is not an integer, such as a decimal or a non-nu
 ##### `401 UNAUTHORIZED`
 
 If the user is not an admin. 
+
+---
+
+## Reservations Router
+This router is used to manage reservations. A reservation is when a user claims a block and thereby commits to going around this block and mapping every tree they see on their side of the block. A block is completed when they have walked around the block, mapped every tree and subsequently confirmed on the app that they did completed those activities. The way our reservation system is set is that it creates a new entry into the reservation table every time an action is performed on a block. These possible actions are:
+
+- `reserve` - Reserve the given block for the given user.
+- `complete` - Complete the given block. 
+- `release`- Release the given block, meaning to cancel the reservation.
+- `uncomplete` - Admin only. Used to invalidate a completed reservation for any reason (not actually completed, want to inventory the block again, etc.)
+- `QA` - Admin only. Mark this block for QA, meaning that SFTT wants to go through the trees counted here and make sure everything looks okay.
+
+If the user specifies doesn't specify a team at the time of reservation the user is solely responsible for the block. If they do specify a team, then their team can also complete this block for them. This leads to two options when completing a block.
+
+1. The user who reserved the block completes the block, and can choose which, if any, team to credit it to. Credit goes to the reserving user and the team of their choosing.
+2. A teammate completes the block. The teammate cannot specify the team, since it was reserved by another user. Credit goes to the user who completes the block, not the reserving user, and their shared team.
+
+### Make a Reservation
+
+`POST api/v1/protected/reservations/reserve`
+
+Must be called on an open (not marked reserved, completed or QA) block. Will create a reservation for the user making the request for the given block. `team_id` is the team that the user wants to count this block with. This can always be left `NULL`. The purpose of specifying a team at the time of reservation is that it allows other team members to complete this block.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT,
+  "team_id": INT | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This block was reserved successfully.
+
+##### `400 BAD REQUEST`
+
+If there is not a block associated with the given `block_id`.
+
+##### `400 BAD REQUEST`
+ 
+If there is not a team associated with the given `team_id`.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'open'.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a member of the given team.
+
+### Complete a Reservation
+
+`POST api/v1/protected/reservations/complete`
+
+Must be called on a block reserved by the user or by a team they're on. `team_id` is the team that the user wants to credit with this block completion. This can always be left `NULL`.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT,
+  "team_id": INT | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+This reservation was completed successfully.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associatd with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'reserved'.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not a member of the given team.
+
+### Release a Reservation
+
+`POST api/v1/protected/reservations/release`
+
+Must be called on a reservation belonging to the user or a team they're the leader of. 
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This reservation was cancelled successfully.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'reserved'.
+
+### Uncomplete a Reservation (Admin Only)
+
+`POST api/v1/protected/reservations/uncomplete`
+
+Can only by called by admins. Will invalidate the last completion for the given block and opens the block back up for inventory.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This reservation was marked as incomplete successfully.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `400 BAD REQUEST`
+
+If the block does not have status 'complete'.
+
+### Mark for QA (Admin Only)
+
+`POST api/v1/protected/reservations/qa`
+
+Can only by called by admins on completed blocks. Will indicate that this block needs QA.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This block has been selected for QA.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Pass QA (Admin Only)
+
+`POST api/v1/protected/reservations/pass_qa`
+
+Can only by called by admins on blocks with a QA status. Will duplicate the completion entry from before it was marked for QA and add it as a new entry for the block completion. This preserves the QA as part of the blocks record and returns the block back to its previous state from before it was marked for QA.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This block has passed QA.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Fail QA (Admin Only)
+
+`POST api/v1/protected/reservations/fail_qa`
+
+Can only by called by admins on blocks with a QA status. Will mark the block as open by using the `UNCOMPLETE` action.
+
+#### Request Body
+
+```json
+{
+  "block_id": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+This block has failed QA.
+
+##### `400 BAD REQUEST`
+
+If the `block_id` specified is not associated with an existing block.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+## Teams Router
+
+This router is used to manage teams. A team consists of a group of users which work together to reach their set goals. Teams can have a leader, members and pending members. Users can also be marked as having `NONE` team role, meaning they have left the team or have been rejected.
+
+### Create a Team
+
+`POST api/v1/protected/teams/create`
+
+Create a team. The team will only contain the member that created it who is now specified as the team leader. It will not have any goals.
+
+#### Request Body
+
+```json
+{
+  "name": STRING,
+  "bio": STRING,
+  "inviteEmails": [
+    EMAIL,
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Returns the same response as the "Get a Team" route for the newly created team.
+
+##### `400 BAD REQUEST`
+
+If the team name is taken or if any of the email addresses is invalid.
+
+### Get a Team
+
+Used to get all the information about a given team. The `team_role` field for each user is one of the values in the team roles enum.
+
+`GET api/v1/protected/teams/:team_id`
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "id": INT,
+  "name": STRING,
+  "bio": STRING,
+  "finished": BOOLEAN,
+  "createdAt": TIMESTAMP,
+  "deletedAt": TIMESTAMP | NULL,
+  "members": [ // To add
+    {
+      "user_id": INT,
+      "username": STRING,
+      "team_role": TEAM_ROLE,
+    },
+    ...
+  ],
+  "goals": [
+    {
+      "id": INT,
+      "goal": INT,
+      "progress": INT, // To add
+      "start_date": TIMESTAMP,
+      "complete_by": TIMESTAMP,
+      "completion_date": TIMESTAMP | NULL
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+### Add a Goal
+
+`POST api/v1/protected/teams/:team_id/add_goal`
+
+Team leader only. Adds a goal to this team's list of goals.
+
+#### Request Body
+
+```json
+{
+  "goal": INT,
+  "start_at": TIMESTAMP,
+  "complete_by": TIMESTAMP
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the goal is negative.
+
+##### `400 BAD REQUEST`
+
+If the `complete_by` date is before the `start_at` date.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
+
+### Delete a Goal
+
+Team leader only. Deletes a goal from this team's list of goals. Simply removes the record from the table.
+
+`POST api/v1/protected/teams/:team_id/delete_goal/:goal_id`
+
+#### Request Body
+
+No request body.
+
+##### `400 BAD REQUEST`
+
+If the `goal_id` specified is not associated with an existing goal.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
+
+### Invite a User
+
+`POST api/v1/protected/teams/:team_id/invite`
+
+Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
+
+!!! Still in progress, emails for this route are not implemented.
+
+#### Request Body
+
+```json
+{
+  "invites": [
+    {
+      "name": STRING,
+      "email" STRING
+    },
+    ...
+  ]
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Users invited.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not team leader.
+
+### Get Applicants
+
+`GET api/v1/protected/teams/:team_id/applicants`
+
+Get the userIds for anyone that has requested to join this team as a map from userId to the "PENDING" team status
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "users": {
+    STRING: "PENDING",
+    STRING: "PENDING",
+    ...
+  },
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+### Apply to a Team
+
+`POST api/v1/protected/teams/:team_id/apply`
+
+Apply to join this team. Any member can apply to join a team that they are not currently on. They will have to be approved by the team leader before becoming an actual member of the team.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Applied successfully.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the user is already on the team or the user's status on this team is "PENDING".
+
+### Approve a User
+
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/approve`
+
+Team Leader only. Approve this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+This member has joined the team.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the `user_id` specified is not associated with a user with status "PENDING" on this team.
+
+##### `400 BAD REQUEST` 
+
+If the user that created the request no longer exists.
+
+##### `401 Unauthorized`
+
+If the user is not a team leader.
+
+### Reject a User
+
+`POST api/v1/protected/teams/:team_id/applicants/:user_id/reject`
+
+Team Leader only. Reject this applicant's request to join the team. The user_id will be the same as the id returned in the GET applicants API call. Their team role will be set to `NONE`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+This applicant has been removed from the applicant's list.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the `user_id` specified is not associated with a user with status "PENDING" on this team.
+
+##### `400 BAD REQUEST` 
+
+If the user that created the request no longer exists.
+
+##### `401 Unauthorized`
+
+If the user is not a team leader.
+
+### Kick a User
+
+`POST api/v1/protected/teams/:team_id/members/:member_id/kick`
+
+Leader only. Kicks a member off this team. Sets their team role to `NONE`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully kicked user.
+
+##### `400 BAD REQUEST` 
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the user is no longer on the team.
+
+##### `401 Unauthorized`
+
+If the user is not a team leader.
+
+### Leave a Team
+
+`POST api/v1/protected/teams/:team_id/leave`
+
+Leave this team that you are a part of. Cannot be called by the leader of the team. Will set team role to `NONE`.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully left team.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `400 BAD REQUEST`
+
+If the user is not on the team.
+
+##### `400 BAD REQUEST`
+
+If the user is the leader of the team.
+
+### Disband a Team
+
+`POST api/v1/protected/teams/:team_id/disband`
+
+Leader only. Disband this team. The `deleted_at` field will be set to the current timestamp.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Successfully deleted team.
+
+##### `400 BAD REQUEST`
+
+If the `team_id` specified is not associated with an existing team.
+
+##### `401 UNAUTHORIZED`
+
+If the user is not the team leader.
+
+### Transfer Team Ownership
+
+`POST api/v1/protected/teams/:team_id/transfer_ownership`
+
+Leader only. Makes the current team leader a regular team member and the specified user the team leader.
+
+#### Request Body
+
+```json
+{
+    "newLeaderId": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Success.
+
+##### `400 BAD REQUEST`
+
+If the `user_id` specified is not associated with a user.
+
+##### `400 BAD REQUEST`
+
+If the given user is not on the team.
+
+##### `401 UNAUTHORIZED`
+
+If the requesting user is not the team leader.
+
+
+## Leaderboard Router
+
+The leaderboard router is used to get the information displayed on the leaderboard, which is blocks completed per user. It is public so that a future release can include a public leaderboard page. Since none of the information here is strictly private, the consequences of making it public are minimal.
+
+A completed block is a block for which the last entry is either `complete` or `qa`. The user and team that are referenced in that last entry are the user and team that should be credited with the completion. If the user is `NULL`, no user will be credited with that completion, and the same goes for a `NULL` team field. The tie breaker for users or teams with the same number of completed blocks is whatever order the database returns the values in.
+
+### Get Users Leaderboard
+
+`GET api/v1/leaderboard/users?previousDays=INT`
+
+Returns a list of the top 100 users with counted blocks, of usernames and the blocks those users counted, in order of the number of blocks they counted from most to least. All users with `SUPER_ADMIN` privilege level are excluded.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "users": [
+    {
+      "id": INT,
+      "name": STRING,
+      "blocksCounted": INT
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+### Get Teams Leaderboard
+
+`GET api/v1/leaderboard/teams?previousDays=INT`
+
+Returns a list of the top 100 team's names and the blocks those teams counted, in order of the number of blocks they counted from most to least. Only teams with blocks counted will be shown.
+
+#### Query Params
+
+##### previousDays: INT
+
+The number of days in the past the leaderboard is representing. Only blocks completed within the last specified number of days will be counted towards the leaderboard. This value should be specified, by default it is set to 100 days.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "teams": [
+    {
+      "id": INT,
+      "name": STRING,
+      "blocksCounted": INT
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
