@@ -75,34 +75,6 @@ Malformed request.
 ##### `401 Unauthorized`
 The username/password combination is invalid.
 
-### Refresh Access Token
-
-`POST api/v1/user/login/refresh`
-
-Used for getting a new access token.
-
-#### Request body
-
-```json
-{
-  "X-Refresh-Token" : JWT
-}
-```
-
-#### Responses
-
-##### `201 Created`
-The refresh token is valid and has not yet expired. Response includes a new unique access_token.
-
-```json
-{
-  "freshAccessToken" : JWT,
-}
-```
-
-##### `401 Unauthorized`
-The refresh token is invalid.
-
 ### Sign Up
 
 `POST api/v1/user/signup`
@@ -168,6 +140,34 @@ Used for logging out.
 ##### `204 No Content`
 Logout successful.
 
+### Refresh Access Token
+
+`POST api/v1/user/login/refresh`
+
+Used for getting a new access token.
+
+#### Request body
+
+```json
+{
+  "X-Refresh-Token" : JWT
+}
+```
+
+#### Responses
+
+##### `201 Created`
+The refresh token is valid and has not yet expired. Response includes a new unique access_token.
+
+```json
+{
+  "freshAccessToken" : JWT,
+}
+```
+
+##### `401 Unauthorized`
+The refresh token is invalid.
+
 ### Request Password Reset
 
 `POST api/v1/user/forgot_password/request`
@@ -223,6 +223,26 @@ The new password that was given is an invalid password.
 
 The given secret key is invalid and does not refer to an account or was created too long ago to be valid.
 
+### Create Secret Key
+
+!!! missing "This route still needs to be implemented"
+
+`GET api/v1/user/create_secret/:user_id`
+
+Used to create secret keys for users.
+
+#### Request Body
+
+None. The `user_id` parameter is the id of the user the secret key should be linked to.
+
+#### Responses
+
+##### `200 OK`
+A secret key was created and stored for the given user.
+
+##### `400 BAD REQUEST`
+The `user_id` is not associated with a user.
+
 ### Verify Secret Key
 
 `GET api/v1/user/verify/:secret_key`
@@ -242,58 +262,9 @@ The user's secret key has been verified.
 ##### `401 Unauthorized`
 The secret key is invalid or expired.
 
-### Create Secret Key
-
-!!! missing "This route still needs to be implemented"
-
-`GET api/v1/user/create_secret/:user_id`
-
-Used to create secret keys for users.
-
-#### Request Body
-
-None. The user_id parameter is the id of the user the secret key should be linked to.
-
-#### Responses
-
-##### `200 OK`
-A secret key was created and stored for the given user.
-
-##### `400 BAD REQUEST`
-The `user_id` is not associated with a user.
-
 ## Users Router
 
 This router is used for routes that affects user accounts. It can only be called when a user is authenticated, as opposed to the auth router which is public.
-
-### Change Password
-
-`POST api/v1/protected/user/change_password`
-
-Allows a user to change their password when already authenticated. Passwords should be strings with a length of at least 8 characters.
-
-#### Request Body
-
-```json
-{
-  "currentPassword": STRING,
-  "newPassword": STRING
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-The password change was successful.
-
-##### `400 BAD REQUEST`
-
-If the request was malformed.
-
-##### `401 Unauthorized`
-
-The currentPassword does not match the calling user's current password.
 
 ### Change Username
 
@@ -323,6 +294,35 @@ The password does not match the calling user's current password.
 
 ##### `409 Conflict`
 The given `newUsername` is already in use.
+
+### Change Password
+
+`POST api/v1/protected/user/change_password`
+
+Allows a user to change their password when already authenticated. Passwords should be strings with a length of at least 8 characters.
+
+#### Request Body
+
+```json
+{
+  "currentPassword": STRING,
+  "newPassword": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+The password change was successful.
+
+##### `400 BAD REQUEST`
+
+If the request was malformed.
+
+##### `401 Unauthorized`
+
+The currentPassword does not match the calling user's current password.
 
 ### Change Email
 
@@ -978,7 +978,7 @@ If the calling user is not an admin.
 
 The sites router is used to handle all the sites and create new ones. A site can be either a planting site without a tree or there can be a tree present. They are differentiated by the field `tree_present` in the `site_entries` table. 
 
-### Add a Site
+### Add Site
 
 `POST api/v1/protected/sites/add`
 
@@ -1081,7 +1081,7 @@ If the request body is malformed.
 
 If the calling user is not an admin.
 
-### Add a Potential Site
+### Add Potential Site
 
 !!! missing "This route still needs to be implemented"
 
@@ -1126,7 +1126,7 @@ Site successfully added.
 
 If the request body is malformed.
 
-### Get a Site
+### Get Site
 
 `GET api/v1/sites/:site_id`
 
@@ -1206,17 +1206,23 @@ No request body.
 
 If the `site_id` specified is invalid.
 
-### Upload Site Image
+### Edit Site (Admin Only)
 
-`POST api/v1/protected/sites/:site_id/upload_image`
+`POST api/v1/protected/sites/:site_id/edit`
 
-Used to update the image of a site. The `image` field of the most recent entry in the `site_entries` table associated with the specified site will be updated. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
+Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Only the `block_id` field is not required.
 
 #### Request Body
 
 ```json
 {
-  "image": STRING | NULL
+  "blockId": INT | NULL,
+  "address": STRING,
+  "city": STRING,
+  "zip": STRING,
+  "lat": DOUBLE,
+  "lng": DOUBLE,
+  "neighborhoodId": INT
 }
 ```
 
@@ -1224,16 +1230,41 @@ Used to update the image of a site. The `image` field of the most recent entry i
 
 ##### `200 OK`
 
-Site successfully updated.
+Features of site successfully edited.
 
 ##### `400 BAD REQUEST`
 
-If the request body is malformed.
-If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
-If the image url specified is non-null and invalid.
-If an unauthorized user tries to perform this action.
+If any of the specified `site_id`, `block_id`, or `neighborhood_id` are invalid. An invalid id is a non-existent id or the id of a deleted site, block, or neighborhood.
 
-### Update a Site
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Delete Site (Admin Only)
+
+`POST api/v1/protected/sites/:site_id/delete`
+
+Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified is invalid.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Add Site Entry
 
 `POST api/v1/protected/sites/:site_id/update`
 
@@ -1301,23 +1332,17 @@ Site successfully updated.
 If the request body is malformed.
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
-### Edit a Site (Admin Only)
+### Upload Site Image
 
-`POST api/v1/protected/sites/:site_id/edit`
+`POST api/v1/protected/sites/:site_id/upload_image`
 
-Used to edit the features of a site. This is done by querying the appropriate site and setting the given features. Only the `block_id` field is not required.
+Used to update the image of a site. The `image` field of the most recent entry in the `site_entries` table associated with the specified site will be updated. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
 
 #### Request Body
 
 ```json
 {
-  "blockId": INT | NULL,
-  "address": STRING,
-  "city": STRING,
-  "zip": STRING,
-  "lat": DOUBLE,
-  "lng": DOUBLE,
-  "neighborhoodId": INT
+  "image": STRING | NULL
 }
 ```
 
@@ -1325,39 +1350,14 @@ Used to edit the features of a site. This is done by querying the appropriate si
 
 ##### `200 OK`
 
-Features of site successfully edited.
+Site successfully updated.
 
 ##### `400 BAD REQUEST`
 
-If any of the specified `site_id`, `block_id`, or `neighborhood_id` are invalid. An invalid id is a non-existent id or the id of a deleted site, block, or neighborhood.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin.
-
-### Delete Site (Admin Only)
-
-`POST api/v1/protected/sites/:site_id/delete`
-
-Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Site successfully deleted.
-
-##### `400 BAD REQUEST`
-
-If the `site_id` specified is invalid.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin.
+If the request body is malformed.
+If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
+If the image url specified is non-null and invalid.
+If an unauthorized user tries to perform this action.
 
 ### Mark Site for QA (Admin Only)
 
@@ -1385,7 +1385,7 @@ If the `site_id` specified is invalid.
 
 If the calling user is not an admin.
 
-### Adopt a Site
+### Adopt Site
 
 `POST api/v1/protected/sites/:site_id/adopt`
 
@@ -1405,7 +1405,7 @@ Site successfully marked as adopted.
 
 If the `site_id` specified does not exist or is already adopted.
 
-### Parent Adopt a Site for Child
+### Parent Adopt Site for Child
 
 `POST api/v1/protected/sites/:site_id/parent_adopt`
 
@@ -1433,7 +1433,7 @@ If the `site_id` specified does not exist or is already adopted.
 
 If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
 
-### Remove Site as Adopted
+### Unadopt Site
 
 `POST api/v1/protected/sites/:site_id/unadopt`
 
@@ -1457,7 +1457,7 @@ If the `site_id` specified does not exist.
 
 If the site is not adopted by the user.
 
-### Force Remove Site as Adopted (Admin only)
+### Force Unadopt Site (Admin only)
 
 `POST api/v1/protected/sites/:site_id/force_unadopt`
 
