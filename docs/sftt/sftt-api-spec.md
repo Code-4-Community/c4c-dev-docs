@@ -522,7 +522,6 @@ The given email or username is already in use.
 "Error creating new child user, given username %s already used"
 ```
 
-
 ### Get Child User Data
 
 `GET api/v1/protected/user/child_data`
