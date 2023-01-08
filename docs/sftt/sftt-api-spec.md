@@ -1680,7 +1680,7 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 `POST api/v1/protected/sites/add`
 
-Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `block_id`, `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
 `NULL` `BOOLEAN`s will be treated as `false`.
 
 All measurements should be given in inches.
@@ -1691,7 +1691,7 @@ measurements should be given as numbers and assumed to be in inches.
 
 ```json
 {
-    "blockId": INT,
+    "blockId": INT | NULL,
     "lat": LONG,
     "lng": LONG,
     "city": STRING,
@@ -1748,6 +1748,36 @@ Site successfully added.
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
+
+### Add Sites (Admin Only)
+
+`POST api/v1/protected/sites/add_sites`
+
+Used to add multiple new sites. The request body is the content of a CSV file and must contain the following columns: `blockId`, `lat`, `lng`, `zip`, `address`, and `neighborhoodId`. Every column besides `lat`, `lng`, `city`, `zip`, `address`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order. Blank cell values are treated as default or empty values (`null`, `""`, `false`, etc.).
+
+For more information, refer to the documentation on adding a site (https://docs.c4cneu.com/sftt/sftt-api-spec/#add-a-site).
+
+#### Request Body
+
+```
+blockId, lat, lng, city, zip, address, neighborhoodId, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
+INT | NULL, LONG, LONG, STRING, STRING, STRING, INT, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
+...
+```
+
+#### Responses
+
+##### `200 OK`
+
+All sites successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
 
 ### Add a Potential Site
 
@@ -2073,6 +2103,34 @@ Site successfully marked as adopted.
 
 If the `site_id` specified does not exist or is already adopted.
 
+### Parent Adopt a Site for Child
+
+`POST api/v1/protected/sites/:site_id/parent_adopt`
+
+Adopt the given site on behalf of a specified child account. Creates a record in the adopted sites table linking the child user and the site.
+
+#### Request Body
+
+```json
+{
+  "childUserId": INT
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Site successfully marked as adopted.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist or is already adopted. 
+
+##### `400 BAD REQUEST`
+
+If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
+
 ### Remove Site as Adopted
 
 `POST api/v1/protected/sites/:site_id/unadopt`
@@ -2175,6 +2233,43 @@ Activity successfully recorded.
 ##### `400 BAD REQUEST`
 
 If the `site_id` specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If all activities are `False`.
+
+### Parent Record Stewardship Activity for Child
+
+`POST api/v1/protected/sites/:site_id/parent_record_stewardship`
+
+Records a stewardship activity on behalf of the specified child account. Date is the day on which the activity was performed, which can be in the past if the parent is adding a past activity for the child. Indicate `True` if the activity (watered, mulched, etc.) was completed, else `False`.  At least one activity must be `True`.
+
+#### Request Body
+
+```json
+{
+  "childUserId": INT,
+  "date": DATE,
+  "watered": BOOLEAN,
+  "mulched": BOOLEAN,
+  "cleaned": BOOLEAN,
+  "weeded": BOOLEAN
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully recorded.
+
+##### `400 BAD REQUEST`
+
+If the `site_id` specified does not exist.
+
+##### `400 BAD REQUEST`
+
+If the user corresponding to the childUserId either does not exist or is not a child account of the parent user.
 
 ##### `400 BAD REQUEST`
 
