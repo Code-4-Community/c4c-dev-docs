@@ -696,8 +696,8 @@ Used to import blocks into the database. Since blocks reference neighborhoods wi
 {
   "blocks": [
     {
-      "block_id": INT,
-      "neighborhood_id": INT,
+      "blockId": INT,
+      "neighborhoodId": INT,
       "lat": LONG,
       "lng": LONG,
       "geometry": STRING,
@@ -733,13 +733,13 @@ Used to import neighborhoods into the database. Must be called before importing 
 {
   "neighborhoods": [
     {
-      "neighborhood_id": INT,
-      "neighborhood_name": STRING,
-      "sq_miles": DOUBLE,
+      "neighborhoodId": INT,
+      "name": STRING,
+      "sqmiles": DOUBLE,
       "lat": LONG,
       "lng": LONG,
       "geometry": STRING,
-      "canopy_coverage": DOUBLE,
+      "canopyCoverage": DOUBLE,
     },
     ...
   ]
@@ -836,24 +836,24 @@ Used to import sites into the database. See below for a description of each ambi
 {
   "sites": [
     {
-      "block_id": INT,
+      "siteId": INT,
+      "blockId": INT,
       "lat": LONG,
       "lng": LONG,
       "city": STRING,
       "zip": STRING,
       "address": STRING,
-      "neighborhood_id": INT,
-      "deleted_at": TIMESTAMP,
-      "site_id": INT,
-      "user_id": INT,
+      "neighborhoodId": INT,
+      "deletedAt": TIMESTAMP,
+      "userId": INT,
       "username": USERNAME,
-      "updated_at": TIMESTAMP,
+      "updatedAt": TIMESTAMP,
       "qa": BOOLEAN,
-      "tree_present": BOOLEAN,
+      "treePresent": BOOLEAN,
       "status": STRING,
       "genus": STRING,
       "species": STRING,
-      "common_name": STRING,
+      "commonName": STRING,
       "confidence": STRING,
       "multistem": BOOLEAN,
       "diameter": DOUBLE,
@@ -863,33 +863,33 @@ Used to import sites into the database. See below for a description of each ambi
       "condition": STRING,
       "discoloring": BOOLEAN,
       "leaning": BOOLEAN,
-      "constricting_grate": BOOLEAN,
+      "constrictingGrate": BOOLEAN,
       "wounds": BOOLEAN,
       "pooling": BOOLEAN,
-      "stakes_with_wires": BOOLEAN,
-      "stakes_without_wires": BOOLEAN,
+      "stakesWithWires": BOOLEAN,
+      "stakesWithoutWires": BOOLEAN,
       "light": BOOLEAN,
       "bicycle": BOOLEAN,
-      "bag_empty": BOOLEAN,
-      "bag_filled": BOOLEAN,
+      "bagEmpty": BOOLEAN,
+      "bagFilled": BOOLEAN,
       "tape": BOOLEAN,
-      "sucker_growth": BOOLEAN,
-      "site_type": STRING,
-      "sidewalk_width": STRING,
-      "site_width": STRING,
-      "site_length": STRING,
+      "suckerGrowth": BOOLEAN,
+      "siteType": STRING,
+      "sidewalkWidth": STRING,
+      "siteWidth": STRING,
+      "siteLength": STRING,
       "material": STRING,
-      "raised_bed": BOOLEAN,
+      "raisedBed": BOOLEAN,
       "fence": STRING,
       "trash": STRING,
       "wires": STRING,
       "grate": STRING,
       "stump": STRING,
-      "tree_notes": STRING,
-      "site_notes": STRING,
-      "melnea_cass_trees": STRING,
-      "mcb_number": INT,
-      "tree_dedicated_to": STRING
+      "treeNotes": STRING,
+      "siteNotes": STRING,
+      "melneaCassTrees": STRING,
+      "mcbNumber": INT,
+      "treeDedicatedTo": STRING
     },
     ...
   ]
@@ -1099,7 +1099,7 @@ Creates a potential site, which is a place where the city could potentially plac
 
 ```json
 {
-  "block_id": INT,
+  "block_id": INT | NULL,
   "lat": LONG,
   "lng": LONG,
   "city": STRING,
@@ -1143,19 +1143,19 @@ No request body.
 
 ```json
 {
-  "site_id": INT,
-  "block_id": INT,
+  "siteId": INT,
+  "blockId": INT | NULL,
   "lat": LONG,
   "lng": LONG,
   "city": STRING,
   "zip": STRING,
   "address": STRING,
-  "neighborhood_id": INT,
+  "neighborhoodId": INT,
   "entries": [
     {
       "id": INT,
       "username": USERNAME,
-      "updated_at": TIMESTAMP,
+      "updatedAt": TIMESTAMP,
       "treePresent": BOOLEAN | NULL,
       "status": STRING | NULL,
       "genus": STRING | NULL,
@@ -1244,7 +1244,7 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/sites/:site_id/delete`
 
-Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp. 
+Used to delete a site. This is done by setting `deleted_at` in the `sites` table to the current timestamp.
 
 #### Request Body
 
@@ -1499,7 +1499,7 @@ Return a list of integers representing the site ID's of the users adopted sites.
 
 ```json
 {
-  "favorites": [
+  "adoptedSites": [
     INT,
     INT,
     INT,
@@ -1577,30 +1577,6 @@ If the user corresponding to the childUserId either does not exist or is not a c
 
 If all activities are `False`.
 
-### Delete Stewardship Activity (Admin and Author Only)
-
-`POST api/v1/protected/sites/delete_stewardship/:activity_id`
-
-Deletes the stewardship activity from the database. This is in case either SFTT believes the activity was not performed or if the activity recorder made a mistake.
-
-#### Request Body
-
-No request body.
-
-#### Responses
-
-##### `200 OK`
-
-Activity successfully removed.
-
-##### `400 BAD REQUEST`
-
-If the `activity_id` specified is not associated with an existing activity.
-
-##### `401 UNAUTHORIZED`
-
-If the calling user is not an admin or the user listed on the activity.
-
 ### Edit Stewardship Activity (Admin and Author Only)
 
 `POST api/v1/protected/sites/edit_stewardship/:activity_id`
@@ -1637,9 +1613,33 @@ If all activities are `False`.
 
 If the calling user is not an admin or the user listed on the activity.
 
+### Delete Stewardship Activity (Admin and Author Only)
+
+`POST api/v1/protected/sites/delete_stewardship/:activity_id`
+
+Deletes the stewardship activity from the database. This is in case either SFTT believes the activity was not performed or if the activity recorder made a mistake.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Activity successfully removed.
+
+##### `400 BAD REQUEST`
+
+If the `activity_id` specified is not associated with an existing activity.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin or the user listed on the activity.
+
 ### Get Stewardship Activities By Site
 
-`GET api/v1/protected/sites/:site_id/stewardship_activities`
+`GET api/v1/sites/:site_id/stewardship_activities`
 
 Returns all the recorded stewardship activities for the indicated site. Array will be sorted by date, from most recent to least recent, and a secondary sort on id. 
 
@@ -1653,10 +1653,10 @@ No request body.
 
 ```json
 {
-  "activities": [
+  "stewardshipActivities": [
     {
       "id": INT,
-      "user_id": INT,
+      "userId": INT,
       "date": DATE,
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
