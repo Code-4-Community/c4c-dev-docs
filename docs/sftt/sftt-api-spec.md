@@ -522,6 +522,39 @@ The given email or username is already in use.
 "Error creating new child user, given username %s already used"
 ```
 
+### Get Child User Data
+
+`GET api/v1/protected/user/child_data`
+
+!!! missing "This route still needs to be implemented"
+
+Get the user data for all of the calling user's child accounts, including their user IDs and first and last names.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "childData": [
+    {
+      "userId": INT,
+      "firstName": STRING,
+      "lastName": STRING
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the calling user does not exist.
+
 ## Map Router
 
 
@@ -1332,17 +1365,56 @@ Site successfully updated.
 If the request body is malformed.
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
-### Upload Site Image
+### Edit Site Entry (Admin Only)
 
-`POST api/v1/protected/sites/:site_id/upload_image`
+!!! missing "This route still needs to be implemented"
 
-Used to update the image of a site. The `image` field of the most recent entry in the `site_entries` table associated with the specified site will be updated. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. If the given URL is NULL, any pre-existing site image for the specified site will be deleted.
+`POST api/v1/protected/sites/edit_entry/:entry_id`
+
+Updates a site's existing site entry with the given values. Every field can be `NULL`. `NULL` `BOOLEAN`s will be treated as `false`. All measurements should be given as numbers in inches.
 
 #### Request Body
 
 ```json
 {
-  "image": STRING | NULL
+  "treePresent": BOOLEAN | NULL,
+  "status": STRING | NULL,
+  "genus": STRING | NULL,
+  "species": STRING | NULL,
+  "commonName": STRING | NULL,
+  "confidence": STRING | NULL,
+  "diameter": DOUBLE | NULL,
+  "circumference": DOUBLE | NULL,
+  "multistem": BOOLEAN | NULL,
+  "coverage": STRING | NULL,
+  "pruning": STRING | NULL,
+  "condition": STRING | NULL,
+  "discoloring": BOOLEAN | NULL,
+  "leaning": BOOLEAN | NULL,
+  "constrictingGrate": BOOLEAN | NULL,
+  "wounds": BOOLEAN | NULL,
+  "pooling": BOOLEAN | NULL,
+  "stakesWithWires": BOOLEAN | NULL,
+  "stakesWithoutWires": BOOLEAN | NULL,
+  "light": BOOLEAN | NULL,
+  "bicycle": BOOLEAN | NULL,
+  "bagEmpty": BOOLEAN | NULL,
+  "bagFilled": BOOLEAN | NULL,
+  "tape": BOOLEAN | NULL,
+  "suckerGrowth": BOOLEAN | NULL,
+  "siteType": STRING | NULL,
+  "sidewalkWidth": STRING | NULL,
+  "siteWidth": DOUBLE | NULL,
+  "siteLength": DOUBLE | NULL,
+  "material": STRING | NULL,
+  "raisedBed": BOOLEAN | NULL,
+  "fence": BOOLEAN | NULL,
+  "trash": BOOLEAN | NULL,
+  "wires": BOOLEAN | NULL,
+  "grate": BOOLEAN | NULL,
+  "stump": BOOLEAN | NULL,
+  "treeNotes": STRING | NULL,
+  "siteNotes": STRING | NULL
 }
 ```
 
@@ -1350,14 +1422,100 @@ Used to update the image of a site. The `image` field of the most recent entry i
 
 ##### `200 OK`
 
-Site successfully updated.
+Specified site entry successfully edited.
 
 ##### `400 BAD REQUEST`
 
 If the request body is malformed.
-If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
-If the image url specified is non-null and invalid.
-If an unauthorized user tries to perform this action.
+If the `entry_id` specified is not associated with an existing site entry.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Delete Site Entry (Admin Only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/sites/delete_entry/:entry_id`
+
+Deletes the specified site entry from the database.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Site entry successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the `entry_id` specified is not associated with an existing activity.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
+### Upload Site Image (Admin and Owner only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/sites/upload_image/:site_id`
+
+Adds an image of a site's most recent site entry. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. The `imageEncoding` field must be a valid base 64 encoding of the image to upload.
+
+#### Request Body
+
+```json
+{
+  "imageEncoding": STRING
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Image successfully added.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+If the specified site ID is non-existent.
+If the given base64 encoding of the image is non-null and invalid.
+
+##### `401 UNAUTHORIZED`
+
+If a standard user that does not own the site tries to perform this action.
+
+### Delete Site Image (Admin and Owner only)
+
+!!! missing "This route still needs to be implemented"
+
+`POST api/v1/protected/sites/delete_image/:image_id`
+
+Deletes the site image with the given `image_id`. Only users who are owners of the specified site, Admins, or Super Admins can perform this action.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Image successfully deleted.
+
+##### `400 BAD REQUEST`
+
+If the `image_id` specified is not associated with an existing site image.
+
+##### `401 UNAUTHORIZED`
+
+If a standard user that does not own the site tries to perform this action.
 
 ### Mark Site for QA (Admin Only)
 
@@ -1699,6 +1857,41 @@ If the `site_id` specified does not exist or if `name` is more than 60 character
 ##### `401 UNAUTHORIZED`
 
 If the user is not the site's adopter.
+
+### Calculate Tree Benefits
+
+!!! missing "This route still needs to be implemented"
+
+`GET api/v1/sites/:site_id/calculate_benefits`
+
+Calculates and returns the environmental impacts of the latest site entry of the site with the given `site_id`. This includes the following values: energy conserved, stormwater filtered, air quality improved, carbon dioxide removed, and carbon dioxide stored, as well as the amount of money saved for each category.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "energy": DOUBLE,
+  "energyMoney": DOUBLE,
+  "stormwater": DOUBLE,
+  "stormwaterMoney": DOUBLE,
+  "airQuality": DOUBLE,
+  "airQualityMoney": DOUBLE,
+  "co2Removed": DOUBLE,
+  "co2RemovedMoney": DOUBLE,
+  "co2Stored": DOUBLE,
+  "co2StoredMoney": DOUBLE
+}
+```
+
+##### `400 BAD REQUEST`
+
+If there is no site with the given `site_id`.
 
 ## Report Router
 
