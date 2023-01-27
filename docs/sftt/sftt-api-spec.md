@@ -1893,8 +1893,6 @@ No request body.
 
 If there is no site with the given `site_id`.
 
-!!! missing "This route still needs to be implemented"
-
 ### Filter Sites (Admin Only)
 
 `GET api/v1/protected/sites/filter_sites`
