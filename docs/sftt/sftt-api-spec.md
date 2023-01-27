@@ -1893,6 +1893,74 @@ No request body.
 
 If there is no site with the given `site_id`.
 
+### Filter Sites (Admin Only)
+
+`GET api/v1/protected/sites/filter_sites`
+
+!!! missing "This route still needs to be implemented"
+
+Return data on sites matching all of the given criteria: species of tree, range of adopted date, range of last stewardship activity recorded date, and neighborhood. A criterion is ignored (i.e. sites are not filtered on a criterion) if its value is `NULL`. See below for a description of each criterion.
+
+A site matches the criterion if:
+
+- `treeSpecies`: the species of the site's latest site entry is in the list
+- `adoptedStart`: the site has been adopted by a user on or after this date
+- `adoptedEnd`: the site has been adopted by a user on or before this date
+- `lastActivityStart`: the site's latest stewardship activity was recorded on or after this date
+- `lastActivityEnd`: the site's latest stewardship activity was recorded on or before this date
+- `neighborhoodIds`: the site is located in a neighborhood in the list
+
+#### Request Body
+
+```json
+{
+  "treeSpecies": [
+    STRING,
+    ...
+  ] | NULL,
+  "adoptedStart": DATE | NULL,
+  "adoptedEnd": DATE | NULL,
+  "lastActivityStart": DATE | NULL,
+  "lastActivityEnd": DATE | NULL,
+  "neighborhoodIds": [
+    INT,
+    ...
+  ] | NULL
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+In the JSON below, `adopterId` is the adopter's user ID, `adopterActivityCount` is the number of stewardship activities performed within the given `lastActivity` range, if applicable, and `lastActivityWeeks` is the number of weeks since the last stewardship activity.
+
+```json
+{
+  "filteredSites": [
+    {
+      "siteId": INT,
+      "address": STRING,
+      "adopterId": INT,
+      "adopterName": STRING,
+      "dateAdopted": DATE,
+      "adopterActivityCount": INT,
+      "neighborhoodId": INT,
+      "lastActivityWeeks": INT
+    },
+    ...
+  ]
+}
+```
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed.
+
+##### `401 UNAUTHORIZED`
+
+If the calling user is not an admin.
+
 ## Report Router
 
 The report router is used to get reports on the status of trees and adoptions.
