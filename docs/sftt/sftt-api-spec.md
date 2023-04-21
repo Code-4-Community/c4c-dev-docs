@@ -1367,8 +1367,6 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 ### Edit Site Entry (Admin Only)
 
-!!! missing "This route still needs to be implemented"
-
 `POST api/v1/protected/sites/edit_entry/:entry_id`
 
 Updates a site's existing site entry with the given values. Every field can be `NULL`. `NULL` `BOOLEAN`s will be treated as `false`. All measurements should be given as numbers in inches.
