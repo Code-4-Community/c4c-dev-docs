@@ -536,9 +536,7 @@ The given email or username is already in use.
 
 `GET api/v1/protected/user/child_data`
 
-!!! missing "This route still needs to be implemented"
-
-Get the user data for all of the calling user's child accounts, including their user IDs and first and last names.
+Get the user data for all of the calling user's child accounts, including their first and last names, emails, and usernames.
 
 #### Request Body
 
@@ -552,9 +550,10 @@ No request body.
 {
   "childData": [
     {
-      "userId": INT,
       "firstName": STRING,
-      "lastName": STRING
+      "lastName": STRING,
+      "email": EMAIL,
+      "username": STRING
     },
     ...
   ]
