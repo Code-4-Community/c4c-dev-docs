@@ -1910,24 +1910,24 @@ If there is no site with the given `site_id`.
 
 `GET api/v1/protected/sites/filter_sites`
 
-!!! missing "This route still needs to be implemented"
-
-Return data on sites matching all of the given criteria: species of tree, range of adopted date, range of last stewardship activity recorded date, and neighborhood. A criterion is ignored (i.e. sites are not filtered on a criterion) if its value is `NULL`. See below for a description of each criterion.
+Return data on sites matching all of the given criteria: common names of tree, range of adopted date, range of last stewardship activity recorded date, and neighborhood. A criterion is ignored (i.e. sites are not filtered on a criterion) if its value is `NULL`. See below for a description of each criterion.
 
 A site matches the criterion if:
 
-- `treeSpecies`: the species of the site's latest site entry is in the list
+- `treeCommonNames`: the common names of the site's latest site entry is in the list
 - `adoptedStart`: the site has been adopted by a user on or after this date
 - `adoptedEnd`: the site has been adopted by a user on or before this date
 - `lastActivityStart`: the site's latest stewardship activity was recorded on or after this date
 - `lastActivityEnd`: the site's latest stewardship activity was recorded on or before this date
 - `neighborhoodIds`: the site is located in a neighborhood in the list
+- `activityCountMin`: the number of stewardship activities recorded by the site's current adopter is greater than or equal to this minimum
+- `activityCountMax`: the number of stewardship activities recorded by the site's current adopter is less than or equal to this maximum
 
 #### Request Body
 
 ```json
 {
-  "treeSpecies": [
+  "treeCommonNames": [
     STRING,
     ...
   ] | NULL,
@@ -1938,7 +1938,9 @@ A site matches the criterion if:
   "neighborhoodIds": [
     INT,
     ...
-  ] | NULL
+  ] | NULL,
+  "activityCountMin": INT,
+  "activityCountMax": INT | NULL,
 }
 ```
 
@@ -1956,6 +1958,7 @@ In the JSON below, `adopterId` is the adopter's user ID, `adopterActivityCount` 
       "address": STRING | NULL,
       "adopterId": INT,
       "adopterName": STRING,
+      "adopterEmail": STRING,
       "dateAdopted": DATE,
       "adopterActivityCount": INT,
       "neighborhoodId": INT,
