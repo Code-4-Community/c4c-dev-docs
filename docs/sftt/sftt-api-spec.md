@@ -683,7 +683,8 @@ No request body.
         "common_name": STRING,
         "planting_date": TIMESTAMP,
         "adopter_id": INT,
-        "address": STRING
+        "address": STRING,
+        "owner": STRING
       },
       "geometry": {
         "type": "Point",
