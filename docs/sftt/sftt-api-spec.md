@@ -887,6 +887,7 @@ Used to import sites into the database. See below for a description of each ambi
       "zip": STRING,
       "address": STRING,
       "neighborhoodId": INT,
+      "owner": STRING,
       "deletedAt": TIMESTAMP,
       "userId": INT,
       "username": USERNAME,
