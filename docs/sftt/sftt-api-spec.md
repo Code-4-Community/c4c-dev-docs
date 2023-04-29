@@ -1088,15 +1088,15 @@ If the request body is malformed.
 
 `POST api/v1/protected/sites/add_sites`
 
-Used to add multiple new sites. The request body is the content of a CSV file and must contain the following columns: `blockId`, `lat`, `lng`, `zip`, `address`, and `neighborhoodId`. Every column besides `lat`, `lng`, `city`, `zip`, `address`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order. Blank cell values are treated as default or empty values (`null`, `""`, `false`, etc.).
+Used to add multiple new sites. The request body is the content of a CSV file and must contain the following columns: `blockId`, `lat`, `lng`, `zip`, `address`, and `neighborhoodId`. Every column besides `lat`, `lng`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order. Blank cell values are treated as default or empty values (`null`, `""`, `false`, etc.).
 
 For more information, refer to the documentation on adding a site (https://docs.c4cneu.com/sftt/sftt-api-spec/#add-a-site).
 
 #### Request Body
 
 ```
-blockId, lat, lng, city, zip, address, neighborhoodId, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
-INT | NULL, LONG, LONG, STRING, STRING, STRING, INT, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
+blockId, lat, lng, city, zip, address, neighborhood, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
+INT | NULL, LONG, LONG, STRING | NULL, STRING | NULL, STRING | NULL, STRING, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
 ...
 ```
 
@@ -1938,13 +1938,13 @@ In the JSON below, `adopterId` is the adopter's user ID, `adopterActivityCount` 
   "filteredSites": [
     {
       "siteId": INT,
-      "address": STRING,
+      "address": STRING | NULL,
       "adopterId": INT,
       "adopterName": STRING,
       "dateAdopted": DATE,
       "adopterActivityCount": INT,
       "neighborhoodId": INT,
-      "lastActivityWeeks": INT
+      "lastActivityWeeks": INT | NULL
     },
     ...
   ]
