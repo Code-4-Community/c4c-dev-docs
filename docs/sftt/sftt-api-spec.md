@@ -990,16 +990,17 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/neighborhoods/send_email`
 
-Sends an email with the given message to users in certain neighborhoods. If `neighborhoods` is an empty list, send the email to everyone.
+Sends an email with the given subject and content to users with the given emails.
 
 #### Request Body
 ```json
 {
-  "neighborhoodIDs": [
-    INT,
-    INT,
+  "emails": [
+    EMAIL,
+    EMAIL,
     ...
   ],
+  "emailSubject": STRING,
   "emailBody": STRING
 }
 ```
@@ -1008,7 +1009,7 @@ Sends an email with the given message to users in certain neighborhoods. If `nei
 
 ##### `200 OK`
 
-Email successfully sent to users in the specified neighborhoods.
+Email successfully sent to the given users.
 
 ##### `400 BAD REQUEST`
 
