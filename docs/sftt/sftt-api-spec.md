@@ -15,6 +15,16 @@ The privilege level enum is all the possible privilege levels a user can have. T
 - `ADMIN` - A more senior SFTT volunteer, might be in charge of a neighborhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
 - `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
 
+### Site Owner
+
+The site owner enum is all of the possible groups that a site can be owned by. This is stored in the sites table as the owner field. The possible options are:
+
+- `ROW` - A Right of Way (Street) site. It is planted, owned, and maintained by the city of Boston.
+- `Park` - A Park site. It is planted, owned, and maintained by the city of Boston.
+- `State` - A site owned by the state (usually on MBTA or DCR land).
+- `Federal` - A site owned by the federal government.
+- `Private` - A site owned by a private company or resident.
+
 ### Team Role
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
@@ -526,9 +536,7 @@ The given email or username is already in use.
 
 `GET api/v1/protected/user/child_data`
 
-!!! missing "This route still needs to be implemented"
-
-Get the user data for all of the calling user's child accounts, including their user IDs and first and last names.
+Get the user data for all of the calling user's child accounts, including their first and last names, emails, and usernames.
 
 #### Request Body
 
@@ -542,9 +550,10 @@ No request body.
 {
   "childData": [
     {
-      "userId": INT,
       "firstName": STRING,
-      "lastName": STRING
+      "lastName": STRING,
+      "email": EMAIL,
+      "username": STRING
     },
     ...
   ]
@@ -674,7 +683,8 @@ No request body.
         "common_name": STRING,
         "planting_date": TIMESTAMP,
         "adopter_id": INT,
-        "address": STRING
+        "address": STRING,
+        "owner": STRING
       },
       "geometry": {
         "type": "Point",
@@ -877,6 +887,7 @@ Used to import sites into the database. See below for a description of each ambi
       "zip": STRING,
       "address": STRING,
       "neighborhoodId": INT,
+      "owner": STRING,
       "deletedAt": TIMESTAMP,
       "userId": INT,
       "username": USERNAME,
@@ -979,16 +990,17 @@ If the calling user is not an admin.
 
 `POST api/v1/protected/neighborhoods/send_email`
 
-Sends an email with the given message to users in certain neighborhoods. If `neighborhoods` is an empty list, send the email to everyone.
+Sends an email with the given subject and content to users with the given emails.
 
 #### Request Body
 ```json
 {
-  "neighborhoodIDs": [
-    INT,
-    INT,
+  "emails": [
+    EMAIL,
+    EMAIL,
     ...
   ],
+  "emailSubject": STRING,
   "emailBody": STRING
 }
 ```
@@ -997,7 +1009,7 @@ Sends an email with the given message to users in certain neighborhoods. If `nei
 
 ##### `200 OK`
 
-Email successfully sent to users in the specified neighborhoods.
+Email successfully sent to the given users.
 
 ##### `400 BAD REQUEST`
 
@@ -1015,7 +1027,7 @@ The sites router is used to handle all the sites and create new ones. A site can
 
 `POST api/v1/protected/sites/add`
 
-Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `lat`, `lng`, `city`, `zip` and `address` is allowed to be `NULL`.
+Used to create a new site. Will create two entries in the database. One in the `sites` table to record the permanent information (location, address, block_id) and one in the `site_entries` table to record the state of the site (species, foliage, leaning, trash, etc.). Every field besides `lat`, `lng`, `city`, `zip`, `address`, and `owner` is allowed to be `NULL`.
 `NULL` `BOOLEAN`s will be treated as `false`.
 
 All measurements should be given in inches.
@@ -1033,6 +1045,7 @@ measurements should be given as numbers and assumed to be in inches.
     "zip": STRING,
     "address": STRING,
     "neighborhoodId": INT,
+    "owner": STRING,
     "treePresent": BOOLEAN | NULL,
     "status": STRING | NULL,
     "genus": STRING | NULL,
@@ -1088,15 +1101,15 @@ If the request body is malformed.
 
 `POST api/v1/protected/sites/add_sites`
 
-Used to add multiple new sites. The request body is the content of a CSV file and must contain the following columns: `blockId`, `lat`, `lng`, `zip`, `address`, and `neighborhoodId`. Every column besides `lat`, `lng`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order. Blank cell values are treated as default or empty values (`null`, `""`, `false`, etc.).
+Used to add multiple new sites. The request body is the content of a CSV file. Every column besides `lat`, `lng`, and `neighborhoodId` is allowed to be `NULL` and optional. All columns may appear in any order. Blank cell values are treated as default or empty values (`null`, `""`, `false`, etc.).
 
 For more information, refer to the documentation on adding a site (https://docs.c4cneu.com/sftt/sftt-api-spec/#add-a-site).
 
 #### Request Body
 
 ```
-blockId, lat, lng, city, zip, address, neighborhood, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
-INT | NULL, LONG, LONG, STRING | NULL, STRING | NULL, STRING | NULL, STRING, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
+blockId, lat, lng, city, zip, address, neighborhood, owner, treePresent, status, genus, species, commonName, confidence, diameter, circumference, multistem, coverage, pruning, condition, discoloring, leaning, constrictingGrate, wounds, pooling, stakesWithWires, stakesWithoutWires, light, bicycle, bagEmpty, bagFilled, tape, suckerGrowth, siteType, sidewalkWidth, siteWidth, siteLength, material, raisedBed, fence, trash, wires, grate, stump, treeNotes, siteNotes
+INT | NULL, LONG, LONG, STRING | NULL, STRING | NULL, STRING | NULL, STRING, STRING | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL, DOUBLE | NULL, DOUBLE | NULL, STRING | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, BOOLEAN | NULL, STRING | NULL, STRING | NULL
 ...
 ```
 
@@ -1184,6 +1197,7 @@ No request body.
   "zip": STRING,
   "address": STRING,
   "neighborhoodId": INT,
+  "owner": STRING,
   "entries": [
     {
       "id": INT,
@@ -1255,7 +1269,8 @@ Used to edit the features of a site. This is done by querying the appropriate si
   "zip": STRING,
   "lat": DOUBLE,
   "lng": DOUBLE,
-  "neighborhoodId": INT
+  "neighborhoodId": INT,
+  "owner": STRING
 }
 ```
 
@@ -1366,8 +1381,6 @@ If the request body is malformed.
 If the id specified is invalid. An invalid id is a non-existent id or the id of a deleted site.
 
 ### Edit Site Entry (Admin Only)
-
-!!! missing "This route still needs to be implemented"
 
 `POST api/v1/protected/sites/edit_entry/:entry_id`
 
@@ -1895,24 +1908,24 @@ If there is no site with the given `site_id`.
 
 `GET api/v1/protected/sites/filter_sites`
 
-!!! missing "This route still needs to be implemented"
-
-Return data on sites matching all of the given criteria: species of tree, range of adopted date, range of last stewardship activity recorded date, and neighborhood. A criterion is ignored (i.e. sites are not filtered on a criterion) if its value is `NULL`. See below for a description of each criterion.
+Return data on sites matching all of the given criteria: common names of tree, range of adopted date, range of last stewardship activity recorded date, and neighborhood. A criterion is ignored (i.e. sites are not filtered on a criterion) if its value is `NULL`. See below for a description of each criterion.
 
 A site matches the criterion if:
 
-- `treeSpecies`: the species of the site's latest site entry is in the list
+- `treeCommonNames`: the common names of the site's latest site entry is in the list
 - `adoptedStart`: the site has been adopted by a user on or after this date
 - `adoptedEnd`: the site has been adopted by a user on or before this date
 - `lastActivityStart`: the site's latest stewardship activity was recorded on or after this date
 - `lastActivityEnd`: the site's latest stewardship activity was recorded on or before this date
 - `neighborhoodIds`: the site is located in a neighborhood in the list
+- `activityCountMin`: the number of stewardship activities recorded by the site's current adopter is greater than or equal to this minimum
+- `activityCountMax`: the number of stewardship activities recorded by the site's current adopter is less than or equal to this maximum
 
 #### Request Body
 
 ```json
 {
-  "treeSpecies": [
+  "treeCommonNames": [
     STRING,
     ...
   ] | NULL,
@@ -1923,7 +1936,9 @@ A site matches the criterion if:
   "neighborhoodIds": [
     INT,
     ...
-  ] | NULL
+  ] | NULL,
+  "activityCountMin": INT,
+  "activityCountMax": INT | NULL,
 }
 ```
 
@@ -1941,6 +1956,7 @@ In the JSON below, `adopterId` is the adopter's user ID, `adopterActivityCount` 
       "address": STRING | NULL,
       "adopterId": INT,
       "adopterName": STRING,
+      "adopterEmail": STRING,
       "dateAdopted": DATE,
       "adopterActivityCount": INT,
       "neighborhoodId": INT,
@@ -2501,11 +2517,11 @@ If the calling user is not team leader.
 
 ### Invite a User
 
+!!! missing "This route still needs to be implemented"
+
 `POST api/v1/protected/teams/:team_id/invite`
 
 Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
-
-!!! Still in progress, emails for this route are not implemented.
 
 #### Request Body
 
