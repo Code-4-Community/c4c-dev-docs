@@ -1382,8 +1382,6 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 ### Edit Site Entry (Admin Only)
 
-!!! missing "This route still needs to be implemented"
-
 `POST api/v1/protected/sites/edit_entry/:entry_id`
 
 Updates a site's existing site entry with the given values. Every field can be `NULL`. `NULL` `BOOLEAN`s will be treated as `false`. All measurements should be given as numbers in inches.
@@ -2519,11 +2517,11 @@ If the calling user is not team leader.
 
 ### Invite a User
 
+!!! missing "This route still needs to be implemented"
+
 `POST api/v1/protected/teams/:team_id/invite`
 
 Invite someone to join a team. Will send an email to all specified people that includes a link. Link will direct them to the team page where they can join once they are authenticated. If one of the email addresses is invalid or the user is already on the team that invite will not be send out, the other ones will be and a `200 OK` response is returned.
-
-!!! Still in progress, emails for this route are not implemented.
 
 #### Request Body
 
