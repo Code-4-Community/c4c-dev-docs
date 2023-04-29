@@ -15,6 +15,16 @@ The privilege level enum is all the possible privilege levels a user can have. T
 - `ADMIN` - A more senior SFTT volunteer, might be in charge of a neighborhood or someone that works for SFTT. They are able to mark blocks for QA, change normal or admin user privilege levels and other activities that require elevated privileges.
 - `SUPER_ADMIN` - A super user with elevated privileges such as being able to import data into the database.
 
+### Site Owner
+
+The site owner enum is all of the possible groups that a site can be owned by. This is stored in the sites table as the owner field. The possible options are:
+
+- `ROW` - A Right of Way (Street) site. It is planted, owned, and maintained by the city of Boston.
+- `Park` - A Park site. It is planted, owned, and maintained by the city of Boston.
+- `State` - A site owned by the state (usually on MBTA or DCR land).
+- `Federal` - A site owned by the federal government.
+- `Private` - A site owned by a private company or resident.
+
 ### Team Role
 
 The team role enum is all the possible states a use can be in in relation to a team. This is stored in the users_teams table on the backend as the team_role field. The possible options are:
