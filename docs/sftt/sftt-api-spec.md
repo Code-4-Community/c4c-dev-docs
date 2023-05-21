@@ -1504,11 +1504,11 @@ If the given base64 encoding of the image is non-null and invalid.
 
 If a standard user that does not own the site tries to perform this action.
 
-### Delete Site Image (Admin and Owner only)
+### Delete Site Image (Admin only)
 
 `POST api/v1/protected/sites/delete_image/:image_id`
 
-Deletes the site image with the given `image_id`. Only users who are owners of the specified site, Admins, or Super Admins can perform this action.
+Deletes the site image with the given `image_id`. Only Admins or Super Admins can perform this action.
 
 #### Request Body
 
