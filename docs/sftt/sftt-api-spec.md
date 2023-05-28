@@ -2888,15 +2888,14 @@ If the S3 bucket policy does not permit access.
 
 ### Edit Email Template (Admin Only)
 
-`POST api/v1/protected/emailer/edit_template/`
+`POST api/v1/protected/emailer/edit_template/:template_name`
 
-Overwrites an existing HTML file named '`name`' with `template` as the content and the admin ID as 'x-amz-meta-userid' metadata to the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Overwrites an existing HTML file named '`template_name`' with `template` as the content and the admin ID as 'x-amz-meta-userid' metadata to the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
 ```json
 {
-    "name" : STRING,
     "template" : STRING
 }
 ```
@@ -2958,7 +2957,8 @@ Template successfully loaded.
 ```json
 {
     "name" : STRING,
-    "template" : STRING
+    "template" : STRING,
+    "author" : INT
 }
 ```
 
