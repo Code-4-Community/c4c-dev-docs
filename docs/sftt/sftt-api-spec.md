@@ -2890,13 +2890,13 @@ If the S3 bucket policy does not permit access.
 
 `POST api/v1/protected/emailer/edit_template/`
 
-Overwrites an existing HTML file named '`html_full_name`' with `template` as the content and the admin ID as 'x-amz-meta-userid' metadata to the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Overwrites an existing HTML file named '`name`' with `template` as the content and the admin ID as 'x-amz-meta-userid' metadata to the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
 ```json
 {
-    "html_full_name" : STRING,
+    "name" : STRING,
     "template" : STRING
 }
 ```
@@ -2905,7 +2905,7 @@ Overwrites an existing HTML file named '`html_full_name`' with `template` as the
 
 ##### `200 OK`
 
-Template successfully added.
+Template successfully edited.
 
 ##### `400 BAD REQUEST`
 
@@ -2929,7 +2929,7 @@ No Request Body
 
 ##### `200 OK`
 
-Template successfully added.
+Template successfully deleted.
 
 ##### `400 BAD REQUEST`
 
@@ -2953,7 +2953,14 @@ No Request Body
 
 ##### `200 OK`
 
-Template successfully added.
+Template successfully loaded.
+
+```json
+{
+    "name" : STRING,
+    "template" : STRING
+}
+```
 
 ##### `400 BAD REQUEST`
 
