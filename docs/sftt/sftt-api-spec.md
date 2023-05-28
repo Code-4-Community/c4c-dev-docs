@@ -2917,18 +2917,13 @@ If the S3 bucket policy does not permit access.
 
 ### Delete Email Template (Admin Only)
 
-`POST api/v1/protected/emailer/delete_template/`
+`POST api/v1/protected/emailer/delete_template/:template_name`
 
-Deletes an existing HTML file named '`html_full_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Deletes an existing HTML file named '`template_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
-```json
-{
-    "html_full_name" : STRING,
-    "template" : STRING
-}
-```
+No Request Body
 
 #### Responses
 
@@ -2946,18 +2941,13 @@ If the S3 bucket policy does not permit access.
 
 ### Load Email Template (Admin Only)
 
-`GET api/v1/protected/emailer/load_template/`
+`GET api/v1/protected/emailer/load_template/:template_name`
 
-Loads an existing HTML file named '`html_full_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Loads an existing HTML file named '`template_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
-```json
-{
-    "html_full_name" : STRING,
-    "template" : STRING
-}
-```
+No Request Body
 
 #### Responses
 
