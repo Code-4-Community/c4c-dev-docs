@@ -3,7 +3,7 @@ This is the official API specification for the Breaktime back end. The back end 
 
 
 ## Enums
-
+   
 ### Privilege Level
 
 The privilege level enum is all the possible privilege levels a user can have. This is stored in the users table as the privilege_level field. The possible options are:
