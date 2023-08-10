@@ -1474,7 +1474,7 @@ If the `entry_id` specified is not associated with an existing activity.
 
 If the calling user is not an admin.
 
-### Get images pending approval (Admin only)
+### Get Unapproved Images (Admin only)
 
 !!! missing "This route still needs to be implemented"
 
@@ -1482,11 +1482,11 @@ If the calling user is not an admin.
 
 Retrieves any user-uploaded images that are awaiting approval from admins. Only Admins or Super Admins can perform this action.
 
-### Request Body
+#### Request Body
 
 No request body.
 
-### Responses
+#### Responses
 
 ##### `200 OK`
 
@@ -1506,7 +1506,7 @@ No request body.
 
 ##### `401 UNAUTHORIZED`
 
-If a standard user attempts to call this route
+If a standard user attempts to call this route.
 
 ### Upload Site Image (Admin and Owner only)
 
@@ -1570,7 +1570,7 @@ If a standard user that does not own the site tries to perform this action.
 
 `PUT api/v1/protected/sites/approve_image/:image_id`
 
-Approves the site image with the given `image_id`, allowing it to be shown on site pages. Only Admins or Super Admins can perform this action.
+Approves the site image with the given `image_id`, allowing it to be shown publically on site pages. Only Admins or Super Admins can perform this action.
 
 #### Request Body
 
@@ -3008,7 +3008,7 @@ If the request was malformed.
 
 If the S3 bucket policy does not permit access.
 
-### Get Email Template Names
+### Get Email Template Names (Admin only)
 
 `GET api/v1/protected/emailer/template_names`
 
@@ -3024,7 +3024,10 @@ No request body.
 
 ```json
 {
-  "templates": STRING[]
+  "templates": [
+    STRING,
+    ...
+  ]
 }
 ```
 
