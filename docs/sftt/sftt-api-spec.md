@@ -1386,6 +1386,8 @@ If the id specified is invalid. An invalid id is a non-existent id or the id of 
 
 Updates a site's existing site entry with the given values. Every field can be `NULL`. `NULL` `BOOLEAN`s will be treated as `false`. All measurements should be given as numbers in inches.
 
+Updates the `user_id` and `updated at` site entry attributes to the logged in admin and time of editing respectively.
+
 #### Request Body
 
 ```json
