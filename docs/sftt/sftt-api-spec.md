@@ -1474,6 +1474,40 @@ If the `entry_id` specified is not associated with an existing activity.
 
 If the calling user is not an admin.
 
+### Get Unapproved Images (Admin only)
+
+!!! missing "This route still needs to be implemented"
+
+`GET api/v1/protected/sites/unapproved_images`
+
+Retrieves any user-uploaded images that are awaiting approval from admins. Only Admins or Super Admins can perform this action.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "images": [
+    {
+      "imageId": INT,
+      "uploaderUsername": STRING,
+      "uploadedAt": TIMESTAMP,
+      "imageUrl": STRING
+    },
+    ...
+  ]  
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If a standard user attempts to call this route.
+
 ### Upload Site Image (Admin and Owner only)
 
 !!! missing "This route still needs to be implemented"
@@ -1529,6 +1563,32 @@ If the `image_id` specified is not associated with an existing site image.
 ##### `401 UNAUTHORIZED`
 
 If a standard user that does not own the site tries to perform this action.
+
+### Approve site image (Admin only)
+
+!!! missing "This route still needs to be implemented"
+
+`PUT api/v1/protected/sites/approve_image/:image_id`
+
+Approves the site image with the given `image_id`, allowing it to be shown publically on site pages. Only Admins or Super Admins can perform this action.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+Image successfully approved.
+
+##### `400 BAD REQUEST`
+
+If the `image_id` specified is not associated with an existing site image.
+
+##### `401 UNAUTHORIZED`
+
+If a non-admin tries to perform this action.
 
 ### Mark Site for QA (Admin Only)
 
@@ -1693,7 +1753,8 @@ Records a stewardship activity for the given site. Date is the day on which the 
   "watered": BOOLEAN,
   "mulched": BOOLEAN,
   "cleaned": BOOLEAN,
-  "weeded": BOOLEAN
+  "weeded": BOOLEAN,
+  "installedWateringBag": BOOLEAN
 }
 ```
 
@@ -1726,7 +1787,8 @@ Records a stewardship activity on behalf of the specified child account. Date is
   "watered": BOOLEAN,
   "mulched": BOOLEAN,
   "cleaned": BOOLEAN,
-  "weeded": BOOLEAN
+  "weeded": BOOLEAN,
+  "installedWateringBag": BOOLEAN
 }
 ```
 
@@ -1762,7 +1824,8 @@ Edits an existing stewardship activity. Indicate `True` if the activity (watered
   "watered": BOOLEAN,
   "mulched": BOOLEAN,
   "cleaned": BOOLEAN,
-  "weeded": BOOLEAN
+  "weeded": BOOLEAN,
+  "installedWateringBag": BOOLEAN
 }
 ```
 
@@ -1832,7 +1895,8 @@ No request body.
       "watered": BOOLEAN,
       "mulched": BOOLEAN,
       "cleaned": BOOLEAN,
-      "weeded": BOOLEAN
+      "weeded": BOOLEAN,
+      "installedWateringBag": BOOLEAN
     }, 
     ...
   ]
@@ -2888,39 +2952,11 @@ If the request was malformed.
 
 If the S3 bucket policy does not permit access.
 
-### Edit Email Template (Admin Only)
-
-`POST api/v1/protected/emailer/edit_template/:template_name`
-
-Overwrites an existing HTML file named '`template_name`' with `template` as the content and the admin ID as 'x-amz-meta-userid' metadata to the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
-
-#### Request Body
-
-```json
-{
-    "template" : STRING
-}
-```
-
-#### Responses
-
-##### `200 OK`
-
-Template successfully edited.
-
-##### `400 BAD REQUEST`
-
-If the request was malformed.
-
-##### `403 FORBIDDEN`
-
-If the S3 bucket policy does not permit access.
-
 ### Delete Email Template (Admin Only)
 
 `POST api/v1/protected/emailer/delete_template/:template_name`
 
-Deletes an existing HTML file named '`template_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Deletes an existing HTML file named '`template_name`_template.html' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
@@ -2944,7 +2980,7 @@ If the S3 bucket policy does not permit access.
 
 `GET api/v1/protected/emailer/load_template/:template_name`
 
-Loads an existing HTML file named '`template_name`' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
+Loads an existing HTML file named '`template_name`_template.html' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
 #### Request Body
 
@@ -2971,3 +3007,30 @@ If the request was malformed.
 ##### `403 FORBIDDEN`
 
 If the S3 bucket policy does not permit access.
+
+### Get Email Template Names (Admin only)
+
+`GET api/v1/protected/emailer/template_names`
+
+Retrieves the names of all existing email templates currently stored in S3.
+
+#### Request Body
+
+No request body.
+
+#### Responses
+
+##### `200 OK`
+
+```json
+{
+  "templates": [
+    STRING,
+    ...
+  ]
+}
+```
+
+##### `401 UNAUTHORIZED`
+
+If a standard user tries to perform this action.
