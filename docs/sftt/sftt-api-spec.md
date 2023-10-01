@@ -1510,16 +1510,15 @@ If a standard user attempts to call this route.
 
 ### Upload Site Image (Admin and Owner only)
 
-!!! missing "This route still needs to be implemented"
-
 `POST api/v1/protected/sites/upload_image/:site_id`
 
-Adds an image of a site's most recent site entry. Only users who are owners of the specified site, Admins, or Super Admins can perform this action. The `imageEncoding` field must be a valid base 64 encoding of the image to upload.
+Adds an image of a site's most recent site entry. Any user can upload an image, as long as they have less than 20 images currently awaiting approval. Admins are exempt from this limit. The `imageEncoding` field must be a valid base 64 encoding of the image to upload.
 
 #### Request Body
 
 ```json
 {
+  "anonymous": BOOLEAN,
   "imageEncoding": STRING
 }
 ```
@@ -1536,9 +1535,9 @@ If the request body is malformed.
 If the specified site ID is non-existent.
 If the given base64 encoding of the image is non-null and invalid.
 
-##### `401 UNAUTHORIZED`
+##### `403 UNAUTHORIZED`
 
-If a standard user that does not own the site tries to perform this action.
+If a standard user with 20 or more images awaiting approval tries to upload an image.
 
 ### Delete Site Image (Admin only)
 
