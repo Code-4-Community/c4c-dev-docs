@@ -95,3 +95,6 @@ nav:
         - Home: jpal/index.md
     - LBFE:
         - Home: lbfe/index.md
+    - BREAKTIME:
+        - Home: breaktime/index.md
+        - API Specification: breaktime/breaktime-api-spec.md
