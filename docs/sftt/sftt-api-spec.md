@@ -1483,9 +1483,13 @@ If the calling user is not an admin.
 Retrieves any user-uploaded images that are awaiting approval from admins that meet the given criteria. Only Admins or Super Admins can perform this action.
 
 An image matches the criteria if:
+
 - `submittedStart`: the image was submitted on or after this date
+  
 - `submittedEnd`: the image was submitted on or before this date
+  
 - `siteIds`: the site of the entry the image is for is in this list
+  
 
 If a condition is null, i.e. not specified, then that condition will not be checked.
 
