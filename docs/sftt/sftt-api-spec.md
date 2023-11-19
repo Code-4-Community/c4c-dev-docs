@@ -1480,11 +1480,26 @@ If the calling user is not an admin.
 
 `GET api/v1/protected/sites/unapproved_images`
 
-Retrieves any user-uploaded images that are awaiting approval from admins. Only Admins or Super Admins can perform this action.
+Retrieves any user-uploaded images that are awaiting approval from admins that meet the given criteria. Only Admins or Super Admins can perform this action.
 
-#### Request Body
+An image matches the criteria if:
+- `submittedStart`: the image was submitted on or after this date
+- `submittedEnd`: the image was submitted on or before this date
+- `siteIds`: the site of the entry the image is for is in this list
 
-No request body.
+If a condition is null, i.e. not specified, then that condition will not be checked.
+
+#### Request Params
+
+Note: since this is a GET request, these parameters will come from the request URL and not the body.
+
+```json
+{
+  "submittedStart": DATE | NULL,
+  "submittedEnd": DATE | NULL,
+  "siteIds": [INT] | NULL
+}
+```
 
 #### Responses
 
@@ -1495,14 +1510,23 @@ No request body.
   "images": [
     {
       "imageId": INT,
-      "uploaderUsername": STRING,
-      "uploadedAt": TIMESTAMP,
-      "imageUrl": STRING
+      "imageUrl": STRING,
+      "siteId": INT,
+      "uploaderName": STRING,
+      "uploaderEmail": STRING,
+      "dateSubmitted": DATE,
+      "species": STRING | NULL,
+      "neighborhoodId": INT,
+      "address": STRING | NULL,
     },
     ...
   ]  
 }
 ```
+
+##### `400 BAD REQUEST`
+
+If the request parameters are incorrect.
 
 ##### `401 UNAUTHORIZED`
 
@@ -1541,7 +1565,7 @@ If a standard user with 20 or more images awaiting approval tries to upload an i
 
 ### Delete Site Image (Admin only)
 
-`POST api/v1/protected/sites/delete_image/:image_id`
+`DELETE api/v1/protected/sites/delete_image/:image_id`
 
 Deletes the site image with the given `image_id`. Only Admins or Super Admins can perform this action.
 
@@ -1565,8 +1589,6 @@ If a standard user that does not own the site tries to perform this action.
 
 ### Approve site image (Admin only)
 
-!!! missing "This route still needs to be implemented"
-
 `PUT api/v1/protected/sites/approve_image/:image_id`
 
 Approves the site image with the given `image_id`, allowing it to be shown publically on site pages. Only Admins or Super Admins can perform this action.
@@ -1580,6 +1602,36 @@ No request body.
 ##### `200 OK`
 
 Image successfully approved.
+
+##### `400 BAD REQUEST`
+
+If the `image_id` specified is not associated with an existing site image.
+
+##### `401 UNAUTHORIZED`
+
+If a non-admin tries to perform this action.
+
+### Reject site image (Admin only)
+
+!!! missing "This route still needs to be implemented"
+
+`DELETE api/v1/protected/sites/approve_image/:image_id`
+
+Rejects the site image with the given `image_id`, removing it from the database and sending the uploader a notification email with the reason, if given. Only Admins or Super Admins can perform this action.
+
+#### Request Body
+
+```json
+{
+  "rejectionReason": STRING | NULL
+}
+```
+
+#### Response
+
+#### `200 OK`
+
+Image successfully deleted and rejection email successfully sent.
 
 ##### `400 BAD REQUEST`
 
@@ -2953,7 +3005,7 @@ If the S3 bucket policy does not permit access.
 
 ### Delete Email Template (Admin Only)
 
-`POST api/v1/protected/emailer/delete_template/:template_name`
+`DELETE api/v1/protected/emailer/delete_template/:template_name`
 
 Deletes an existing HTML file named '`template_name`_template.html' in the 'email_templates/' folder of the 'sftt-user-uploads' S3 bucket.
 
