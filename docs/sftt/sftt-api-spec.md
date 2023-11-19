@@ -1567,11 +1567,11 @@ If the given base64 encoding of the image is non-null and invalid.
 
 If a standard user with 20 or more images awaiting approval tries to upload an image.
 
-### Delete Site Image (Admin only)
+### Delete Site Image (Admin and Uploader only)
 
 `DELETE api/v1/protected/sites/delete_image/:image_id`
 
-Deletes the site image with the given `image_id`. Only Admins or Super Admins can perform this action.
+Deletes the site image with the given `image_id`. Only the image's uploader, Admins, or Super Admins can perform this action.
 
 #### Request Body
 
@@ -1589,7 +1589,7 @@ If the `image_id` specified is not associated with an existing site image.
 
 ##### `401 UNAUTHORIZED`
 
-If a standard user that does not own the site tries to perform this action.
+If a non-admin or a user that didn't upload the image tries to perform this action.
 
 ### Approve site image (Admin only)
 
