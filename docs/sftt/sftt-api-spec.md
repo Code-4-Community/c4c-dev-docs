@@ -1452,9 +1452,11 @@ If the calling user is not an admin.
 
 !!! missing "This route still needs to be implemented"
 
-`POST api/v1/protected/sites/delete_entry/:entry_id`
+`DELETE api/v1/protected/sites/delete_entry/:entry_id`
 
-Deletes the specified site entry from the database.
+Deletes the specified site entry from the database along with all other information related to the entry. Only admins and super admins can perform this action. 
+
+This action cannot be done if the site associated with the given entry has no other entries, i.e. this action would delete the site's only entry.
 
 #### Request Body
 
@@ -1473,6 +1475,10 @@ If the `entry_id` specified is not associated with an existing activity.
 ##### `401 UNAUTHORIZED`
 
 If the calling user is not an admin.
+
+##### `403 FORBIDDEN`
+
+If deleting this entry would leave the associated site with no other entries.
 
 ### Get Unapproved Images (Admin only)
 
