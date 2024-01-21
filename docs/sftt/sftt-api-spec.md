@@ -1495,6 +1495,8 @@ An image matches the criteria if:
 - `submittedEnd`: the image was submitted on or before this date
   
 - `siteIds`: the site of the entry the image is for is in this list
+
+- `neighborhoodIds`: the neighborhood of the image's site is in this list
   
 
 If a condition is null, i.e. not specified, then that condition will not be checked.
@@ -1507,7 +1509,8 @@ Note: since this is a GET request, these parameters will come from the request U
 {
   "submittedStart": DATE | NULL,
   "submittedEnd": DATE | NULL,
-  "siteIds": [INT] | NULL
+  "siteIds": [INT] | NULL,
+  "neighborhoodIds": [INT] | NULL
 }
 ```
 
