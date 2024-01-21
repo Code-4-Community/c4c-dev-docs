@@ -1528,7 +1528,7 @@ Note: since this is a GET request, these parameters will come from the request U
       "uploaderName": STRING,
       "uploaderEmail": STRING,
       "dateSubmitted": DATE,
-      "species": STRING | NULL,
+      "commonName": STRING | NULL,
       "neighborhoodId": INT,
       "address": STRING | NULL,
     },
