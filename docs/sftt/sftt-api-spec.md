@@ -1547,7 +1547,7 @@ If a standard user attempts to call this route.
 
 ### Upload Site Image (Admin and Owner only)
 
-`POST api/v1/protected/sites/upload_image/:site_id`
+`POST api/v1/protected/sites/upload_image/:entry_id`
 
 Adds an image of a site's most recent site entry. Any user can upload an image, as long as they have less than 20 images currently awaiting approval. Admins are exempt from this limit. The `imageEncoding` field must be a valid base 64 encoding of the image to upload.
 
@@ -2001,8 +2001,6 @@ If the user is not the site's adopter.
 
 ### Calculate Tree Benefits
 
-!!! missing "This route still needs to be implemented"
-
 `GET api/v1/sites/:site_id/calculate_benefits`
 
 Calculates and returns the environmental impacts of the latest site entry of the site with the given `site_id`. This includes the following values: energy conserved, stormwater filtered, air quality improved, carbon dioxide removed, and carbon dioxide stored, as well as the amount of money saved for each category.
@@ -2104,6 +2102,37 @@ If the request body is malformed.
 ##### `401 UNAUTHORIZED`
 
 If the calling user is not an admin.
+
+!!! missing "This route still needs to be implemented"
+
+### Report Site For Issues
+
+`POST api/v1/protected/sites/:site_id/report`
+
+Reports the site for any issues on the site page, such as incorrect information or inapproriate names. Making a report sends an email to admins with the given information.
+
+#### Request Body
+
+```json
+{
+  "reason": STRING,
+  "description": STRING,
+}
+```
+
+#### Responses
+
+##### `200 OK`
+
+Report was successfully sent.
+
+##### `400 BAD REQUEST`
+
+If the request body is malformed, or if `reason` is empty.
+
+##### `404 NOT FOUND`
+
+If the given site does not exist.
 
 ## Report Router
 
