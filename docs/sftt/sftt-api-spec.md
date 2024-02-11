@@ -2103,9 +2103,9 @@ If the request body is malformed.
 
 If the calling user is not an admin.
 
-!!! missing "This route still needs to be implemented"
-
 ### Report Site For Issues
+
+!!! missing "This route still needs to be implemented"
 
 `POST api/v1/protected/sites/:site_id/report`
 
