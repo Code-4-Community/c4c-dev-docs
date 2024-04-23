@@ -1626,9 +1626,7 @@ If a non-admin tries to perform this action.
 
 ### Reject site image (Admin only)
 
-!!! missing "This route still needs to be implemented"
-
-`DELETE api/v1/protected/sites/approve_image/:image_id`
+`DELETE api/v1/protected/sites/reject_image/:image_id`
 
 Rejects the site image with the given `image_id`, removing it from the database and sending the uploader a notification email with the reason, if given. Only Admins or Super Admins can perform this action.
 
